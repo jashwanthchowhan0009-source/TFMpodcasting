@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>About Us — The Founder Mafia</title>
+  <meta name="description" content="Who runs the table, how a sit-down works and the house rules of The Founder Mafia podcast.">
+  <meta name="theme-color" content="#140608">
+  <meta property="og:title" content="The Founder Mafia">
+  <meta property="og:description" content="Founders pull up a chair with Aarav Phanindra and tell the story the pitch deck leaves out.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/three.module.min.js", "three/addons/": "./vendor/three/addons/" } }
+  </script>
+</head>
+<body data-page="about">
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="topbar-mark" href="index.html" aria-label="The Founder Mafia, home">TFM</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="siteNav">Menu</button>
+    <nav id="siteNav" aria-label="Main">
+      <a href="index.html" data-page="home">Home</a>
+      <a href="about.html" data-page="about">About Us</a>
+      <a href="community.html" data-page="community">Community</a>
+      <a href="enter.html" data-page="enter" class="nav-cta">Enter the Mafia</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="chapter page-intro" data-room="wide" aria-labelledby="aboutTitle">
+      <div class="chapter-inner">
+        <p class="kicker">About us</p>
+        <h1 id="aboutTitle" class="page-title">A table where founders tell it straight</h1>
+        <p>The Founder Mafia is a long-form podcast for people building companies in India. Each episode is one founder, one table and one honest conversation about how the company really got built.</p>
+        <p>No highlight reels. We ask about the cheque that bounced, the co-founder who left and the pivot nobody saw coming — because that is the part the next founder can actually use.</p>
+      </div>
+    </section>
+
+    <section class="chapter" data-room="side" aria-labelledby="formatTitle">
+      <div class="chapter-inner">
+        <h2 id="formatTitle">How a sit-down works</h2>
+        <ol class="steps">
+          <li><h3>The pitch</h3><p>A founder pitches their story, or we invite them after following their work.</p></li>
+          <li><h3>The pre-call</h3><p>Twenty minutes to find the moments worth an hour. No script is shared.</p></li>
+          <li><h3>The recording</h3><p>One take, two microphones. The guest can pull anything off the record afterwards.</p></li>
+          <li><h3>The episode</h3><p>It goes out on YouTube and Spotify, with the guest’s one lesson for the next founder.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="chapter" data-room="lamp" aria-labelledby="hostTitle">
+      <div class="chapter-inner">
+        <p class="kicker">Your host</p>
+        <h2 id="hostTitle" class="host-name">Aarav Phanindra</h2>
+        <p>Aarav runs the table. He asks the questions founders usually only get asked off-mic — about cash in the bank, co-founder fights and the month they nearly quit — and keeps asking until the real answer shows up.</p>
+        <p class="platforms" data-platforms></p>
+      </div>
+    </section>
+
+    <section class="chapter" data-room="mic" aria-labelledby="rulesTitle">
+      <div class="chapter-inner">
+        <h2 id="rulesTitle">House rules at the table</h2>
+        <ul class="rules">
+          <li>Nothing is off the record unless you say so.</li>
+          <li>Numbers, not adjectives.</li>
+          <li>The failures get as much airtime as the wins.</li>
+          <li>Every guest leaves one lesson behind for the next founder.</li>
+        </ul>
+        <div class="actions">
+          <a class="btn btn-primary" href="enter.html">Enter the Mafia</a>
+          <a class="btn btn-ghost" href="index.html#episodes">See the episodes</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="footer-mark">The Founder Mafia</p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About Us</a><a href="enter.html">Enter the Mafia</a><a href="community.html">Community</a>
+    </nav>
+    <p class="footer-links" id="footerLinks"></p>
+    <p class="footer-note">© <span id="year"></span> The Founder Mafia</p>
+  </footer>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

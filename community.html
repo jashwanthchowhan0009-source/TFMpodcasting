@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Community — The Founder Mafia</title>
+  <meta name="description" content="Join the Founder Mafia community: episode drops, guest Q&A and founder meetups.">
+  <meta name="theme-color" content="#140608">
+  <meta property="og:title" content="The Founder Mafia">
+  <meta property="og:description" content="Founders pull up a chair with Aarav Phanindra and tell the story the pitch deck leaves out.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/three.module.min.js", "three/addons/": "./vendor/three/addons/" } }
+  </script>
+</head>
+<body data-page="community">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="topbar-mark" href="index.html" aria-label="The Founder Mafia, home">TFM</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="siteNav">Menu</button>
+    <nav id="siteNav" aria-label="Main">
+      <a href="index.html" data-page="home">Home</a>
+      <a href="about.html" data-page="about">About Us</a>
+      <a href="community.html" data-page="community">Community</a>
+      <a href="enter.html" data-page="enter" class="nav-cta">Enter the Mafia</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="community-hero" aria-labelledby="commTitle">
+      <div class="hero-layers is-static" id="heroLayers"></div>
+      <canvas class="fx-embers" id="heroEmbers" aria-hidden="true"></canvas>
+      <div class="community-copy">
+        <p class="kicker">Community</p>
+        <h1 id="commTitle" class="page-title">The family</h1>
+        <p>Founders, operators and people about to quit their jobs to start something. Listen together, argue about the episodes and meet the guests in person.</p>
+      </div>
+    </section>
+
+    <section class="chapter-plain" aria-labelledby="invTitle">
+      <div class="plain-inner">
+        <h2 id="invTitle">Pick your door</h2>
+        <ul class="invites">
+          <li class="invite" data-channel="whatsapp">
+            <h3>WhatsApp community</h3>
+            <p>Episode drops, guest Q&amp;A threads and meetup invites. Low noise, high signal.</p>
+            <span class="invite-action" data-label="Join on WhatsApp"></span>
+          </li>
+          <li class="invite" data-channel="instagram">
+            <h3>Instagram</h3>
+            <p>Clips from every sit-down, and the moments that didn’t make the edit.</p>
+            <span class="invite-action" data-label="Follow on Instagram"></span>
+          </li>
+          <li class="invite" data-channel="youtube">
+            <h3>YouTube</h3>
+            <p>Full episodes, uncut. Comment with the question you want asked next.</p>
+            <span class="invite-action" data-label="Subscribe on YouTube"></span>
+          </li>
+          <li class="invite" data-channel="linkedin">
+            <h3>LinkedIn</h3>
+            <p>Founder takeaways, written up, for the people who read instead of watch.</p>
+            <span class="invite-action" data-label="Follow on LinkedIn"></span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="chapter-plain chapter-split" aria-labelledby="meetTitle">
+      <div class="plain-inner split">
+        <div>
+          <h2 id="meetTitle">Meet the family</h2>
+          <p>Live recordings and small founder meetups. Seats are limited and go to community members first.</p>
+          <ul class="meetups" id="meetups"></ul>
+        </div>
+        <div>
+          <h2>The family code</h2>
+          <ul class="rules rules-small">
+            <li>Give before you ask.</li>
+            <li>What’s said in the room stays in the room.</li>
+            <li>Help the founder one step behind you.</li>
+            <li>Disagree with the idea, never the person.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="seat-band" aria-labelledby="seatTitle">
+      <canvas class="fx-embers" data-embers aria-hidden="true"></canvas>
+      <div class="seat-band-inner">
+        <div class="seat-copy">
+          <h2 id="seatTitle">Ready to sit at the table?</h2>
+          <p>Pitch yourself as a guest on the show.</p>
+          <div class="actions"><a class="btn btn-primary" href="enter.html">Enter the Mafia</a></div>
+        </div>
+        <div class="seat" data-seat></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="footer-mark">The Founder Mafia</p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About Us</a><a href="enter.html">Enter the Mafia</a><a href="community.html">Community</a>
+    </nav>
+    <p class="footer-links" id="footerLinks"></p>
+    <p class="footer-note">© <span id="year"></span> The Founder Mafia</p>
+  </footer>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

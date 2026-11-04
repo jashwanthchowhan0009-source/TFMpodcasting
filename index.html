@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The Founder Mafia — a podcast for founders</title>
+  <meta name="description" content="Founders pull up a chair with Aarav Phanindra and tell the story the pitch deck leaves out.">
+  <meta name="theme-color" content="#140608">
+  <meta property="og:title" content="The Founder Mafia">
+  <meta property="og:description" content="Founders pull up a chair with Aarav Phanindra and tell the story the pitch deck leaves out.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/three.module.min.js", "three/addons/": "./vendor/three/addons/" } }
+  </script>
+</head>
+<body class="is-loading" data-page="home">
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="topbar-mark" href="index.html" aria-label="The Founder Mafia, home">TFM</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="siteNav">Menu</button>
+    <nav id="siteNav" aria-label="Main">
+      <a href="index.html" data-page="home">Home</a>
+      <a href="about.html" data-page="about">About Us</a>
+      <a href="community.html" data-page="community">Community</a>
+      <a href="enter.html" data-page="enter" class="nav-cta">Enter the Mafia</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- 1 · the street outside the club; scrolling walks you through the door -->
+    <section class="hero-scene" data-scene aria-labelledby="heroTitle">
+      <div class="scene-sticky">
+        <div class="hero-layers" id="heroLayers"></div>
+        <canvas class="fx-embers" id="heroEmbers" aria-hidden="true"></canvas>
+        <div class="hero-copy">
+          <h1 class="wordmark" id="heroTitle"><span>The Founder</span> <span>Mafia</span></h1>
+          <p class="hero-lede">A podcast where founders pull up a chair with Aarav&nbsp;Phanindra and tell the story the pitch deck leaves&nbsp;out.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="enter.html">Enter the Mafia</a>
+            <a class="btn btn-ghost" href="#episodes">Watch the episodes</a>
+          </div>
+        </div>
+        <p class="scroll-hint" aria-hidden="true"><span></span>Scroll to step inside</p>
+        <div class="scene-door" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- 2 · inside: the Don at his table -->
+    <section class="don-scene" data-drift aria-labelledby="donTitle">
+      <div class="don-art" id="donArt"></div>
+      <canvas class="fx-embers fx-dust" id="donDust" aria-hidden="true"></canvas>
+      <div class="don-copy">
+        <h2 id="donTitle">Every episode is a sit-down</h2>
+        <p>One table, two microphones, no slides. We talk about the first hires, the money that almost didn’t come, the product that had to be shut down — the decisions that actually built the company.</p>
+        <dl class="facts">
+          <div><dt>Who sits down</dt><dd>Founders building in India, from first cheque to scale.</dd></div>
+          <div><dt>The format</dt><dd>Long-form, one conversation, no script handed to the guest.</dd></div>
+          <div><dt>What you leave with</dt><dd>The playbook, in the founder’s own words.</dd></div>
+        </dl>
+        <p class="platforms" data-platforms></p>
+      </div>
+    </section>
+
+    <!-- 3 · the deck, in the 3D room -->
+    <section id="episodes" class="chapter chapter-wide" data-room="orbit" aria-labelledby="episodesTitle">
+      <div class="chapter-inner">
+        <h2 id="episodesTitle">The family deck</h2>
+        <p>Every guest gets a card. Turn one over to see who sat down and what they gave away.</p>
+        <div class="deck" id="deck" role="region" aria-roledescription="carousel" aria-label="Episodes"></div>
+      </div>
+    </section>
+
+    <section class="chapter" data-room="mic" aria-labelledby="rulesTitle">
+      <div class="chapter-inner">
+        <h2 id="rulesTitle">House rules at the table</h2>
+        <ul class="rules">
+          <li>Nothing is off the record unless you say so.</li>
+          <li>Numbers, not adjectives.</li>
+          <li>The failures get as much airtime as the wins.</li>
+          <li>Every guest leaves one lesson behind for the next founder.</li>
+        </ul>
+        <a class="text-link" href="about.html">How the show works</a>
+      </div>
+    </section>
+
+    <!-- 4 · the reserved seat -->
+    <section class="seat-band" aria-labelledby="seatTitle">
+      <canvas class="fx-embers" data-embers aria-hidden="true"></canvas>
+      <div class="seat-band-inner">
+        <div class="seat-copy">
+          <h2 id="seatTitle">There’s a seat with your name on it</h2>
+          <p>Built something worth talking about? Pitch yourself as a guest, or join the family and sit in on the next live recording.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="enter.html">Enter the Mafia</a>
+            <a class="btn btn-ghost" href="community.html">Join the community</a>
+          </div>
+        </div>
+        <div class="seat" data-seat></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="footer-mark">The Founder Mafia</p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About Us</a><a href="enter.html">Enter the Mafia</a><a href="community.html">Community</a>
+    </nav>
+    <p class="footer-links" id="footerLinks"></p>
+    <p class="footer-note">© <span id="year"></span> The Founder Mafia</p>
+  </footer>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
