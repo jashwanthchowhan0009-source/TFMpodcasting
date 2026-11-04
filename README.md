@@ -2,37 +2,36 @@
 
 Static site for **The Founder Mafia** podcast, hosted by Aarav Phanindra. No build step.
 
+The look is "the office": one dark wine desk with paper grain, smoked-glass pills, and paper objects
+(notebook, wax seal, cigar, playing cards, matchbook, polaroids) pinned on top — several of them draggable.
+Between sections sit scroll-driven 3D spaces: a tunnel of pills, a ring of cards, a flipping coin and a cube.
+
+Palette: Burgundy `#93032E` · Wine Red `#7F011F` · Night `#151515` · Light Sand `#F5EBD0`.
+
 ## Pages
 
-| Page | File | What's on it |
-|---|---|---|
-| Home | `index.html` | Noir street at dusk → scroll walks you into the club → the Don at his table → the episode deck (3D room) → house rules → reserved-seat CTA |
-| About Us | `about.html` | The show, how a sit-down works, the host, house rules — all in the 3D room |
-| Enter the Mafia | `enter.html` | Guest pitch form with the "Your seat" card |
-| Community | `community.html` | Channel invitations, meetups, the family code |
+| Page | File |
+|---|---|
+| Home | `index.html` — hero collage, what this is, tunnel, road to Season 02, who you sit with, card ring, trailer, five pillars, three tracks, episode index, glimpse inside, coin, join |
+| About Us | `about.html` — info sheet, profile, host, cube, how a sit-down works, house rules, credits |
+| Enter the Mafia | `enter.html` — guest dossier form, what we look for, tunnel, FAQs |
+| Community | `community.html` — membership card, channels, meetups, family code, card ring |
 
 ## Edit content
 
-Everything you'll normally change lives in **`content.js`**:
-
-- `links` — YouTube, Spotify, Instagram, LinkedIn, WhatsApp invite, and the email that receives guest pitches. Empty links are hidden or shown as "Opening soon".
-- `episodes` — newest first. Add `url` to make "Watch episode" appear; add `image` (e.g. `images/guest-04.jpg`) to replace the silhouette on the card.
-- `meetups` — shown on the Community page.
-
-Page copy is plain HTML in each page file.
+Everything you'll normally change lives in **`content.js`**: links (socials, trailer, pitch email),
+whether pitches are open, the Season 02 timeline, the people at the table, tracks, episodes, meetups, FAQs
+and the "last update" date. Placeholders read "To be announced".
 
 ## Files
 
 ```
 index.html, about.html, enter.html, community.html
-styles.css     all styles + illustration animations
-main.js        page boot: nav, hero, deck, forms, community
-art.js         the illustrations (street, the Don, the reserved seat), as SVG
-fx.js          scroll scenes, parallax, embers, tilt, page transitions
-deck.js        the flip-card episode deck
-room.js        the 3D room (Three.js): table, mics, swinging lamp
-vendor/three/  Three.js r169 (MIT) — vendored, no CDN needed
-fonts/         Big Shoulders Display + Newsreader (OFL), self-hosted
+styles.css     all styles, the 3D spaces and the sticker animations
+main.js        loader, nav, spacebar scrolling, draggable objects, 3D spaces, page content
+stickers.js    every illustration, as original SVG
+content.js     the content you edit
+fonts/         Unbounded + Archivo (SIL OFL), self-hosted
 ```
 
 ## Run locally
@@ -42,14 +41,7 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-(Opening the HTML file directly won't work — ES modules need a server.)
+## Deploy
 
-## Deploy on Vercel
-
-Import the repo in Vercel → Framework preset **Other** → no build command, output directory `.` → Deploy.
-
-## Notes
-
-- All illustrations are original SVG artwork made for this site.
-- Respects `prefers-reduced-motion`: scroll zoom, particles and loops switch off.
-- The 3D room falls back to a flat background on devices without WebGL2.
+GitHub Pages: Settings → Pages → Deploy from a branch → `main` / root.
+Vercel: import the repo, framework preset **Other**, no build command.
