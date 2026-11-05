@@ -2,8 +2,8 @@
 // Palette: burgundy #93032E, wine #7F011F, night #151515, sand #F5EBD0 (+ sand-deep #E6D6AE, brass #C9A24B for tiny details).
 
 const C = { bur: '#93032E', wine: '#7F011F', night: '#151515', sand: '#F5EBD0', deep: '#E6D6AE', brass: '#C9A24B' };
-const D = "font-family=\"Unbounded,sans-serif\" font-weight=\"900\"";
-const M = "font-family=\"Archivo,sans-serif\" font-weight=\"700\"";
+const D = "font-family=\"Poppins,sans-serif\" font-weight=\"800\"";
+const M = "font-family=\"'Open Sans',sans-serif\" font-weight=\"700\"";
 
 const circleText = (id, cx, cy, r) => `<path id="${id}" d="M${cx - r} ${cy}a${r} ${r} 0 1 1 ${r * 2} 0a${r} ${r} 0 1 1 ${-r * 2} 0" fill="none"/>`;
 
@@ -195,7 +195,7 @@ export function polaroid(scene, caption) {
   return `<svg viewBox="0 0 230 270" aria-hidden="true">
     <rect width="230" height="270" rx="3" fill="#fbf6ea"/>
     <svg x="15" y="15" width="200" height="170" viewBox="0 0 200 170">${SCENES[scene]}</svg>
-    <text x="115" y="230" text-anchor="middle" font-family="Archivo,sans-serif" font-style="italic" font-size="19" fill="${C.night}">${caption}</text>
+    <text x="115" y="230" text-anchor="middle" font-family="'Open Sans',sans-serif" font-style="italic" font-size="19" fill="${C.night}">${caption}</text>
   </svg>`;
 }
 

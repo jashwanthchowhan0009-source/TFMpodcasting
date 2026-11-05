@@ -6,6 +6,8 @@ The look is "the office": one dark wine desk with paper grain, smoked-glass pill
 (notebook, wax seal, cigar, playing cards, matchbook, polaroids) pinned on top — several of them draggable.
 Between sections sit scroll-driven 3D spaces: a tunnel of pills, a ring of cards, a flipping coin and a cube.
 
+Fonts: Poppins (headings) and Open Sans (body), self-hosted in `fonts/`.
+
 Palette: Burgundy `#93032E` · Wine Red `#7F011F` · Night `#151515` · Light Sand `#F5EBD0`.
 
 ## Pages
@@ -31,7 +33,9 @@ styles.css     all styles, the 3D spaces and the sticker animations
 main.js        loader, nav, spacebar scrolling, draggable objects, 3D spaces, page content
 stickers.js    every illustration, as original SVG
 content.js     the content you edit
-fonts/         Unbounded + Archivo (SIL OFL), self-hosted
+fonts/         Poppins + Open Sans (SIL OFL), self-hosted
+vendor/        Lenis smooth scrolling (MIT)
+img/           logo, wordmark banner, favicons
 ```
 
 ## Run locally

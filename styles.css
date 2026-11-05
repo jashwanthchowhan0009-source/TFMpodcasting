@@ -7,15 +7,14 @@
    night     #151515  stickers, labels, the dark band
    sand      #F5EBD0  type and paper                                              */
 
-@font-face { font-family: 'Unbounded'; font-weight: 500; font-display: swap; src: url(fonts/unbounded-latin-500-normal.woff2) format('woff2'); }
-@font-face { font-family: 'Unbounded'; font-weight: 700; font-display: swap; src: url(fonts/unbounded-latin-700-normal.woff2) format('woff2'); }
-@font-face { font-family: 'Unbounded'; font-weight: 800; font-display: swap; src: url(fonts/unbounded-latin-800-normal.woff2) format('woff2'); }
-@font-face { font-family: 'Unbounded'; font-weight: 900; font-display: swap; src: url(fonts/unbounded-latin-900-normal.woff2) format('woff2'); }
-@font-face { font-family: 'Archivo'; font-weight: 400; font-display: swap; src: url(fonts/archivo-latin-400-normal.woff2) format('woff2'); }
-@font-face { font-family: 'Archivo'; font-weight: 400; font-style: italic; font-display: swap; src: url(fonts/archivo-latin-400-italic.woff2) format('woff2'); }
-@font-face { font-family: 'Archivo'; font-weight: 500; font-display: swap; src: url(fonts/archivo-latin-500-normal.woff2) format('woff2'); }
-@font-face { font-family: 'Archivo'; font-weight: 600; font-display: swap; src: url(fonts/archivo-latin-600-normal.woff2) format('woff2'); }
-@font-face { font-family: 'Archivo'; font-weight: 700; font-display: swap; src: url(fonts/archivo-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 600; font-display: swap; src: url(fonts/poppins-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; font-display: swap; src: url(fonts/poppins-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 800; font-display: swap; src: url(fonts/poppins-latin-800-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 900; font-display: swap; src: url(fonts/poppins-latin-900-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Open Sans'; font-weight: 400; font-display: swap; src: url(fonts/open-sans-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Open Sans'; font-weight: 400; font-style: italic; font-display: swap; src: url(fonts/open-sans-latin-400-italic.woff2) format('woff2'); }
+@font-face { font-family: 'Open Sans'; font-weight: 500 600; font-display: swap; src: url(fonts/open-sans-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Open Sans'; font-weight: 700; font-display: swap; src: url(fonts/open-sans-latin-700-normal.woff2) format('woff2'); }
 
 :root {
   color-scheme: dark;
@@ -30,8 +29,8 @@
   --glass-line: rgba(245, 235, 208, 0.22);
   --shadow: 0 26px 40px -18px rgba(8, 0, 2, 0.7), 0 6px 12px -6px rgba(8, 0, 2, 0.5);
 
-  --display: 'Unbounded', 'Archivo Black', 'Arial Black', system-ui, sans-serif;
-  --body: 'Archivo', 'Helvetica Neue', Arial, system-ui, sans-serif;
+  --display: 'Poppins', 'Helvetica Neue', Arial, system-ui, sans-serif;
+  --body: 'Open Sans', 'Helvetica Neue', Arial, system-ui, sans-serif;
 
   --gutter: clamp(14px, 4.4vw, 72px);
   --radius-pill: 999px;
@@ -208,6 +207,12 @@ main { position: relative; padding-top: 74px; }
 .wordmark small { font-size: 0.26em; letter-spacing: 0.02em; align-self: flex-start; margin-top: 0.4em; }
 .hero .wordmark { flex-direction: column; align-items: flex-start; gap: 0; font-size: clamp(2.2rem, 7.4vw, 9.4rem); line-height: 0.88; }
 .hero .wordmark small { margin: 0 0 0.35em 0.06em; font-size: 0.2em; }
+.hero-banner { display: block; padding: clamp(18px, 3vw, 54px) clamp(26px, 5.4vw, 104px); }
+.hero-art {
+  display: block; width: 100%; height: auto; max-width: 1500px; margin-inline: auto;
+  transform: translate(calc(var(--mx, 0) * -8px), calc(var(--my, 0) * -5px));
+  will-change: transform;
+}
 .page-pill { padding-block: clamp(10px, 1.2vw, 18px); }
 .page-pill .hero-logo { height: clamp(84px, 10vw, 170px); }
 .page-pill .wordmark { font-size: clamp(2rem, 5.2vw, 6.6rem); white-space: normal; text-wrap: balance; }
@@ -327,7 +332,7 @@ main { position: relative; padding-top: 74px; }
 }
 .stamp .pin { position: absolute; top: 12px; right: 18px; width: 30px; transform: rotate(18deg); pointer-events: none; }
 .stamp .pin svg { display: block; width: 100%; height: auto; }
-.stamp-big { font: 900 clamp(2rem, 4.4vw, 4.1rem) var(--display); line-height: 0.88; letter-spacing: -0.045em; text-transform: uppercase; }
+.stamp-big { font: 900 clamp(2rem, 4.4vw, 4.1rem) var(--display); line-height: 0.88; letter-spacing: -0.03em; text-transform: uppercase; }
 .stamp-suits { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; font-size: clamp(2.4rem, 5vw, 4.4rem); line-height: 1; }
 .stamp-suits span:nth-child(even) { color: var(--night); }
 .stamp-meta { display: flex; justify-content: space-between; gap: 10px; font: 700 0.6rem var(--display); letter-spacing: 0.06em; margin: 4px 0 14px; }
@@ -470,7 +475,7 @@ html.lenis, html.lenis body { height: auto; }
 /* join the family */
 .join { position: relative; text-align: center; padding-block: clamp(70px, 11vw, 150px); }
 .join .wordmark-pill { flex-direction: column; gap: clamp(16px, 2vw, 26px); padding-block: clamp(36px, 5vw, 70px); }
-.join h2 { font: 900 clamp(2.2rem, 7.6vw, 7.6rem) var(--display); line-height: 0.9; letter-spacing: -0.045em; text-transform: uppercase; }
+.join h2 { font: 900 clamp(2.2rem, 7.6vw, 7.6rem) var(--display); line-height: 0.9; letter-spacing: -0.03em; text-transform: uppercase; }
 .join p { max-width: 34rem; margin-inline: auto; }
 .join .pill-row { justify-content: center; }
 .join .obj-seal { width: clamp(90px, 11vw, 150px); left: 4%; top: 8%; transform: rotate(-12deg); }
@@ -592,7 +597,7 @@ html.lenis, html.lenis body { height: auto; }
 .footer-pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .footer-pills .grow { flex: 1 1 auto; justify-content: flex-start; }
 .the-end { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 24px; margin-top: 28px; }
-.the-end b { font: 900 clamp(2.2rem, 8vw, 7rem) var(--display); line-height: 0.9; letter-spacing: -0.05em; text-transform: uppercase; }
+.the-end b { font: 900 clamp(2.2rem, 8vw, 7rem) var(--display); line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; }
 .the-end span { font: 700 0.66rem var(--display); letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.75; }
 
 /* ════════════════════════════════════════════════════════
@@ -653,7 +658,7 @@ html.lenis, html.lenis body { height: auto; }
   display: grid; place-items: center;
   will-change: transform, opacity;
 }
-.frame span { font: 900 clamp(1.8rem, 8vw, 7.6rem) var(--display); letter-spacing: -0.045em; text-transform: uppercase; color: var(--sand); white-space: nowrap; will-change: opacity; }
+.frame span { font: 900 clamp(1.8rem, 8vw, 7.6rem) var(--display); letter-spacing: -0.03em; text-transform: uppercase; color: var(--sand); white-space: nowrap; will-change: opacity; }
 .frame:nth-child(even) { border-color: #c01446; }
 .frame.is-front { background: rgba(21, 21, 21, 0.35); }
 .frame:last-child.is-front { background: var(--sand); }
@@ -734,6 +739,7 @@ html.lenis, html.lenis body { height: auto; }
   body { font-size: 1rem; }
   .progress-pill .site { display: none; }
   .hero-pill { grid-template-columns: 1fr; justify-items: center; text-align: center; border-radius: 40px; padding: 18px 18px 26px; }
+  .hero-banner { padding: 16px 14px; border-radius: 28px; }
   .hero-logo { height: 190px; }
   .hero .wordmark { align-items: center; font-size: clamp(2.3rem, 13vw, 3.6rem); }
   .hero .wordmark small { margin-left: 0; }
