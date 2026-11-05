@@ -1,9 +1,56 @@
 import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate } from './content.js';
 import * as S from './stickers.js';
+import Lenis from './vendor/lenis.mjs';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── Smooth scrolling + an eased pointer for parallax ──── */
+
+const lenis = reduceMotion ? null : new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true, anchors: { offset: -80 } });
+const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
+addEventListener('pointermove', (e) => {
+  pointer.x = (e.clientX / innerWidth) * 2 - 1;
+  pointer.y = (e.clientY / innerHeight) * 2 - 1;
+}, { passive: true });
+function frame(t) {
+  lenis?.raf(t);
+  if (!reduceMotion) {
+    pointer.sx += (pointer.x - pointer.sx) * 0.07;
+    pointer.sy += (pointer.y - pointer.sy) * 0.07;
+    document.documentElement.style.setProperty('--mx', pointer.sx.toFixed(4));
+    document.documentElement.style.setProperty('--my', pointer.sy.toFixed(4));
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+const goTo = (y) => (lenis ? lenis.scrollTo(y, { duration: 1.2 }) : scrollTo({ top: y }));
+
+/* ── Sections ease in as they arrive ──────────────────── */
+
+function reveals() {
+  const groups = [
+    '.block-head', '.intro > *', '.road > li', '.lineup > figure', '.trailer > *', '.pillars > li', '.tracks > .track',
+    '.index', '.glimpse > figure', '.keywords > li', '.info-grid > *', '.steps > li', '.rules > li', '.credits > div',
+    '.channels > li', '.meetups > li', '.faq > details', '.look-for > li', '.split > *', '.join .wordmark-pill', '.footer-pills', '.the-end',
+  ];
+  const els = [];
+  for (const sel of groups) {
+    for (const el of $$(sel)) {
+      if (el.closest('.collage') || el.classList.contains('drop')) continue;
+      const sibs = [...el.parentElement.children].filter((c) => c.matches(sel));
+      el.style.setProperty('--rv', Math.max(0, sibs.indexOf(el)) % 6);
+      el.classList.add('rv');
+      els.push(el);
+    }
+  }
+  if (reduceMotion || !('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('in')); return; }
+  const io = new IntersectionObserver((entries) => {
+    for (const en of entries) if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach((e) => io.observe(e));
+}
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const safeUrl = (u) => (/^https?:\/\//i.test(u) ? encodeURI(u) : '');
 
@@ -72,7 +119,7 @@ function chrome() {
   addEventListener('resize', onScroll);
   onScroll();
 
-  const scrollStep = (dir = 1) => scrollBy({ top: dir * innerHeight * 0.85, behavior: reduceMotion ? 'auto' : 'smooth' });
+  const scrollStep = (dir = 1) => goTo((lenis ? lenis.targetScroll : scrollY) + dir * innerHeight * 0.85);
   $('.spacebar .round')?.addEventListener('click', () => scrollStep(1));
   $('.spacebar .pill')?.addEventListener('click', () => scrollStep(1));
   addEventListener('keydown', (e) => {
@@ -80,7 +127,7 @@ function chrome() {
     e.preventDefault();
     scrollStep(e.shiftKey ? -1 : 1);
   });
-  $$('[data-top]').forEach((b) => b.addEventListener('click', () => scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })));
+  $$('[data-top]').forEach((b) => b.addEventListener('click', () => goTo(0)));
 }
 
 /* ── Objects you can pick up and move ─────────────────── */
@@ -112,7 +159,7 @@ function draggable(el) {
 
 function mountObjects() {
   const art = {
-    clip: S.paperclip, pin: S.pin, cigar: S.cigar,
+    clip: S.paperclip, pin: S.pin, 'pin-dark': () => S.pin('#93032E'), cigar: S.cigar,
     seal: () => S.seal('THE FOUNDER MAFIA', 'TFM'),
     match: S.matchbook, fedora: S.fedora, rose: S.rose, mic: S.mic,
     ruler: () => S.ruler(12),
@@ -351,4 +398,5 @@ mountHome();
 mountEnter();
 mountCommunity();
 transitions();
+reveals();
 loader();
