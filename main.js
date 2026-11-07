@@ -1,6 +1,5 @@
 import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate } from './content.js';
 import * as S from './stickers.js';
-import Lenis from './vendor/lenis.mjs';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -8,7 +7,13 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ── Smooth scrolling + an eased pointer for parallax ──── */
 
-const lenis = reduceMotion ? null : new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true, anchors: { offset: -80 } });
+// Smooth scrolling is an extra: loaded on its own so a missing or blocked file never stops the page.
+let lenis = null;
+if (!reduceMotion) {
+  import('./vendor/lenis.js')
+    .then(({ default: Lenis }) => { lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true, anchors: { offset: -80 } }); })
+    .catch((err) => console.warn('[tfm] smooth scrolling unavailable, using native scroll', err));
+}
 const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
 addEventListener('pointermove', (e) => {
   pointer.x = (e.clientX / innerWidth) * 2 - 1;
@@ -56,30 +61,73 @@ const safeUrl = (u) => (/^https?:\/\//i.test(u) ? encodeURI(u) : '');
 
 /* ── Loader: "Opening the office" ─────────────────────── */
 
+const LOADER_MAX_MS = 2800; // the loader never stays up longer than this
+
+function revealPage() {
+  document.body.classList.add('is-ready');
+  window.__tfmReady?.(); // tells the inline failsafe in <head> it can stand down
+}
+
+// Waits for one asset, but never longer than `ms`; errors count as "done".
+function settle(promise, ms) {
+  return Promise.race([
+    Promise.resolve(promise).catch(() => {}),
+    new Promise((r) => setTimeout(r, ms)),
+  ]);
+}
+
+function preloadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = img.onerror = () => resolve();
+    img.src = src;
+    if (img.complete) resolve();
+  });
+}
+
 function loader() {
   const el = $('.loader');
-  if (!el) { document.body.classList.add('is-ready'); return; }
+  if (!el) { revealPage(); return; }
   const pct = $('.loader-pct', el);
   const seen = (() => { try { return sessionStorage.getItem('tfm-open') === '1'; } catch { return false; } })();
-  const total = reduceMotion || seen ? 250 : 1500;
+  const minMs = reduceMotion || seen ? 250 : 1300;
   const t0 = performance.now();
-  let fontsReady = false;
-  (document.fonts?.ready || Promise.resolve()).then(() => { fontsReady = true; });
-  function step(now) {
-    let p = Math.min(1, (now - t0) / total);
-    p = 1 - Math.pow(1 - p, 2.2);
-    if (!fontsReady && p > 0.9) p = 0.9;
-    const v = Math.round(p * 100);
+
+  // Real assets the first screen needs. Each one resolves on load, error or timeout.
+  const assets = [
+    settle(document.fonts?.ready, 2000),
+    ...$$('img[src]').slice(0, 4).map((img) => settle(preloadImage(img.currentSrc || img.src), 2400)),
+  ];
+  let loaded = 0;
+  assets.forEach((a) => a.then(() => { loaded += 1; }));
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    pct.textContent = '100%';
+    el.style.setProperty('--load', 100);
+    try { sessionStorage.setItem('tfm-open', '1'); } catch {}
+    setTimeout(revealPage, 120);
+  };
+
+  // Progress = the slower of time and assets, so it always moves and always reaches 100.
+  const tick = () => {
+    if (done) return;
+    const now = performance.now();
+    const timeP = 1 - Math.pow(1 - Math.min(1, (now - t0) / minMs), 2.2);
+    const assetP = assets.length ? loaded / assets.length : 1;
+    const v = Math.round(Math.min(timeP, 0.15 + assetP * 0.85) * 100);
     pct.textContent = `${v}%`;
     el.style.setProperty('--load', v);
-    if (v < 100) requestAnimationFrame(step);
-    else {
-      try { sessionStorage.setItem('tfm-open', '1'); } catch {}
-      setTimeout(() => document.body.classList.add('is-ready'), 120);
-    }
-  }
-  requestAnimationFrame(step);
-  setTimeout(() => document.body.classList.add('is-ready'), 4000); // never block the page
+    if (v >= 100) finish();
+  };
+  // setInterval keeps counting even where requestAnimationFrame is paused (background tabs).
+  const timer = setInterval(() => { tick(); if (done) clearInterval(timer); }, 50);
+  tick();
+
+  Promise.all(assets).then(() => setTimeout(tick, 0));
+  setTimeout(finish, LOADER_MAX_MS); // hard fallback: reveal no matter what
 }
 
 /* ── Top bar, progress, spacebar ──────────────────────── */
@@ -391,12 +439,12 @@ function transitions() {
   addEventListener('pageshow', (e) => { if (e.persisted) document.body.classList.add('is-ready'); });
 }
 
-chrome();
-mountSpaces();
-mountObjects();
-mountHome();
-mountEnter();
-mountCommunity();
-transitions();
-reveals();
+// Start the loader first, then build each part of the page on its own:
+// one part failing is logged and skipped, it never blocks the rest or the loader.
 loader();
+for (const [name, fn] of [
+  ['chrome', chrome], ['spaces', mountSpaces], ['objects', mountObjects], ['home', mountHome],
+  ['enter', mountEnter], ['community', mountCommunity], ['transitions', transitions], ['reveals', reveals],
+]) {
+  try { fn(); } catch (err) { console.error(`[tfm] ${name} failed`, err); }
+}

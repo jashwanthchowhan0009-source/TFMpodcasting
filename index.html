@@ -18,6 +18,33 @@
   <link rel="preload" href="fonts/open-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="img/tfm-wordmark.png" as="image">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    /* Loader failsafe. Runs before anything else and does not depend on main.js:
+       if the page has not revealed itself after 3 s, or a script/stylesheet fails to load,
+       the loader is forced to 100% and dismissed. main.js calls window.__tfmReady() when it
+       reveals the page normally, which stands this down. */
+    (function () {
+      document.documentElement.classList.add('js');
+      var done = false;
+      function reveal() {
+        if (done) return;
+        if (!document.body) { document.addEventListener('DOMContentLoaded', reveal); return; }
+        done = true;
+        var pct = document.querySelector('.loader-pct');
+        var bar = document.querySelector('.loader');
+        if (pct) pct.textContent = '100%';
+        if (bar) bar.style.setProperty('--load', 100);
+        document.body.classList.add('is-ready');
+      }
+      window.__tfmReady = function () { done = true; };
+      setTimeout(reveal, 3000);
+      window.addEventListener('error', function (e) {
+        var t = e.target;
+        if (t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK')) { setTimeout(reveal, 300); }
+      }, true);
+    })();
+  </script>
+  <noscript><style>.loader { display: none !important; } .drop { opacity: 1 !important; translate: none !important; scale: none !important; }</style></noscript>
 </head>
 <body data-page="home">
   <div class="loader" aria-hidden="true">
