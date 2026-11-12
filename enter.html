@@ -75,12 +75,13 @@
       <a class="pill" href="about.html" data-nav="about">About Us</a>
       <a class="pill" href="enter.html" data-nav="enter">Enter the Mafia</a>
       <a class="pill" href="community.html" data-nav="community">Community</a>
+      <a class="pill nav-book" href="book.html" data-nav="book">Book a seat · ₹200</a>
     </nav>
     <button class="pill menu-pill" type="button" aria-expanded="false">Menu</button>
   </header>
 
   <main id="main">
-    <section class="page-hero desk" aria-labelledby="enterTitle">
+    <section class="page-hero desk" aria-labelledby="enterTitle" data-scene="Enter">
       <div class="hero-pill page-pill drop" style="--d:0">
         <img class="hero-logo" src="img/tfm-logo.png" width="679" height="662" alt="">
         <h1 class="wordmark" id="enterTitle">Enter the Mafia</h1>
@@ -88,7 +89,23 @@
       <div class="scallop" aria-hidden="true"><div class="marquee"><ul><li>Podcast</li><li>Founder family</li><li>Not a course</li><li>Not an accelerator</li><li>Live sit-downs</li><li>On the record</li><li>Numbers, not adjectives</li><li>No slides</li></ul><ul><li>Podcast</li><li>Founder family</li><li>Not a course</li><li>Not an accelerator</li><li>Live sit-downs</li><li>On the record</li><li>Numbers, not adjectives</li><li>No slides</li></ul></div></div>
     </section>
 
-    <section class="block desk" aria-labelledby="pitchTitle">
+    <section class="cinema cinema-left" data-drift data-scene="The door" aria-label="The door">
+      <div class="cinema-sticky">
+      <div class="cinema-frame" aria-hidden="true">
+        <img class="cinema-img" src="media/still-door.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900">
+        <span class="bars"></span>
+      </div>
+        <div class="viewfinder" aria-hidden="true"><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i><i class="third v1"></i><i class="third v2"></i><i class="third h1"></i><i class="third h2"></i><span class="rec">Rec</span><span class="tc">00:00:00:00</span></div>
+
+      <div class="cinema-copy desk">
+        <p class="label">Scene · The door</p>
+        <p class="cinema-line">Every guest walks through the same door.</p>
+        <p class="cinema-sub">Tell us the story you would tell at the table. If it belongs here, the door opens.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="block desk" aria-labelledby="pitchTitle" data-scene="The dossier">
       <div class="enter-grid">
         <div class="paper dossier drop" style="--d:1">
           <div class="dossier-head">
@@ -132,7 +149,7 @@
       </div>
     </section>
 
-    <section class="space" data-space="tunnel" data-words="Pitch|Pre-call|Recording|Premiere|Your seat" aria-label="From pitch to premiere">
+    <section class="space" data-space="tunnel" data-words="Pitch|Pre-call|Recording|Premiere|Your seat" aria-label="From pitch to premiere" data-scene="What happens next">
       <div class="space-sticky">
         <div class="space-stage" aria-hidden="true"></div>
         <div class="space-caption"><span class="label">What happens next</span><b>From pitch to premiere</b></div>
@@ -140,26 +157,61 @@
       </div>
     </section>
 
-    <section class="block desk" aria-labelledby="faqTitle">
+    <section class="block desk" aria-labelledby="faqTitle" data-scene="FAQs">
       <div class="block-head"><h2 class="title-pill" id="faqTitle">FAQs</h2><p>Still deciding? Most answers are here.</p></div>
       <div class="faq" id="faq"></div>
     </section>
   </main>
 
-  <footer class="footer desk">
-    <div class="footer-pills">
-      <span class="pill grow" data-last-update>Last update</span>
-      <a class="pill" href="index.html">Home</a>
-      <a class="pill" href="about.html">About Us</a>
-      <a class="pill" href="enter.html">Enter the Mafia</a>
-      <a class="pill" href="community.html">Community</a>
-      <span class="footer-pills" data-socials></span>
+  <footer class="site-footer" aria-label="Site footer">
+    <div class="foot-cta desk">
+      <div class="foot-cta-copy">
+        <p class="label">The table is set</p>
+        <p class="foot-cta-line">Pull up a chair.</p>
+      </div>
+      <div class="foot-cta-actions">
+        <a class="pill is-solid btn" href="book.html">Book a seat · ₹200</a>
+        <a class="pill btn" href="enter.html">Pitch yourself as a guest</a>
+      </div>
     </div>
-    <div class="the-end">
-      <b>The end <small style="font-size:.32em;letter-spacing:0">(<span data-year>2026</span> – ∞)</small></b>
+
+    <div class="foot-grid desk">
+      <div class="foot-brand">
+        <img src="img/tfm-logo.png" width="679" height="662" alt="TFM Podcasting" class="foot-logo">
+        <p>A long-form podcast and a family of founders building in India. One table, two microphones, no slides.</p>
+        <p class="foot-socials" data-socials></p>
+      </div>
+      <nav class="foot-col" aria-label="Explore">
+        <p class="label">Explore</p>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="enter.html">Enter the Mafia</a>
+        <a href="community.html">Community</a>
+        <a href="book.html">Book a seat</a>
+      </nav>
+      <div class="foot-col">
+        <p class="label">Get involved</p>
+        <a href="enter.html">Pitch yourself as a guest</a>
+        <a href="book.html">Sit in on a live recording</a>
+        <a href="community.html">Join the family</a>
+        <span data-contact></span>
+      </div>
+      <a class="foot-venture" href="av-venture-house.html" aria-label="A venture of A&amp;V Venture House — about the venture house">
+        <span class="label">A venture of</span>
+        <img src="media/av-mark.png" width="267" height="504" alt="" class="av-mark">
+        <span class="av-name">A&amp;V Venture House</span>
+        <span class="av-more">About the venture house</span>
+      </a>
+    </div>
+
+    <div class="foot-end desk">
+      <b class="the-end-word">The end <small>(<span data-year>2026</span>)</small></b>
       <button class="pill" type="button" data-top>Scroll to top</button>
     </div>
-    <p class="copyright" data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+    <div class="foot-legal desk">
+      <p data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+      <p data-last-update>Last update</p>
+    </div>
   </footer>
 
   <div class="spacebar">

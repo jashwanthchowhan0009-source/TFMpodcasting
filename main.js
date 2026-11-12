@@ -1,4 +1,4 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team } from './content.js';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js';
 import * as S from './stickers.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -38,7 +38,8 @@ function reveals() {
   const groups = [
     '.block-head', '.intro > *', '.road > li', '.lineup > figure', '.trailer > *', '.pillars > li', '.tracks > .track',
     '.index', '.glimpse > figure', '.keywords > li', '.info-grid > *', '.steps > li', '.rules > li', '.team > li',
-    '.channels > li', '.meetups > li', '.faq > details', '.look-for > li', '.split > *', '.join .wordmark-pill', '.footer-pills', '.the-end',
+    '.channels > li', '.meetups > li', '.faq > details', '.look-for > li', '.split > *', '.join .wordmark-pill',
+    '.foot-cta > *', '.foot-grid > *', '.foot-end', '.foot-legal', '.book-grid > *', '.av-card > *', '.av-points > li', '.ticket-card > div',
   ];
   const els = [];
   for (const sel of groups) {
@@ -161,6 +162,16 @@ function chrome() {
   $$('[data-last-update]').forEach((el) => { el.textContent = `Last update · ${lastUpdate}`; });
   $$('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
   $$('[data-copyright]').forEach((el) => { el.textContent = `© 2026 ${company}`; });
+  $$('[data-contact]').forEach((el) => {
+    el.innerHTML = links.contactEmail ? `<a href="mailto:${esc(links.contactEmail)}">${esc(links.contactEmail)}</a>` : '';
+  });
+  // "THE END" rises letter by letter when the footer arrives
+  $$('.the-end-word').forEach((el) => {
+    const small = el.querySelector('small');
+    const word = [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('').trim();
+    el.innerHTML = `<span class="letters" aria-label="${esc(word)}">${[...word].map((c, i) => `<span aria-hidden="true" style="--i:${i}">${c === ' ' ? '&nbsp;' : esc(c)}</span>`).join('')}</span> `;
+    if (small) el.append(small);
+  });
 
   const prog = $('.progress-pill');
   const pctEl = $('.progress-pill .pct');
@@ -337,7 +348,7 @@ function mountEnter() {
     $('.stamp-mark').textContent = 'Closed';
     return;
   }
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     let firstBad = null;
     for (const f of form.elements) {
@@ -349,15 +360,19 @@ function mountEnter() {
     if (firstBad) { status.textContent = 'Fill in every field, with a valid email, to send your pitch.'; firstBad.focus(); return; }
     const d = Object.fromEntries(new FormData(form));
     try { localStorage.setItem('tfm-pitch', JSON.stringify(d)); } catch {}
+    status.textContent = 'Filing your dossier…';
+    let id = '';
+    try { const r = await sendToSheet({ type: 'pitch', ...d }); if (r.ok) id = r.id; } catch (err) { console.warn('[tfm] pitch not saved', err); }
     const pay = safeUrl(payment.razorpayLink);
     if (!pay) {
-      status.textContent = 'Payments open soon. Your pitch is saved on this device — come back to complete it.';
+      status.textContent = id ? `Pitch received — reference ${id}. Payment opens soon; we’ll email you the link.` : 'Payments open soon. Your pitch is saved on this device — come back to complete it.';
       return;
     }
     // Hand over to Razorpay. Name, email and phone prefill the payment page where it supports it.
     const u = new URL(pay);
     if (d.name) u.searchParams.set('name', d.name);
     if (d.email) u.searchParams.set('email', d.email);
+    if (id) u.searchParams.set('reference', id);
     status.textContent = 'Taking you to Razorpay to complete your entry…';
     setTimeout(() => { location.href = u.toString(); }, 350);
   });
@@ -483,6 +498,175 @@ function mountSpaces() {
   requestAnimationFrame(tick);
 }
 
+/* ── Forms: seat bookings, community joins and guest pitches all land in the Google Sheet ── */
+
+const priceText = () => `₹${Number(booking.price || 0).toLocaleString('en-IN')}`;
+
+async function sendToSheet(payload) {
+  const endpoint = safeUrl(booking.endpoint);
+  if (!endpoint) return { ok: false, offline: true };
+  // text/plain keeps this a "simple" request: no CORS preflight, which Apps Script can't answer
+  const res = await fetch(endpoint, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+  return res.json();
+}
+
+function validate(form) {
+  let firstBad = null;
+  for (const f of form.elements) {
+    if (!f.name || f.closest('.hp')) continue;
+    const ok = f.checkValidity() && (!f.required || f.value.trim() !== '');
+    f.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    if (!ok && !firstBad) firstBad = f;
+  }
+  return firstBad;
+}
+
+function mountForms() {
+  $$('[data-price]').forEach((el) => { el.textContent = Number(booking.price || 0).toLocaleString('en-IN'); });
+  $$('[data-booking]').forEach((el) => { const v = booking[el.dataset.booking]; if (v) el.textContent = v; });
+
+  // seats left, when a capacity is set and the sheet is connected
+  const left = $('.seats-left');
+  if (left && booking.capacity > 0 && safeUrl(booking.endpoint)) {
+    fetch(safeUrl(booking.endpoint)).then((r) => r.json()).then((d) => {
+      if (!d?.ok) return;
+      $('[data-seats-left]', left).textContent = `${Math.max(0, booking.capacity - d.booked)} of ${booking.capacity}`;
+      left.hidden = false;
+    }).catch(() => {});
+  }
+
+  for (const form of $$('form[data-type]')) {
+    const type = form.dataset.type;
+    const card = form.parentElement;
+    const status = $('.form-status', form);
+    const button = $('button[type="submit"]', form);
+    const key = `tfm-${type}`;
+    // details typed earlier on this device come back, so nobody types twice
+    try {
+      const saved = JSON.parse(localStorage.getItem(key) || 'null');
+      if (saved) for (const [k, v] of Object.entries(saved)) if (form.elements[k] && !form.elements[k].value) form.elements[k].value = v;
+    } catch {}
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const bad = validate(form);
+      if (bad) { status.textContent = 'Fill in your name, age, email and a valid mobile number.'; bad.focus(); return; }
+      const d = Object.fromEntries(new FormData(form));
+      try { const { website, ...keep } = d; localStorage.setItem(key, JSON.stringify(keep)); } catch {}
+      button.disabled = true;
+      status.textContent = type === 'join' ? 'Opening the door…' : 'Holding your seat…';
+      try {
+        const r = await sendToSheet({ type, ...d, page: location.pathname });
+        if (r.offline) {
+          status.textContent = type === 'join'
+            ? 'Joining opens in a few days. Your details are kept on this device, so it’s one tap when we go live.'
+            : 'Seat booking opens in a few days. Your details are kept on this device, so it’s one tap when we go live.';
+          button.disabled = false;
+          return;
+        }
+        if (!r.ok) throw new Error(r.error || 'Could not save');
+        const done = $('.booked', card);
+        $$('[data-out="name"]', done).forEach((el) => { el.textContent = d.name.split(/\s+/)[0]; });
+        $$('[data-out="id"]', done).forEach((el) => { el.textContent = r.id; });
+        if (type === 'booking') {
+          const pay = safeUrl(booking.razorpayLink);
+          const row = $('#payRow');
+          const state = $('#payState');
+          if (pay) {
+            const u = new URL(pay);
+            u.searchParams.set('name', d.name); u.searchParams.set('email', d.email); u.searchParams.set('phone', d.mobile);
+            row.innerHTML = `<a class="pill is-solid btn" href="${u.toString()}" target="_blank" rel="noopener">Pay ${priceText()} to confirm</a>`;
+            if (state) state.textContent = `Pay securely with Razorpay. Mention booking ID ${r.id}.`;
+          }
+        }
+        form.hidden = true;
+        done.hidden = false;
+        requestAnimationFrame(() => done.classList.add('is-in'));
+        done.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+      } catch (err) {
+        console.warn('[tfm] form', err);
+        status.textContent = String(err.message || '').startsWith('Please') ? err.message : 'Couldn’t reach the booking desk. Check your connection and try again.';
+        button.disabled = false;
+      }
+    });
+  }
+}
+
+/* ── Cinema: full-bleed scenes that open like a shutter as you scroll through them ── */
+
+const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+function mountCinema() {
+  const scenes = $$('.cinema').map((sc) => {
+    const line = $('.cinema-line', sc);
+    if (line) {
+      let i = 0;
+      line.innerHTML = line.innerHTML.split(/(<br\s*\/?>)/i).map((part) => /^<br/i.test(part) ? part
+        : part.split(/(\s+)/).map((w) => (w.trim() ? `<span class="w"><span style="--i:${i++}">${w}</span></span>` : w)).join('')).join('');
+    }
+    return { sc, tc: $('.tc', sc), on: false };
+  });
+  if (!scenes.length) return;
+  document.documentElement.classList.add('has-cinema');
+  if (reduceMotion) { scenes.forEach(({ sc }) => { sc.classList.add('is-on'); sc.style.setProperty('--cp', 0.5); sc.style.setProperty('--bar', 10); }); return; }
+
+  const fps = 24;
+  function tick() {
+    const vh = innerHeight;
+    for (const s of scenes) {
+      const r = s.sc.getBoundingClientRect();
+      if (r.bottom < -vh * 0.5 || r.top > vh * 1.5) continue;
+      // 0 when the scene's top reaches the bottom of the screen, 1 when its bottom leaves the top
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (r.height + vh)));
+      // shutter: closed → open to letterbox → closes again on the way out
+      const open = smooth(0.12, 0.34, p) * (1 - smooth(0.84, 0.98, p));
+      const bar = 50 - open * 39; // % of the frame each bar covers (50 = shut, 11 = 2.39:1-ish letterbox)
+      s.sc.style.setProperty('--cp', p.toFixed(4));
+      s.sc.style.setProperty('--bar', bar.toFixed(2));
+      const on = p > 0.3 && p < 0.86;
+      if (on !== s.on) { s.on = on; s.sc.classList.toggle('is-on', on); }
+      if (s.tc) {
+        const f = Math.floor(p * 40 * fps);
+        const pad = (n) => String(n).padStart(2, '0');
+        s.tc.textContent = `00:${pad(Math.floor(f / fps / 60))}:${pad(Math.floor(f / fps) % 60)}:${pad(f % fps)}`;
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ── Chapters: every section is a named scene; the rail and the top pill say where you are ── */
+
+function mountChapters() {
+  const scenes = $$('[data-scene]');
+  if (scenes.length < 2) return;
+  const label = $('.progress-pill > span:not(.fill):not(.site)');
+  const textNode = label && [...label.childNodes].find((n) => n.nodeType === 3);
+  const rail = document.createElement('nav');
+  rail.className = 'scene-rail';
+  rail.setAttribute('aria-label', 'Scenes on this page');
+  rail.innerHTML = `<ol>${scenes.map((sc, i) => `<li><button type="button" data-i="${i}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span class="t">${esc(sc.dataset.scene)}</span></button></li>`).join('')}</ol>`;
+  document.body.append(rail);
+  const buttons = $$('button', rail);
+  buttons.forEach((b) => b.addEventListener('click', () => goTo(scenes[+b.dataset.i].getBoundingClientRect().top + scrollY - 70)));
+
+  let current = -1;
+  function update() {
+    const line = innerHeight * 0.382; // the golden line: a scene is "now" once its top passes it
+    let idx = 0;
+    scenes.forEach((sc, i) => { if (sc.getBoundingClientRect().top <= line) idx = i; });
+    if (idx === current) return;
+    current = idx;
+    buttons.forEach((b, i) => { b.classList.toggle('is-now', i === idx); b.classList.toggle('is-past', i < idx); if (i === idx) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+    if (textNode) textNode.textContent = `${String(idx + 1).padStart(2, '0')} · ${scenes[idx].dataset.scene} `;
+    document.body.dataset.scene = idx;
+  }
+  addEventListener('scroll', update, { passive: true });
+  addEventListener('resize', update);
+  update();
+}
+
 /* ── Page-to-page: the desk slides ────────────────────── */
 
 function transitions() {
@@ -504,7 +688,8 @@ function transitions() {
 loader();
 for (const [name, fn] of [
   ['chrome', chrome], ['spaces', mountSpaces], ['objects', mountObjects], ['home', mountHome],
-  ['enter', mountEnter], ['team', mountTeam], ['community', mountCommunity], ['transitions', transitions], ['reveals', reveals],
+  ['enter', mountEnter], ['team', mountTeam], ['community', mountCommunity], ['forms', mountForms], ['cinema', mountCinema],
+  ['chapters', mountChapters], ['transitions', transitions], ['reveals', reveals],
 ]) {
   try { fn(); } catch (err) { console.error(`[tfm] ${name} failed`, err); }
 }

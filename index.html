@@ -87,12 +87,13 @@
       <a class="pill" href="about.html" data-nav="about">About Us</a>
       <a class="pill" href="enter.html" data-nav="enter">Enter the Mafia</a>
       <a class="pill" href="community.html" data-nav="community">Community</a>
+      <a class="pill nav-book" href="book.html" data-nav="book">Book a seat · ₹200</a>
     </nav>
     <button class="pill menu-pill" type="button" aria-expanded="false">Menu</button>
   </header>
 
   <main id="main">
-    <section class="hero desk" aria-labelledby="heroTitle">
+    <section class="hero desk" aria-labelledby="heroTitle" data-scene="The street">
       <div class="hero-pill hero-banner drop" style="--d:0">
         <img class="hero-art" src="img/tfm-wordmark.png" width="1863" height="495" alt="Phanindra Aarav presents The Founder Mafia — TFM Podcasting">
       </div>
@@ -128,7 +129,7 @@
       </div>
     </section>
 
-    <section class="block desk" aria-labelledby="introTitle">
+    <section class="block desk" aria-labelledby="introTitle" data-scene="What this is">
       <div class="intro">
         <div class="panel">
           <p class="label">What this is</p>
@@ -145,7 +146,7 @@
       </div>
     </section>
 
-    <section class="space" data-space="tunnel" data-words="No slides|No scripts|One table|Two mics|The whole story" aria-label="Walk into the office">
+    <section class="space" data-space="tunnel" data-words="No slides|No scripts|One table|Two mics|The whole story" aria-label="Walk into the office" data-scene="Walk in">
       <div class="space-sticky">
         <div class="space-stage" aria-hidden="true"></div>
         <div class="space-caption"><span class="label">Walk in</span><b>How every episode is made</b></div>
@@ -153,7 +154,7 @@
       </div>
     </section>
 
-    <section class="block desk" aria-labelledby="roadTitle">
+    <section class="block desk" aria-labelledby="roadTitle" data-scene="The road">
       <div class="block-head">
         <h2 class="title-pill" id="roadTitle">The road to <span data-season style="margin-left:.3em">Season 01</span></h2>
         <p>How the next season comes together. Dates go up here first.</p>
@@ -161,7 +162,7 @@
       <ol class="road" id="road"></ol>
     </section>
 
-    <section class="block desk" aria-labelledby="tableTitle">
+    <section class="block desk" aria-labelledby="tableTitle" data-scene="The table">
       <div class="block-head">
         <h2 class="title-pill" id="tableTitle">Who you sit with matters</h2>
         <p>The host runs the table. The empty seats are for a founder &amp; CEO and an investor joining the season.</p>
@@ -169,14 +170,14 @@
       <div class="lineup" id="lineup"></div>
     </section>
 
-    <section class="space" data-space="ring" aria-label="The family deck">
+    <section class="space" data-space="ring" aria-label="The family deck" data-scene="The deck">
       <div class="space-sticky">
         <div class="space-stage" aria-hidden="true"></div>
         <div class="space-caption"><span class="label">The family deck</span><b>Every guest gets a card</b><p>Scroll to shuffle. Move your cursor to tilt the table.</p></div>
       </div>
     </section>
 
-    <section class="block desk" aria-labelledby="trailerTitle">
+    <section class="block desk" aria-labelledby="trailerTitle" data-scene="Why the table">
       <div class="trailer">
         <div>
           <h2 class="title-pill" id="trailerTitle">Why the table</h2>
@@ -187,7 +188,23 @@
       </div>
     </section>
 
-    <section class="block desk" aria-labelledby="pillarsTitle">
+    <section class="cinema cinema-right" data-drift data-scene="Capital" aria-label="Capital">
+      <div class="cinema-sticky">
+      <div class="cinema-frame" aria-hidden="true">
+        <img class="cinema-img" src="media/still-funds.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900">
+        <span class="bars"></span>
+      </div>
+        <div class="viewfinder" aria-hidden="true"><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i><i class="third v1"></i><i class="third v2"></i><i class="third h1"></i><i class="third h2"></i><span class="rec">Rec</span><span class="tc">00:00:00:00</span></div>
+
+      <div class="cinema-copy desk">
+        <p class="label">Scene · Capital</p>
+        <p class="cinema-line">Money moves at this table.</p>
+        <p class="cinema-sub">Investors sit down with founders and explain how cheques really get written.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="block desk" aria-labelledby="pillarsTitle" data-scene="Five pillars">
       <div class="block-head">
         <h2 class="title-pill" id="pillarsTitle">Everything at one table</h2>
         <p>What a founder leaves with, after an episode or a night with the family.</p>
@@ -201,7 +218,7 @@
       </ul>
     </section>
 
-    <section class="block desk" aria-labelledby="tracksTitle">
+    <section class="block desk" aria-labelledby="tracksTitle" data-scene="Three suits">
       <div class="block-head">
         <h2 class="title-pill" id="tracksTitle">Three suits, every season</h2>
         <p>Every episode sits in one of three tracks, so you can follow the one you are building in.</p>
@@ -209,7 +226,7 @@
       <div class="tracks" id="tracks"></div>
     </section>
 
-    <section class="block desk" id="episodes" aria-labelledby="episodesTitle">
+    <section class="block desk" id="episodes" aria-labelledby="episodesTitle" data-scene="Episodes">
       <div class="block-head">
         <h2 class="title-pill" id="episodesTitle">Episode index</h2>
         <p>Every sit-down, newest first.</p>
@@ -224,7 +241,7 @@
       </div>
     </section>
 
-    <section class="block desk" aria-labelledby="glimpseTitle">
+    <section class="block desk" aria-labelledby="glimpseTitle" data-scene="Inside">
       <div class="block-head">
         <h2 class="title-pill" id="glimpseTitle">A glimpse inside</h2>
         <p>Where the sit-downs happen. Real photos go here once the studio opens its doors.</p>
@@ -232,14 +249,36 @@
       <div class="glimpse" id="glimpse"></div>
     </section>
 
-    <section class="space" data-space="coin" aria-label="On the record">
+    <section class="space" data-space="coin" aria-label="On the record" data-scene="On the record">
       <div class="space-sticky">
         <div class="space-stage" aria-hidden="true"></div>
         <div class="space-caption"><span class="label">House rule Nº 1</span><b>On the record</b><p>Flip it either way. Nothing is off the record unless you say so.</p></div>
       </div>
     </section>
 
-    <section class="join desk" aria-labelledby="joinTitle">
+    <section class="block desk" aria-labelledby="crewTitle" data-scene="The crew">
+      <div class="block-head"><h2 class="title-pill" id="crewTitle">The crew</h2><p>The people who run the table and everything around it.</p></div>
+      <ul class="team" id="team"></ul>
+    </section>
+
+    <section class="cinema cinema-left" data-drift data-scene="Sit in the room" aria-label="Sit in the room">
+      <div class="cinema-sticky">
+      <div class="cinema-frame" aria-hidden="true">
+        <img class="cinema-img" src="media/still-chair.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900">
+        <span class="bars"></span>
+      </div>
+        <div class="viewfinder" aria-hidden="true"><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i><i class="third v1"></i><i class="third v2"></i><i class="third h1"></i><i class="third h2"></i><span class="rec">Rec</span><span class="tc">00:00:00:00</span></div>
+
+      <div class="cinema-copy desk">
+        <p class="label">Live recordings · ₹200 a seat</p>
+        <p class="cinema-line">One chair is empty.<br>It’s yours.</p>
+        <p class="cinema-sub">Young founders can book a seat in the room, listen to the host and guest live, and ask their own question at the end.</p>
+        <div class="pill-row cinema-actions"><a class="pill is-solid btn" href="book.html">Book a seat · ₹200</a><a class="pill btn" href="community.html">See the community</a></div>
+      </div>
+      </div>
+    </section>
+
+    <section class="join desk" aria-labelledby="joinTitle" data-scene="Join">
       <span class="obj obj-seal" data-art="seal" aria-hidden="true"></span>
       <span class="obj obj-match" data-art="match" aria-hidden="true"></span>
       <div class="wordmark-pill">
@@ -254,20 +293,55 @@
     </section>
   </main>
 
-  <footer class="footer desk">
-    <div class="footer-pills">
-      <span class="pill grow" data-last-update>Last update</span>
-      <a class="pill" href="index.html">Home</a>
-      <a class="pill" href="about.html">About Us</a>
-      <a class="pill" href="enter.html">Enter the Mafia</a>
-      <a class="pill" href="community.html">Community</a>
-      <span class="footer-pills" data-socials></span>
+  <footer class="site-footer" aria-label="Site footer">
+    <div class="foot-cta desk">
+      <div class="foot-cta-copy">
+        <p class="label">The table is set</p>
+        <p class="foot-cta-line">Pull up a chair.</p>
+      </div>
+      <div class="foot-cta-actions">
+        <a class="pill is-solid btn" href="book.html">Book a seat · ₹200</a>
+        <a class="pill btn" href="enter.html">Pitch yourself as a guest</a>
+      </div>
     </div>
-    <div class="the-end">
-      <b>The end <small style="font-size:.32em;letter-spacing:0">(<span data-year>2026</span> – ∞)</small></b>
+
+    <div class="foot-grid desk">
+      <div class="foot-brand">
+        <img src="img/tfm-logo.png" width="679" height="662" alt="TFM Podcasting" class="foot-logo">
+        <p>A long-form podcast and a family of founders building in India. One table, two microphones, no slides.</p>
+        <p class="foot-socials" data-socials></p>
+      </div>
+      <nav class="foot-col" aria-label="Explore">
+        <p class="label">Explore</p>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="enter.html">Enter the Mafia</a>
+        <a href="community.html">Community</a>
+        <a href="book.html">Book a seat</a>
+      </nav>
+      <div class="foot-col">
+        <p class="label">Get involved</p>
+        <a href="enter.html">Pitch yourself as a guest</a>
+        <a href="book.html">Sit in on a live recording</a>
+        <a href="community.html">Join the family</a>
+        <span data-contact></span>
+      </div>
+      <a class="foot-venture" href="av-venture-house.html" aria-label="A venture of A&amp;V Venture House — about the venture house">
+        <span class="label">A venture of</span>
+        <img src="media/av-mark.png" width="267" height="504" alt="" class="av-mark">
+        <span class="av-name">A&amp;V Venture House</span>
+        <span class="av-more">About the venture house</span>
+      </a>
+    </div>
+
+    <div class="foot-end desk">
+      <b class="the-end-word">The end <small>(<span data-year>2026</span>)</small></b>
       <button class="pill" type="button" data-top>Scroll to top</button>
     </div>
-    <p class="copyright" data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+    <div class="foot-legal desk">
+      <p data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+      <p data-last-update>Last update</p>
+    </div>
   </footer>
 
   <div class="spacebar">

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>A&amp;V Venture House — The Founder Mafia</title>
+  <meta name="claude:viewport-fit-sides" content="cover">
+  <meta name="description" content="A&amp;V Venture House invests in ideas, MVPs and early-stage startups from The Founder Mafia.">
+  <meta name="theme-color" content="#93032e">
+  <meta property="og:title" content="A&amp;V Venture House — The Founder Mafia">
+  <meta property="og:description" content="A&amp;V Venture House invests in ideas, MVPs and early-stage startups from The Founder Mafia.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="img/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="canonical" href="https://thefoundermafia.com/av-venture-house.html">
+  <meta property="og:url" content="https://thefoundermafia.com/av-venture-house.html">
+  <meta property="og:site_name" content="The Founder Mafia">
+  <meta property="og:image" content="https://thefoundermafia.com/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://thefoundermafia.com/img/og.png">
+  <link rel="preload" href="fonts/poppins-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/open-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="img/tfm-logo.png" as="image">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    /* Loader failsafe. Runs before anything else and does not depend on main.js:
+       if the page has not revealed itself after 3 s, or a script/stylesheet fails to load,
+       the loader is forced to 100% and dismissed. main.js calls window.__tfmReady() when it
+       reveals the page normally, which stands this down. */
+    (function () {
+      document.documentElement.classList.add('js');
+      var done = false;
+      function reveal() {
+        if (done) return;
+        if (!document.body) { document.addEventListener('DOMContentLoaded', reveal); return; }
+        done = true;
+        var pct = document.querySelector('.loader-pct');
+        var bar = document.querySelector('.loader');
+        if (pct) pct.textContent = '100%';
+        if (bar) bar.style.setProperty('--load', 100);
+        document.body.classList.add('is-ready');
+      }
+      window.__tfmReady = function () { done = true; };
+      setTimeout(reveal, 3000);
+      window.addEventListener('error', function (e) {
+        var t = e.target;
+        if (t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK')) { setTimeout(reveal, 300); }
+      }, true);
+    })();
+  </script>
+  <noscript><style>.loader { display: none !important; } .drop { opacity: 1 !important; translate: none !important; scale: none !important; }</style></noscript>
+</head>
+<body data-page="av">
+  <div class="loader" aria-hidden="true">
+    <div class="loader-inner">
+      <p class="loader-word">Opening the office</p>
+      <p class="loader-pct">0%</p>
+      <div class="loader-bar"><i></i></div>
+    </div>
+  </div>
+  <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="pill progress-pill" href="index.html" aria-label="The Founder Mafia, home">
+      <span class="fill" aria-hidden="true"></span>
+      <span>Scroll the office <span class="pct">0%</span></span>
+      <span class="site">The Founder Mafia</span>
+    </a>
+    <nav class="nav-pills" aria-label="Main">
+      <a class="pill" href="index.html" data-nav="home">Home</a>
+      <a class="pill" href="about.html" data-nav="about">About Us</a>
+      <a class="pill" href="enter.html" data-nav="enter">Enter the Mafia</a>
+      <a class="pill" href="community.html" data-nav="community">Community</a>
+      <a class="pill nav-book" href="book.html" data-nav="book">Book a seat · ₹200</a>
+    </nav>
+    <button class="pill menu-pill" type="button" aria-expanded="false">Menu</button>
+  </header>
+
+  <main id="main">
+    <section class="block desk av-page" aria-labelledby="avTitle" data-scene="A&amp;V Venture House">
+      <div class="av-card">
+        <div class="av-logo-wrap"><img src="media/av-venture-house.png" width="427" height="633" alt="A&amp;V Venture House Pvt. Ltd. logo" class="av-logo"></div>
+        <div class="av-copy">
+          <p class="label">The venture house behind The Founder Mafia</p>
+          <h1 id="avTitle">A&amp;V Venture House</h1>
+          <p class="lede">We invest in ideas, MVPs and early-stage startups — built by founders inside The Founder Mafia.</p>
+          <p>Some of the best companies in India start in Tier-2 and Tier-3 towns, far from the rooms where cheques get written. A&amp;V Venture House is how The Founder Mafia closes that distance: founders who earn a seat at the table can earn a cheque too.</p>
+          <ul class="av-points">
+            <li><b>Idea</b><span>A problem you understand better than anyone, and the will to solve it.</span></li>
+            <li><b>MVP</b><span>Something real in people’s hands, however rough.</span></li>
+            <li><b>Early stage</b><span>First customers, first revenue, first hires.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="block desk" aria-labelledby="joinFormTitle" data-scene="Join the Mafia">
+      <div class="book-grid">
+        <div class="glass-form">
+          <div class="book-head">
+            <div>
+              <p class="label">Step one</p>
+              <h2 id="joinFormTitle">Join The Founder Mafia</h2>
+            </div>
+          </div>
+          <form class="pitch book-form" id="joinForm" data-type="join" novalidate>
+            <label class="span-2"><span>Full name</span><input name="name" autocomplete="name" required maxlength="80"></label>
+            <label><span>Age</span><input name="age" type="number" inputmode="numeric" min="13" max="100" required></label>
+            <label><span>Mobile number</span><input name="mobile" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 98765 43210" pattern="[0-9+\-\s]{8,16}" required></label>
+            <label class="span-2"><span>Email</span><input name="email" type="email" autocomplete="email" required maxlength="120"></label>
+            <label class="span-2"><span>Startup name <em>(optional)</em></span><input name="startup" autocomplete="organization" maxlength="120"></label>
+            <label class="hp" aria-hidden="true"><span>Website</span><input name="website" tabindex="-1" autocomplete="off"></label>
+            <div class="span-2 pitch-foot">
+              <button class="pill is-solid btn" type="submit">Join the Mafia</button>
+              <p class="form-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+          <div class="booked" hidden>
+            <p class="label">Welcome to the family</p>
+            <h3>You’re in, <span data-out="name"></span>.</h3>
+            <p>Member ID <code data-out="id"></code>. We’ll reach out on email and WhatsApp with what happens next.</p>
+          </div>
+        </div>
+        <aside class="book-side">
+          <ul class="look-for">
+            <li><b>The family</b><span>Founders from towns like yours, building at the same table.</span></li>
+            <li><b>The room</b><span>Live recordings, meetups and the questions nobody asks on stage.</span></li>
+            <li><b>The cheque</b><span>The best ideas and MVPs in the family get a look from A&amp;V Venture House.</span></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" aria-label="Site footer">
+    <div class="foot-cta desk">
+      <div class="foot-cta-copy">
+        <p class="label">The table is set</p>
+        <p class="foot-cta-line">Pull up a chair.</p>
+      </div>
+      <div class="foot-cta-actions">
+        <a class="pill is-solid btn" href="book.html">Book a seat · ₹200</a>
+        <a class="pill btn" href="enter.html">Pitch yourself as a guest</a>
+      </div>
+    </div>
+
+    <div class="foot-grid desk">
+      <div class="foot-brand">
+        <img src="img/tfm-logo.png" width="679" height="662" alt="TFM Podcasting" class="foot-logo">
+        <p>A long-form podcast and a family of founders building in India. One table, two microphones, no slides.</p>
+        <p class="foot-socials" data-socials></p>
+      </div>
+      <nav class="foot-col" aria-label="Explore">
+        <p class="label">Explore</p>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="enter.html">Enter the Mafia</a>
+        <a href="community.html">Community</a>
+        <a href="book.html">Book a seat</a>
+      </nav>
+      <div class="foot-col">
+        <p class="label">Get involved</p>
+        <a href="enter.html">Pitch yourself as a guest</a>
+        <a href="book.html">Sit in on a live recording</a>
+        <a href="community.html">Join the family</a>
+        <span data-contact></span>
+      </div>
+      <a class="foot-venture" href="av-venture-house.html" aria-label="A venture of A&amp;V Venture House — about the venture house">
+        <span class="label">A venture of</span>
+        <img src="media/av-mark.png" width="267" height="504" alt="" class="av-mark">
+        <span class="av-name">A&amp;V Venture House</span>
+        <span class="av-more">About the venture house</span>
+      </a>
+    </div>
+
+    <div class="foot-end desk">
+      <b class="the-end-word">The end <small>(<span data-year>2026</span>)</small></b>
+      <button class="pill" type="button" data-top>Scroll to top</button>
+    </div>
+    <div class="foot-legal desk">
+      <p data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+      <p data-last-update>Last update</p>
+    </div>
+  </footer>
+
+  <div class="spacebar">
+    <button class="pill" type="button">Press spacebar to scroll</button>
+    <button class="round" type="button" aria-label="Scroll down"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

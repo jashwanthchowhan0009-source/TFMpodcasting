@@ -75,12 +75,13 @@
       <a class="pill" href="about.html" data-nav="about">About Us</a>
       <a class="pill" href="enter.html" data-nav="enter">Enter the Mafia</a>
       <a class="pill" href="community.html" data-nav="community">Community</a>
+      <a class="pill nav-book" href="book.html" data-nav="book">Book a seat · ₹200</a>
     </nav>
     <button class="pill menu-pill" type="button" aria-expanded="false">Menu</button>
   </header>
 
   <main id="main">
-    <section class="page-hero desk" aria-labelledby="commTitle">
+    <section class="page-hero desk" aria-labelledby="commTitle" data-scene="The family">
       <div class="hero-pill page-pill drop" style="--d:0">
         <img class="hero-logo" src="img/tfm-logo.png" width="679" height="662" alt="">
         <h1 class="wordmark" id="commTitle">The family</h1>
@@ -88,7 +89,7 @@
       <div class="scallop" aria-hidden="true"><div class="marquee"><ul><li>Podcast</li><li>Founder family</li><li>Not a course</li><li>Not an accelerator</li><li>Live sit-downs</li><li>On the record</li><li>Numbers, not adjectives</li><li>No slides</li></ul><ul><li>Podcast</li><li>Founder family</li><li>Not a course</li><li>Not an accelerator</li><li>Live sit-downs</li><li>On the record</li><li>Numbers, not adjectives</li><li>No slides</li></ul></div></div>
     </section>
 
-    <section class="block desk" aria-labelledby="memberTitle">
+    <section class="block desk" aria-labelledby="memberTitle" data-scene="Membership">
       <div class="trailer">
         <div>
           <p class="label">Community</p>
@@ -107,7 +108,7 @@
       </div>
     </section>
 
-    <section class="block desk" aria-labelledby="doorTitle">
+    <section class="block desk" aria-labelledby="doorTitle" data-scene="Pick your door">
       <div class="block-head"><h2 class="title-pill" id="doorTitle">Pick your door</h2><p>Four ways in. Pick one, or all of them.</p></div>
       <ul class="channels">
         <li class="channel" data-channel="whatsapp"><span class="suit" aria-hidden="true">♠</span><h3>WhatsApp</h3><p>Episode drops, guest Q&amp;A threads and meetup invites. Low noise.</p><span class="slot" data-label="Join on WhatsApp"></span></li>
@@ -117,7 +118,24 @@
       </ul>
     </section>
 
-    <section class="block desk" aria-labelledby="meetTitle">
+    <section class="cinema cinema-right" data-drift data-scene="In the room" aria-label="In the room">
+      <div class="cinema-sticky">
+      <div class="cinema-frame" aria-hidden="true">
+        <img class="cinema-img" src="media/still-mics.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900">
+        <span class="bars"></span>
+      </div>
+        <div class="viewfinder" aria-hidden="true"><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i><i class="third v1"></i><i class="third v2"></i><i class="third h1"></i><i class="third h2"></i><span class="rec">Rec</span><span class="tc">00:00:00:00</span></div>
+
+      <div class="cinema-copy desk">
+        <p class="label">Live recordings</p>
+        <p class="cinema-line">Sit in the room while it records.</p>
+        <p class="cinema-sub">Watch the host and the guest go off-script, then ask your own question. ₹200 a seat.</p>
+        <div class="pill-row cinema-actions"><a class="pill is-solid btn" href="book.html">Book a seat · ₹200</a></div>
+      </div>
+      </div>
+    </section>
+
+    <section class="block desk" aria-labelledby="meetTitle" data-scene="Meet the family">
       <div class="split">
         <div>
           <h2 class="title-pill" id="meetTitle">Meet the family</h2>
@@ -136,14 +154,14 @@
       </div>
     </section>
 
-    <section class="space" data-space="ring" aria-label="The family deck">
+    <section class="space" data-space="ring" aria-label="The family deck" data-scene="The deck">
       <div class="space-sticky">
         <div class="space-stage" aria-hidden="true"></div>
         <div class="space-caption"><span class="label">The family deck</span><b>Everyone gets a card</b><p>Members, guests, the host. Scroll to shuffle.</p></div>
       </div>
     </section>
 
-    <section class="join desk" aria-labelledby="joinTitle">
+    <section class="join desk" aria-labelledby="joinTitle" data-scene="Join">
       <span class="obj obj-seal" data-art="seal" aria-hidden="true"></span>
       <span class="obj obj-match" data-art="match" aria-hidden="true"></span>
       <div class="wordmark-pill">
@@ -155,20 +173,55 @@
     </section>
   </main>
 
-  <footer class="footer desk">
-    <div class="footer-pills">
-      <span class="pill grow" data-last-update>Last update</span>
-      <a class="pill" href="index.html">Home</a>
-      <a class="pill" href="about.html">About Us</a>
-      <a class="pill" href="enter.html">Enter the Mafia</a>
-      <a class="pill" href="community.html">Community</a>
-      <span class="footer-pills" data-socials></span>
+  <footer class="site-footer" aria-label="Site footer">
+    <div class="foot-cta desk">
+      <div class="foot-cta-copy">
+        <p class="label">The table is set</p>
+        <p class="foot-cta-line">Pull up a chair.</p>
+      </div>
+      <div class="foot-cta-actions">
+        <a class="pill is-solid btn" href="book.html">Book a seat · ₹200</a>
+        <a class="pill btn" href="enter.html">Pitch yourself as a guest</a>
+      </div>
     </div>
-    <div class="the-end">
-      <b>The end <small style="font-size:.32em;letter-spacing:0">(<span data-year>2026</span> – ∞)</small></b>
+
+    <div class="foot-grid desk">
+      <div class="foot-brand">
+        <img src="img/tfm-logo.png" width="679" height="662" alt="TFM Podcasting" class="foot-logo">
+        <p>A long-form podcast and a family of founders building in India. One table, two microphones, no slides.</p>
+        <p class="foot-socials" data-socials></p>
+      </div>
+      <nav class="foot-col" aria-label="Explore">
+        <p class="label">Explore</p>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="enter.html">Enter the Mafia</a>
+        <a href="community.html">Community</a>
+        <a href="book.html">Book a seat</a>
+      </nav>
+      <div class="foot-col">
+        <p class="label">Get involved</p>
+        <a href="enter.html">Pitch yourself as a guest</a>
+        <a href="book.html">Sit in on a live recording</a>
+        <a href="community.html">Join the family</a>
+        <span data-contact></span>
+      </div>
+      <a class="foot-venture" href="av-venture-house.html" aria-label="A venture of A&amp;V Venture House — about the venture house">
+        <span class="label">A venture of</span>
+        <img src="media/av-mark.png" width="267" height="504" alt="" class="av-mark">
+        <span class="av-name">A&amp;V Venture House</span>
+        <span class="av-more">About the venture house</span>
+      </a>
+    </div>
+
+    <div class="foot-end desk">
+      <b class="the-end-word">The end <small>(<span data-year>2026</span>)</small></b>
       <button class="pill" type="button" data-top>Scroll to top</button>
     </div>
-    <p class="copyright" data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+    <div class="foot-legal desk">
+      <p data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+      <p data-last-update>Last update</p>
+    </div>
   </footer>
 
   <div class="spacebar">
