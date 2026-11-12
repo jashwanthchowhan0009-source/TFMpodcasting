@@ -24,7 +24,7 @@
   <link rel="preload" href="fonts/poppins-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/open-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="img/tfm-logo.png" as="image">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261112c">
   <script>
     /* Loader failsafe. Runs before anything else and does not depend on main.js:
        if the page has not revealed itself after 3 s, or a script/stylesheet fails to load,
@@ -72,10 +72,10 @@
     </a>
     <nav class="nav-pills" aria-label="Main">
       <a class="pill" href="index.html" data-nav="home">Home</a>
-      <a class="pill" href="about.html" data-nav="about">About Us</a>
+      <a class="pill" href="index.html#about" data-nav="about">About Us</a>
       <a class="pill" href="enter.html" data-nav="enter">Enter the Mafia</a>
       <a class="pill" href="community.html" data-nav="community">Community</a>
-      <a class="pill nav-book" href="book.html" data-nav="book">Book a seat · ₹200</a>
+      <a class="pill nav-book" href="enter.html#book" data-nav="book">Book a seat · ₹200</a>
     </nav>
     <button class="pill menu-pill" type="button" aria-expanded="false">Menu</button>
   </header>
@@ -86,6 +86,7 @@
         <img class="hero-logo" src="img/tfm-logo.png" width="679" height="662" alt="">
         <h1 class="wordmark" id="commTitle">The family</h1>
       </div>
+      <p class="page-sub">Listeners become members. Members become guests. Guests come back to help the next one.</p>
       <div class="scallop" aria-hidden="true"><div class="marquee"><ul><li>Podcast</li><li>Founder family</li><li>Not a course</li><li>Not an accelerator</li><li>Live sit-downs</li><li>On the record</li><li>Numbers, not adjectives</li><li>No slides</li></ul><ul><li>Podcast</li><li>Founder family</li><li>Not a course</li><li>Not an accelerator</li><li>Live sit-downs</li><li>On the record</li><li>Numbers, not adjectives</li><li>No slides</li></ul></div></div>
     </section>
 
@@ -121,7 +122,7 @@
     <section class="cinema cinema-right" data-drift data-scene="In the room" aria-label="In the room">
       <div class="cinema-sticky">
       <div class="cinema-frame" aria-hidden="true">
-        <img class="cinema-img" src="media/still-mics.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900">
+        <picture><source media="(max-width: 820px) and (orientation: portrait)" srcset="media/still-mics-tall.jpg"><img class="cinema-img" src="media/still-mics.jpg" alt="" loading="lazy" decoding="async" width="2560" height="1440"></picture>
         <span class="bars"></span>
       </div>
         <div class="viewfinder" aria-hidden="true"><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i><i class="third v1"></i><i class="third v2"></i><i class="third h1"></i><i class="third h2"></i><span class="rec">Rec</span><span class="tc">00:00:00:00</span></div>
@@ -130,7 +131,7 @@
         <p class="label">Live recordings</p>
         <p class="cinema-line">Sit in the room while it records.</p>
         <p class="cinema-sub">Watch the host and the guest go off-script, then ask your own question. ₹200 a seat.</p>
-        <div class="pill-row cinema-actions"><a class="pill is-solid btn" href="book.html">Book a seat · ₹200</a></div>
+        <div class="pill-row cinema-actions"><a class="pill is-solid btn" href="enter.html#book">Book a seat · ₹200</a></div>
       </div>
       </div>
     </section>
@@ -173,15 +174,15 @@
     </section>
   </main>
 
-  <footer class="site-footer" aria-label="Site footer">
+  <footer class="site-footer" aria-label="Site footer" data-scene="The end">
+    <div class="foot-mark" aria-hidden="true">TFM</div>
     <div class="foot-cta desk">
-      <div class="foot-cta-copy">
-        <p class="label">The table is set</p>
-        <p class="foot-cta-line">Pull up a chair.</p>
-      </div>
+      <p class="label">Until the next sit-down</p>
+      <p class="foot-cta-line">See you at the table.</p>
+      <p class="foot-cta-sub">Sit in on a live recording for ₹200, or pitch your own story for the next season.</p>
       <div class="foot-cta-actions">
-        <a class="pill is-solid btn" href="book.html">Book a seat · ₹200</a>
-        <a class="pill btn" href="enter.html">Pitch yourself as a guest</a>
+        <a class="pill is-solid btn" href="enter.html#book">Book a seat · ₹200</a>
+        <a class="pill btn" href="enter.html#pitch">Pitch yourself as a guest</a>
       </div>
     </div>
 
@@ -194,32 +195,33 @@
       <nav class="foot-col" aria-label="Explore">
         <p class="label">Explore</p>
         <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
+        <a href="index.html#about">About Us</a>
         <a href="enter.html">Enter the Mafia</a>
         <a href="community.html">Community</a>
-        <a href="book.html">Book a seat</a>
       </nav>
       <div class="foot-col">
         <p class="label">Get involved</p>
-        <a href="enter.html">Pitch yourself as a guest</a>
-        <a href="book.html">Sit in on a live recording</a>
-        <a href="community.html">Join the family</a>
+        <a href="enter.html#book">Book a seat · ₹200</a>
+        <a href="enter.html#pitch">Pitch yourself as a guest</a>
+        <a href="av-venture-house.html#join">Join the family</a>
         <span data-contact></span>
       </div>
       <a class="foot-venture" href="av-venture-house.html" aria-label="A venture of A&amp;V Venture House — about the venture house">
         <span class="label">A venture of</span>
         <img src="media/av-mark.png" width="267" height="504" alt="" class="av-mark">
         <span class="av-name">A&amp;V Venture House</span>
-        <span class="av-more">About the venture house</span>
+        <span class="av-more">Ideas · MVPs · Early stage</span>
       </a>
     </div>
 
     <div class="foot-end desk">
-      <b class="the-end-word">The end <small>(<span data-year>2026</span>)</small></b>
-      <button class="pill" type="button" data-top>Scroll to top</button>
+      <span class="rule" aria-hidden="true"></span>
+      <b class="the-end-word">The End</b>
+      <span class="rule" aria-hidden="true"></span>
     </div>
     <div class="foot-legal desk">
       <p data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+      <button class="to-top" type="button" data-top>Back to the top <span aria-hidden="true">↑</span></button>
       <p data-last-update>Last update</p>
     </div>
   </footer>
@@ -229,6 +231,6 @@
     <button class="round" type="button" aria-label="Scroll down"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 
-  <script type="module" src="main.js"></script>
+  <script type="module" src="main.js?v=20261112c"></script>
 </body>
 </html>

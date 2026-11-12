@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js';
-import * as S from './stickers.js';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261112c';
+import * as S from './stickers.js?v=20261112c';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -39,7 +39,8 @@ function reveals() {
     '.block-head', '.intro > *', '.road > li', '.lineup > figure', '.trailer > *', '.pillars > li', '.tracks > .track',
     '.index', '.glimpse > figure', '.keywords > li', '.info-grid > *', '.steps > li', '.rules > li', '.team > li',
     '.channels > li', '.meetups > li', '.faq > details', '.look-for > li', '.split > *', '.join .wordmark-pill',
-    '.foot-cta > *', '.foot-grid > *', '.foot-end', '.foot-legal', '.book-grid > *', '.av-card > *', '.av-points > li', '.ticket-card > div',
+    '.foot-cta > *', '.foot-grid > *', '.foot-end', '.book-grid > *', '.av-card > *', '.av-points > li', '.ticket-card > div',
+    '.about-grid > *', '.booth-copy > *', '.booth-form',
   ];
   const els = [];
   for (const sel of groups) {
@@ -54,7 +55,7 @@ function reveals() {
   if (reduceMotion || !('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('in')); return; }
   const io = new IntersectionObserver((entries) => {
     for (const en of entries) if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  }, { rootMargin: '0px 0px -3% 0px', threshold: 0.05 });
   els.forEach((e) => io.observe(e));
 }
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -187,13 +188,23 @@ function chrome() {
   addEventListener('resize', onScroll);
   onScroll();
 
-  const scrollStep = (dir = 1) => goTo((lenis ? lenis.targetScroll : scrollY) + dir * innerHeight * 0.85);
+  const scrollStep = (dir = 1) => {
+    const now = lenis ? lenis.targetScroll : scrollY;
+    const stops = frameStops();
+    const next = dir > 0 ? stops.find((y) => y > now + 6) : [...stops].reverse().find((y) => y < now - 6);
+    goTo(next ?? (dir > 0 ? document.documentElement.scrollHeight : 0));
+  };
   $('.spacebar .round')?.addEventListener('click', () => scrollStep(1));
   $('.spacebar .pill')?.addEventListener('click', () => scrollStep(1));
   addEventListener('keydown', (e) => {
-    if (e.code !== 'Space' || e.target.closest('input, textarea, select, button, a, summary, [contenteditable]')) return;
+    if (e.target.closest('input, textarea, select, button, a, summary, [contenteditable]')) return;
+    let dir = 0;
+    if (e.code === 'Space') dir = e.shiftKey ? -1 : 1;
+    else if (e.code === 'PageDown') dir = 1;
+    else if (e.code === 'PageUp') dir = -1;
+    if (!dir) return;
     e.preventDefault();
-    scrollStep(e.shiftKey ? -1 : 1);
+    scrollStep(dir);
   });
   $$('[data-top]').forEach((b) => b.addEventListener('click', () => goTo(0)));
 }
@@ -427,7 +438,10 @@ function mountSpaces() {
     const stage = $('.space-stage', sp);
     if (kind === 'tunnel') {
       const words = (sp.dataset.words || '').split('|');
-      stage.innerHTML = `<div class="tunnel-floor"></div><div class="tunnel">${words.map((w) => `<div class="frame"><span>${esc(w)}</span></div>`).join('')}</div>`;
+      stage.innerHTML = `<div class="tunnel-floor"></div><div class="tunnel">${words.map((w, i) => {
+        const [title, line] = w.split('::');
+        return `<div class="frame"><span><small>${String(i + 1).padStart(2, '0')}</small>${esc(title)}${line ? `<em>${esc(line)}</em>` : ''}</span></div>`;
+      }).join('')}</div>`;
     }
     if (kind === 'ring') {
       const suits = ['♠', '♥', '♦', '♣'];
@@ -439,9 +453,9 @@ function mountSpaces() {
     }
     if (kind === 'coin') {
       const edges = Array.from({ length: 17 }, (_, i) => `<div class="edge" style="--z:${(i - 8) * 1.75}px"></div>`).join('');
-      stage.innerHTML = `<div class="coin-glow"></div><div class="coin">${edges}
-        <div class="face front">${S.coinFace('THE FOUNDER MAFIA', 'TFM', { id: 'cfa' })}</div>
-        <div class="face back">${S.coinFace('ON THE RECORD', '♠♥♦', { id: 'cfb' })}</div></div>`;
+      stage.innerHTML = `<div class="coin-glow"></div><div class="coin-floor"></div><div class="coin">${edges}
+        <div class="face front">${S.coinFace('THE FOUNDER MAFIA', 'TFM', { id: 'cfa' })}<i class="glass"></i><i class="sheen"></i></div>
+        <div class="face back">${S.coinFace('ON THE RECORD', '♠♥♦', { id: 'cfb' })}<i class="glass"></i><i class="sheen"></i></div></div>`;
     }
     if (kind === 'cube') {
       const faces = [['♠', 'Story'], ['♥', 'Speed'], ['♦', 'Spine'], ['♣', 'Family'], ['TFM', 'Since 2026'], ['?', 'Your seat']];
@@ -473,9 +487,19 @@ function mountSpaces() {
       const turns = (sp._p ?? 0) * 2;
       const k = Math.min(1, Math.floor(turns));
       const f = Math.min(1, turns - k);
-      const dwell = Math.min(1, Math.max(0, (f - 0.3) / 0.4)); // still for the first and last 30% of each half
-      const e = dwell * dwell * (3 - 2 * dwell);
-      sp.style.setProperty('--coin', `${((k + e) * 180).toFixed(2)}deg`);
+      const dwell = Math.min(1, Math.max(0, (f - 0.28) / 0.44)); // rests face-on at both ends of each half turn
+      const e = dwell * dwell * dwell * (dwell * (dwell * 6 - 15) + 10); // smootherstep
+      const target = (k + e) * 180;
+      // the coin follows the scroll with a little inertia, so the turn never steps
+      const now = performance.now();
+      const dt = Math.min(0.1, (now - (sp._t || now)) / 1000); sp._t = now;
+      // time-based easing (τ ≈ 0.11 s): the same feel at 30, 60 or 120 fps
+      sp._a = sp._a == null || reduceMotion ? target : target + (sp._a - target) * Math.exp(-dt / 0.11);
+      if (Math.abs(target - sp._a) < 0.05) sp._a = target;
+      sp.style.setProperty('--coin', `${sp._a.toFixed(3)}deg`);
+      // light sweeps across the face as it turns: -1 → 1 over each half turn
+      const local = ((sp._a % 180) + 180) % 180;
+      sp.style.setProperty('--sheen', (local / 90 - 1).toFixed(4));
     }
     for (const t of tunnels) {
       const p = t.sp._p ?? 0;
@@ -579,6 +603,7 @@ function mountForms() {
             if (state) state.textContent = `Pay securely with Razorpay. Mention booking ID ${r.id}.`;
           }
         }
+        $$('.book-steps li', card).forEach((li, i) => { li.classList.toggle('is-done', i === 0); li.classList.toggle('is-now', i === 1); });
         form.hidden = true;
         done.hidden = false;
         requestAnimationFrame(() => done.classList.add('is-in'));
@@ -667,6 +692,69 @@ function mountChapters() {
   update();
 }
 
+/* ── Frames: where each press of the spacebar lands ───── */
+
+// Every section is one composed frame. 3D spaces and cinema scenes get the
+// stops where their story reads best (each tunnel step, each coin face, the open shutter).
+function frameStops() {
+  const vh = innerHeight;
+  const max = document.documentElement.scrollHeight - vh;
+  const top = (el) => el.getBoundingClientRect().top + scrollY;
+  const stops = [0];
+  const sections = $$('main > section, body > footer');
+  for (const sec of sections) {
+    const t = top(sec);
+    const h = sec.offsetHeight;
+    const run = Math.max(0, h - vh); // how far a sticky section scrolls while pinned
+    if (sec.matches('.space')) {
+      const kind = sec.dataset.space;
+      let ps = [0.1, 0.9];
+      if (kind === 'tunnel') {
+        const n = (sec.dataset.words || '').split('|').length;
+        ps = Array.from({ length: n }, (_, i) => Math.min(1, i / (n - 0.35)));
+      } else if (kind === 'coin') ps = [0.06, 0.56, 1];
+      else if (kind === 'ring') ps = [0.12, 0.6];
+      else if (kind === 'cube') ps = [0.1, 0.5, 0.9];
+      ps.forEach((p) => stops.push(t + p * run));
+    } else if (sec.matches('.cinema')) {
+      stops.push(t + vh * 0.5); // shutter fully open, words in
+    } else {
+      stops.push(t);
+      // inner anchors, then anything taller than a screen pages through in steps
+      $$('[data-stop]', sec).forEach((el) => stops.push(top(el) - 90));
+      if (h > vh * 1.08) {
+        for (let y = t + vh * 0.86; y < t + h - vh; y += vh * 0.86) stops.push(y);
+        stops.push(t + h - vh);
+      }
+    }
+  }
+  return [...new Set(stops.map((y) => Math.round(Math.min(max, Math.max(0, y)))))]
+    .sort((a, b) => a - b)
+    .filter((y, i, arr) => i === 0 || y - arr[i - 1] > 40);
+}
+
+// Links to a section on this page glide there; arriving with #section in the URL lands on it.
+function anchors() {
+  const land = (hash, smooth) => {
+    const el = hash && hash.length > 1 && document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!el) return false;
+    const y = el.getBoundingClientRect().top + scrollY;
+    if (smooth) goTo(y); else scrollTo({ top: y });
+    return true;
+  };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href*="#"]');
+    if (!a || e.metaKey || e.ctrlKey) return;
+    const url = new URL(a.href, location.href);
+    if (url.pathname !== location.pathname || !url.hash) return;
+    if (land(url.hash, true)) { e.preventDefault(); history.replaceState(null, '', url.hash); $('.topbar')?.classList.remove('is-open'); }
+  });
+  if (location.hash) {
+    const go = () => land(location.hash, false);
+    go(); addEventListener('load', go); setTimeout(go, 600);
+  }
+}
+
 /* ── Page-to-page: the desk slides ────────────────────── */
 
 function transitions() {
@@ -675,7 +763,7 @@ function transitions() {
     const a = e.target.closest('a[href]');
     if (!a || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
     const url = new URL(a.href, location.href);
-    if (url.origin !== location.origin || (url.pathname === location.pathname && url.hash)) return;
+    if (url.origin !== location.origin || (url.pathname === location.pathname && url.hash) || a.hasAttribute('download')) return;
     e.preventDefault();
     document.body.classList.remove('is-ready');
     setTimeout(() => { location.href = url.href; }, 380);
@@ -689,7 +777,7 @@ loader();
 for (const [name, fn] of [
   ['chrome', chrome], ['spaces', mountSpaces], ['objects', mountObjects], ['home', mountHome],
   ['enter', mountEnter], ['team', mountTeam], ['community', mountCommunity], ['forms', mountForms], ['cinema', mountCinema],
-  ['chapters', mountChapters], ['transitions', transitions], ['reveals', reveals],
+  ['chapters', mountChapters], ['anchors', anchors], ['transitions', transitions], ['reveals', reveals],
 ]) {
   try { fn(); } catch (err) { console.error(`[tfm] ${name} failed`, err); }
 }
