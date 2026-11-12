@@ -21,7 +21,7 @@ const SHEETS = {
   pitch: 'Guest pitches',
   join: 'Community members',
 };
-const SEAT_PRICE = 200; // ₹ per seat — keep in sync with content.js
+const SEAT_PRICE = 199; // ₹ per seat — keep in sync with content.js
 
 function doPost(e) {
   const lock = LockService.getScriptLock();

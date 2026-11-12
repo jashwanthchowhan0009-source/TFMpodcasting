@@ -29,8 +29,8 @@ export const company = 'AV Venture House Pvt. Ltd.';
 // `endpoint` is the Web app URL from backend/apps-script.gs (see the steps at the top of that file).
 export const booking = {
   endpoint: '',            // e.g. 'https://script.google.com/macros/s/AKfy…/exec'
-  price: 200,              // ₹ per seat
-  razorpayLink: '',        // Razorpay payment link for ₹200 seats, e.g. 'https://rzp.io/l/tfm-seat'. Empty = "payment link coming".
+  price: 199,              // ₹ per seat
+  razorpayLink: '',        // Razorpay payment link for ₹199 seats, e.g. 'https://rzp.io/l/tfm-seat'. Empty = "payment link coming".
   event: 'Live recording — Season 01',
   date: 'To be announced',
   venue: 'To be announced',
@@ -85,9 +85,9 @@ export const meetups = [
 // Enter the Mafia page.
 export const faqs = [
   { q: 'Who can book a seat?', a: 'Young founders, students and builders who want to hear how companies really get built. One seat is for one person.' },
-  { q: 'What do I get for ₹200?', a: 'A seat in the room at a live recording: you hear the host and the guest talk it through, and you can ask your own question at the end.' },
+  { q: 'What do I get for ₹199?', a: 'A seat in the room at a live recording: you hear the host and the guest talk it through, and you can ask your own question at the end.' },
   { q: 'When do I get the date and venue?', a: 'Every confirmed seat gets the date and venue by email before the recording.' },
-  { q: 'How do I pay?', a: 'Book your seat with your details first. Then pay ₹200 securely through Razorpay to confirm it.' },
+  { q: 'How do I pay?', a: 'Book your seat with your details first. Then pay ₹199 securely through Razorpay to confirm it.' },
   { q: 'Can I bring a friend?', a: 'Yes — ask them to book their own seat, so their name is on the list too.' },
   { q: 'Is the recording on the record?', a: 'Yes. What is said in the room may go out in the episode, so come ready to listen and ask.' },
 ]
