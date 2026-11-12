@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Page not found — The Founder Mafia</title>
+  <meta name="claude:viewport-fit-sides" content="cover">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Who runs the table, how a sit-down works and the house rules of The Founder Mafia.">
+  <meta name="theme-color" content="#93032e">
+  <meta property="og:title" content="About Us — The Founder Mafia">
+  <meta property="og:description" content="Who runs the table, how a sit-down works and the house rules of The Founder Mafia.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="img/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta property="og:url" content="https://thefoundermafia.com/about.html">
+  <meta property="og:site_name" content="The Founder Mafia">
+  <meta property="og:image" content="https://thefoundermafia.com/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://thefoundermafia.com/img/og.png">
+  <link rel="preload" href="fonts/poppins-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/open-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="img/tfm-logo.png" as="image">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    /* Loader failsafe. Runs before anything else and does not depend on main.js:
+       if the page has not revealed itself after 3 s, or a script/stylesheet fails to load,
+       the loader is forced to 100% and dismissed. main.js calls window.__tfmReady() when it
+       reveals the page normally, which stands this down. */
+    (function () {
+      document.documentElement.classList.add('js');
+      var done = false;
+      function reveal() {
+        if (done) return;
+        if (!document.body) { document.addEventListener('DOMContentLoaded', reveal); return; }
+        done = true;
+        var pct = document.querySelector('.loader-pct');
+        var bar = document.querySelector('.loader');
+        if (pct) pct.textContent = '100%';
+        if (bar) bar.style.setProperty('--load', 100);
+        document.body.classList.add('is-ready');
+      }
+      window.__tfmReady = function () { done = true; };
+      setTimeout(reveal, 3000);
+      window.addEventListener('error', function (e) {
+        var t = e.target;
+        if (t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK')) { setTimeout(reveal, 300); }
+      }, true);
+    })();
+  </script>
+  <noscript><style>.loader { display: none !important; } .drop { opacity: 1 !important; translate: none !important; scale: none !important; }</style></noscript>
+</head>
+<body data-page="404">
+  <div class="loader" aria-hidden="true">
+    <div class="loader-inner">
+      <p class="loader-word">Opening the office</p>
+      <p class="loader-pct">0%</p>
+      <div class="loader-bar"><i></i></div>
+    </div>
+  </div>
+  <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="pill progress-pill" href="index.html" aria-label="The Founder Mafia, home">
+      <span class="fill" aria-hidden="true"></span>
+      <span>Scroll the office <span class="pct">0%</span></span>
+      <span class="site">The Founder Mafia</span>
+    </a>
+    <nav class="nav-pills" aria-label="Main">
+      <a class="pill" href="index.html" data-nav="home">Home</a>
+      <a class="pill" href="about.html" data-nav="about">About Us</a>
+      <a class="pill" href="enter.html" data-nav="enter">Enter the Mafia</a>
+      <a class="pill" href="community.html" data-nav="community">Community</a>
+    </nav>
+    <button class="pill menu-pill" type="button" aria-expanded="false">Menu</button>
+  </header>
+
+  <main id="main">
+    <section class="page-hero desk" aria-labelledby="nfTitle">
+      <div class="hero-pill page-pill drop" style="--d:0">
+        <img class="hero-logo" src="img/tfm-logo.png" width="679" height="662" alt="">
+        <h1 class="wordmark" id="nfTitle">Wrong door</h1>
+      </div>
+    </section>
+    <section class="block desk" aria-label="Find your way back">
+      <div class="panel" style="max-width:40rem">
+        <p class="lede">This room doesn't exist. The table is upstairs.</p>
+        <div class="pill-row" style="margin-top:22px">
+          <a class="pill is-solid btn" href="index.html">Back to home</a>
+          <a class="pill btn" href="enter.html">Enter the Mafia</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer desk">
+    <div class="footer-pills">
+      <span class="pill grow" data-last-update>Last update</span>
+      <a class="pill" href="index.html">Home</a>
+      <a class="pill" href="about.html">About Us</a>
+      <a class="pill" href="enter.html">Enter the Mafia</a>
+      <a class="pill" href="community.html">Community</a>
+      <span class="footer-pills" data-socials></span>
+    </div>
+    <div class="the-end">
+      <b>The end <small style="font-size:.32em;letter-spacing:0">(<span data-year>2026</span> – ∞)</small></b>
+      <button class="pill" type="button" data-top>Scroll to top</button>
+    </div>
+    <p class="copyright" data-copyright>© 2026 AV Venture House Pvt. Ltd.</p>
+  </footer>
+
+  <div class="spacebar">
+    <button class="pill" type="button">Press spacebar to scroll</button>
+    <button class="round" type="button" aria-label="Scroll down"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

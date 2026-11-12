@@ -285,16 +285,22 @@ function mountHome() {
     return `<tr>
       <td class="no">${String(ep.number).padStart(2, '0')}</td>
       <td class="ttl">${esc(ep.title)}</td>
-      <td>${esc(ep.guest)}</td>
-      <td>${esc(ep.company)}</td>
-      <td><span class="suit" aria-hidden="true">${t.suit}</span>${esc(t.name)}</td>
+      <td data-label="Guest">${esc(ep.guest)}</td>
+      <td data-label="Company">${esc(ep.company)}</td>
+      <td data-label="Track"><span class="suit" aria-hidden="true">${t.suit}</span>${esc(t.name)}</td>
       <td>${url ? `<a class="pill" href="${url}" target="_blank" rel="noopener">Watch</a>` : '<span class="soon">Coming soon</span>'}</td>
     </tr>`;
   }).join('');
 
   const g = $('#glimpse');
-  if (g) g.innerHTML = [['door', 'the door is open'], ['mics', 'two mics, ready'], ['table', 'one chair is empty'], ['funds', 'funds on table']]
-    .map(([s, c]) => `<figure class="polaroid" style="margin:0">${S.polaroid(s, c)}</figure>`).join('');
+  if (g) g.innerHTML = [
+    ['media/glimpse-door.jpg', 'the door is open', 'A door left half open, warm light spilling across the floor'],
+    ['media/glimpse-mics.jpg', 'two mics, ready', 'Two leather chairs and a table of studio microphones'],
+    ['media/glimpse-empty-chair.jpg', 'one chair is empty', 'A circle of dark chairs with a single empty chair in the spotlight'],
+    ['media/glimpse-funds.jpg', 'funds on table', 'Bundles of cash and briefcases on a wooden table'],
+  ].map(([src, cap, alt]) => `<figure class="polaroid"><div class="polaroid-frame">
+      <img src="${src}" alt="${alt}" width="600" height="510" loading="lazy" decoding="async">
+      <figcaption>${cap}</figcaption></div></figure>`).join('');
 }
 
 /* ── About: the team ──────────────────────────────────── */
@@ -302,11 +308,11 @@ function mountHome() {
 function mountTeam() {
   const el = $('#team');
   if (!el) return;
-  const initials = (n) => /^to be/i.test(n) ? '?' : String(n).split(/\s+/).filter((w) => /^[A-Za-z]/.test(w)).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
+  const initials = (n) => /^(to be|co-founder)/i.test(n) ? '?' : String(n).split(/\s+/).filter((w) => /^[A-Za-z]/.test(w)).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
   el.innerHTML = team.map((p) => {
     const photo = safeAsset(p.photo);
     return `<li class="member">
-      <div class="member-photo">${photo ? `<img src="${photo}" alt="" loading="lazy">` : `<span aria-hidden="true">${esc(initials(p.name))}</span>`}</div>
+      <div class="member-photo">${photo ? `<img src="${photo}" alt="Portrait of ${esc(p.name)}" width="640" height="800" loading="lazy" decoding="async">` : `<span aria-hidden="true">${esc(initials(p.name))}</span>`}</div>
       <h3>${esc(p.name)}</h3>
       <p class="member-role">${esc(p.role)}</p>
       ${p.bio ? `<p class="member-bio">${esc(p.bio)}</p>` : ''}

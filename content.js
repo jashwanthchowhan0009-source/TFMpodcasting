@@ -43,7 +43,7 @@ export const season = {
 // `photo` is a path to a portrait, e.g. 'media/host.jpg' (a tall photo, roughly 3:4, works best).
 // Empty names show as a reserved seat.
 export const table = [
-  { name: 'Phanindra Aarav', role: 'Host', photo: '', note: 'Runs the table and asks the questions founders usually only hear off-mic.' },
+  { name: 'Phanindra Aarav', role: 'Founder & Host', photo: 'media/phanindra-aarav.jpg', note: 'Runs the table and asks the questions founders usually only hear off-mic.' },
   { name: '', role: 'Founder & CEO', photo: '', note: 'A founder and CEO who has built and scaled a company in India.' },
   { name: '', role: 'Investor seat', photo: '', note: 'Someone who has written the cheques our guests talk about.' },
 ];
@@ -85,8 +85,8 @@ export const lastUpdate = '5 Nov 2026';
 // About Us page: the team. Add one entry per person.
 // `photo` is optional, e.g. 'media/team-ravi.jpg'. Without one, the card shows their initials.
 export const team = [
-  { name: 'Phanindra Aarav', role: 'Host & Founder', bio: 'Runs the table and every conversation on it.', photo: '' },
-  { name: 'To be announced', role: 'Research & scripts', bio: '', photo: '' },
-  { name: 'To be announced', role: 'Production', bio: '', photo: '' },
-  { name: 'To be announced', role: 'Community', bio: '', photo: '' },
+  { name: 'Phanindra Aarav', role: 'Founder & Host', bio: 'Runs the table and every conversation on it.', photo: 'media/phanindra-aarav.jpg' },
+  { name: 'Co-founder', role: 'Founder', bio: 'Joining the table soon.', photo: '' }, // ← second founder: name, role, bio, photo
+  { name: 'Jashwanth Chowhan', role: 'Creative Lead', bio: 'Shapes how the show looks, sounds and lands online.', photo: 'media/jashwanth-chowhan.jpg' },
+  { name: 'Arjun Sabavath', role: 'Core team', bio: '', photo: 'media/arjun-sabavath.jpg' },
 ];

@@ -51,6 +51,7 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  isolation: isolate; /* keeps the ambient light and vignette above the desk colour */
 }
 
 /* paper grain over everything, like the reference's textured desk */
@@ -65,8 +66,8 @@ body::before {
   content: '';
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
-    radial-gradient(80% 60% at 50% 0%, rgba(147, 3, 46, 0.55), transparent 70%),
-    radial-gradient(120% 90% at 50% 50%, transparent 40%, rgba(21, 21, 21, 0.55) 100%);
+    radial-gradient(80% 60% at 50% 0%, rgba(147, 3, 46, 0.18), transparent 70%),
+    radial-gradient(120% 90% at 50% 50%, transparent 35%, rgba(21, 21, 21, 0.6) 100%);
 }
 
 ::selection { background: var(--sand); color: var(--bur); }
@@ -749,6 +750,59 @@ html.lenis, html.lenis body { height: auto; }
 .fee-note { padding: 12px 14px; border-radius: 10px; background: rgba(147, 3, 46, 0.08); border-left: 3px solid var(--bur); color: var(--night); font-size: 0.95rem; }
 .fee-note b { color: var(--bur); }
 
+
+/* ════════════════════════════════════════════════════════
+   GLASS — frosted panels over a softly lit desk
+   ════════════════════════════════════════════════════════ */
+
+/* moving light under the glass, so the blur has something to catch */
+.ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.ambient i {
+  position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%;
+  filter: blur(70px); opacity: 0.32; will-change: transform;
+}
+.ambient i:nth-child(1) { left: -10vmax; top: 10vh; background: radial-gradient(closest-side, #93032e, transparent); animation: drift-a 26s ease-in-out infinite alternate; }
+.ambient i:nth-child(2) { right: -14vmax; top: 40vh; background: radial-gradient(closest-side, #7f011f, transparent); animation: drift-b 32s ease-in-out infinite alternate; }
+.ambient i:nth-child(3) { left: 30vw; bottom: -20vmax; width: 34vmax; height: 34vmax; opacity: 0.06; background: radial-gradient(closest-side, #f5ebd0, transparent); animation: drift-c 38s ease-in-out infinite alternate; }
+@keyframes drift-a { to { transform: translate(18vw, 22vh) scale(1.15); } }
+@keyframes drift-b { to { transform: translate(-20vw, -26vh) scale(0.9); } }
+@keyframes drift-c { to { transform: translate(-18vw, -30vh) scale(1.2); } }
+
+.panel, .keywords li:not(.is-solid), .steps li, .member, .channel:not(:first-child), .look-for li,
+.faq details, .meetups li, .index, .rules li:not(:first-child), .title-pill, .notebook,
+.topbar .pill:not([aria-current="page"]):not(.is-solid), .spacebar .pill, .round, .footer-pills > .pill:not(.is-solid) {
+  background:
+    linear-gradient(135deg, rgba(255, 240, 220, 0.11), rgba(255, 240, 220, 0.025) 55%),
+    rgba(21, 21, 21, 0.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  box-shadow: inset 0 0 0 1px rgba(245, 235, 208, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 24px 40px -28px rgba(0, 0, 0, 0.7);
+}
+.notebook { background: linear-gradient(135deg, rgba(255, 240, 220, 0.14), rgba(255, 240, 220, 0.04) 60%), rgba(21, 21, 21, 0.38); }
+.topbar .pill:not([aria-current="page"]):not(.is-solid):hover, .pill-row .pill:hover { background-color: rgba(245, 235, 208, 0.16); }
+.faq details[open] { box-shadow: inset 0 0 0 1px rgba(245, 235, 208, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 24px 40px -28px rgba(0, 0, 0, 0.7); }
+
+/* ── Glimpse inside: real photos in polaroid frames ── */
+.polaroid { margin: 0; }
+.polaroid-frame {
+  padding: 7% 7% 0; background: #fbf6ea; border-radius: 3px;
+  box-shadow: 0 22px 30px -16px rgba(8, 0, 2, 0.6), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.polaroid-frame img { display: block; width: 100%; height: auto; aspect-ratio: 200 / 170; object-fit: cover; background: #222; }
+.polaroid-frame figcaption { padding: 0.8em 0 1em; text-align: center; font: italic 400 clamp(0.88rem, 1.2vw, 1.05rem) var(--body); color: var(--night); }
+
+/* ── Team: black-and-white portraits on glass ── */
+.member { padding: 12px 12px 20px; transition: transform 0.4s cubic-bezier(.2, .8, .2, 1.2); }
+.member:hover { transform: translateY(-6px); }
+.member-photo { position: relative; border-radius: 16px; background: linear-gradient(160deg, #2a2a2a, #111); }
+.member-photo img { filter: grayscale(1) contrast(1.05); transition: transform 0.6s cubic-bezier(.2, .8, .2, 1); }
+.member:hover .member-photo img { transform: scale(1.04); }
+.member-photo::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 -60px 60px -40px rgba(0, 0, 0, 0.55); pointer-events: none; }
+.member h3, .member-role, .member-bio { padding-inline: 4px; }
+
+/* host placard photo is black and white too */
+.lineup svg image { filter: grayscale(1) contrast(1.05); }
+
 /* ── Smaller screens ─────────────────────────────────── */
 
 @media (max-width: 1100px) {
@@ -778,6 +832,19 @@ html.lenis, html.lenis body { height: auto; }
 }
 
 @media (max-width: 600px) {
+
+  /* episode index becomes a stack of cards */
+  .index table { min-width: 0; }
+  .index thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .index tbody tr { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; padding: 16px; border-top: 2px solid rgba(245, 235, 208, 0.14); }
+  .index tbody tr:first-child { border-top: 0; }
+  .index td { padding: 0; border: 0; }
+  .index td.no { grid-row: span 4; align-self: start; font-size: 1.8rem; }
+  .index td[data-label]::before { content: attr(data-label) ' · '; font: 700 0.58rem var(--display); letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.6; }
+  .index td:last-child { grid-column: 2; margin-top: 8px; }
+  .ambient i { filter: blur(44px); opacity: 0.28; }
+  .panel, .keywords li:not(.is-solid), .steps li, .member, .channel:not(:first-child), .look-for li,
+  .faq details, .meetups li, .index, .rules li:not(:first-child), .title-pill, .notebook { -webkit-backdrop-filter: blur(12px) saturate(1.3); backdrop-filter: blur(12px) saturate(1.3); }
   body { font-size: 1rem; }
   .progress-pill .site { display: none; }
   .hero-pill { grid-template-columns: 1fr; justify-items: center; text-align: center; border-radius: 40px; padding: 18px 18px 26px; }
