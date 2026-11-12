@@ -24,7 +24,7 @@
   <link rel="preload" href="fonts/poppins-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/open-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="img/tfm-logo.png" as="image">
-  <link rel="stylesheet" href="styles.css?v=20261112g">
+  <link rel="stylesheet" href="styles.css?v=20261113a">
   <script>
     /* Loader failsafe. Runs before anything else and does not depend on main.js:
        if the page has not revealed itself after 3 s, or a script/stylesheet fails to load,
@@ -125,16 +125,16 @@
               <button class="pill is-solid btn" type="submit">Book my seat · ₹<span data-price>199</span></button>
               <p class="form-status" role="status" aria-live="polite"></p>
             </div>
-            <p class="fine span-2">Your seat is held the moment you book. Pay to confirm it — every paid seat is confirmed by email with the date and venue.</p>
+            <p class="fine span-2">Your seat is held the moment you book, then Razorpay opens to take ₹199 securely — UPI, cards or netbanking.</p>
           </form>
           <div class="booked" hidden>
-            <p class="label">Seat held</p>
-            <h3>You’re on the list, <span data-out="name"></span>.</h3>
+            <p class="label" data-out="state">Seat held</p>
+            <h3 data-out="headline">You’re on the list, <span data-out="name"></span>.</h3>
             <p>Booking ID <code data-out="id"></code>. Keep it handy — it’s how we find your seat.</p>
             <ol class="booked-steps">
-              <li><b>Seat held</b><span>Your details are saved.</span></li>
-              <li><b>Pay ₹<span data-price>199</span></b><span id="payState">Payment link coming soon. We’ll email it to you.</span></li>
-              <li><b>Seat confirmed</b><span>We confirm by email after payment, with the date and venue.</span></li>
+              <li class="is-done"><b>Seat held</b><span>Your details are saved.</span></li>
+              <li class="is-now"><b>Pay ₹<span data-price>199</span></b><span id="payState" role="status" aria-live="polite">Opening secure payment…</span></li>
+              <li><b>Seat confirmed</b><span id="confirmState">Confirmed the moment your payment goes through.</span></li>
             </ol>
             <div class="pill-row" id="payRow"></div>
           </div>
@@ -220,6 +220,6 @@
     <button class="round" type="button" aria-label="Scroll down"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 
-  <script type="module" src="main.js?v=20261112g"></script>
+  <script type="module" src="main.js?v=20261113a"></script>
 </body>
 </html>

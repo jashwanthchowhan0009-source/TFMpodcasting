@@ -27,10 +27,11 @@ export const company = 'A&V Venture House Pvt. Ltd.';
 // Book a seat: young founders sit in the audience at a live recording.
 // Every booking (and every guest pitch) is saved to the Google Sheet "The Founder Mafia — Bookings & Pitches".
 // `endpoint` is the Web app URL from backend/apps-script.gs (see the steps at the top of that file).
+// Payments run through Razorpay Checkout via that same backend. The Razorpay keys live ONLY in the
+// Apps Script's Script Properties — never put RAZORPAY_KEY_SECRET in this file (it is public on GitHub).
 export const booking = {
   endpoint: '',            // e.g. 'https://script.google.com/macros/s/AKfy…/exec'
   price: 199,              // ₹ per seat
-  razorpayLink: '',        // Razorpay payment link for ₹199 seats, e.g. 'https://rzp.io/l/tfm-seat'. Empty = "payment link coming".
   event: 'Live recording — Season 01',
   date: 'To be announced',
   venue: 'To be announced',

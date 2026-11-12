@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261112g';
-import * as S from './stickers.js?v=20261112g';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261113a';
+import * as S from './stickers.js?v=20261113a';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -527,9 +527,10 @@ function mountSpaces() {
 
 const priceText = () => `₹${Number(booking.price || 0).toLocaleString('en-IN')}`;
 
-async function sendToSheet(payload) {
-  const endpoint = safeUrl(booking.endpoint);
-  if (!endpoint) return { ok: false, offline: true };
+async function sendToSheet(payload, route = '') {
+  const base = safeUrl(booking.endpoint);
+  if (!base) return { ok: false, offline: true };
+  const endpoint = route ? `${base.replace(/\/+$/, '')}/${route}` : base;
   // text/plain keeps this a "simple" request: no CORS preflight, which Apps Script can't answer
   const res = await fetch(endpoint, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
   return res.json();
@@ -579,6 +580,7 @@ function mountForms() {
       const d = Object.fromEntries(new FormData(form));
       try { const { website, ...keep } = d; localStorage.setItem(key, JSON.stringify(keep)); } catch {}
       button.disabled = true;
+      button.classList.add('is-busy');
       status.textContent = type === 'join' ? 'Opening the door…' : 'Holding your seat…';
       try {
         const r = await sendToSheet({ type, ...d, page: location.pathname });
@@ -587,35 +589,152 @@ function mountForms() {
             ? 'Joining opens in a few days. Your details are kept on this device, so it’s one tap when we go live.'
             : 'Seat booking opens in a few days. Your details are kept on this device, so it’s one tap when we go live.';
           button.disabled = false;
+          button.classList.remove('is-busy');
           return;
         }
         if (!r.ok) throw new Error(r.error || 'Could not save');
         const done = $('.booked', card);
         $$('[data-out="name"]', done).forEach((el) => { el.textContent = d.name.split(/\s+/)[0]; });
         $$('[data-out="id"]', done).forEach((el) => { el.textContent = r.id; });
-        if (type === 'booking') {
-          const pay = safeUrl(booking.razorpayLink);
-          const row = $('#payRow');
-          const state = $('#payState');
-          if (pay) {
-            const u = new URL(pay);
-            u.searchParams.set('name', d.name); u.searchParams.set('email', d.email); u.searchParams.set('phone', d.mobile);
-            row.innerHTML = `<a class="pill is-solid btn" href="${u.toString()}" target="_blank" rel="noopener">Pay ${priceText()} to confirm</a>`;
-            if (state) state.textContent = `Pay securely with Razorpay. Mention booking ID ${r.id}.`;
-          }
-        }
-        $$('.book-steps li', card).forEach((li, i) => { li.classList.toggle('is-done', i === 0); li.classList.toggle('is-now', i === 1); });
         form.hidden = true;
         done.hidden = false;
         requestAnimationFrame(() => done.classList.add('is-in'));
         done.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+        if (type === 'booking') {
+          try { localStorage.setItem('tfm-seat', JSON.stringify({ id: r.id, name: d.name.split(/\s+/)[0] })); } catch {}
+          seatState(card, 'held');
+          startPayment(card, r.id);
+        }
       } catch (err) {
         console.warn('[tfm] form', err);
         status.textContent = String(err.message || '').startsWith('Please') ? err.message : 'Couldn’t reach the booking desk. Check your connection and try again.';
         button.disabled = false;
+        button.classList.remove('is-busy');
       }
     });
   }
+}
+
+/* ── Razorpay Checkout: hold the seat → pay ₹199 → verified on the server → confirmed ── */
+
+let checkoutLoading = null;
+function loadCheckout() {
+  if (window.Razorpay) return Promise.resolve(window.Razorpay);
+  checkoutLoading ??= new Promise((resolve, reject) => {
+    const tag = document.createElement('script');
+    tag.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    tag.async = true;
+    tag.onload = () => (window.Razorpay ? resolve(window.Razorpay) : reject(new Error('checkout missing')));
+    tag.onerror = () => { checkoutLoading = null; tag.remove(); reject(new Error('checkout blocked')); };
+    document.head.append(tag);
+  });
+  return checkoutLoading;
+}
+
+// One place that paints every step of the booking card.
+function seatState(card, state, info = {}) {
+  const done = $('.booked', card);
+  if (!done) return;
+  const label = $('[data-out="state"]', done);
+  const head = $('[data-out="headline"]', done);
+  const payState = $('#payState', done);
+  const confirmState = $('#confirmState', done);
+  const row = $('#payRow', done);
+  const steps = $$('.booked-steps li', done);
+  const pills = $$('.book-steps li', card);
+  const name = $('[data-out="name"]', done)?.textContent || '';
+  const paid = state === 'paid';
+  done.dataset.state = state;
+  steps.forEach((li, i) => { li.classList.toggle('is-done', i === 0 || paid); li.classList.toggle('is-now', (i === 1 && !paid) || (i === 2 && paid)); });
+  pills.forEach((li, i) => { li.classList.toggle('is-done', i === 0 || (paid && i === 1)); li.classList.toggle('is-now', paid ? i === 2 : i === 1); });
+  if (label) label.textContent = paid ? 'Seat confirmed' : 'Seat held';
+  if (head) head.innerHTML = paid ? `Your seat is confirmed, <span data-out="name">${esc(name)}</span>.` : `You’re on the list, <span data-out="name">${esc(name)}</span>.`;
+  const button = (text, busy = false) => `<button class="pill is-solid btn pay-btn${busy ? ' is-busy' : ''}" type="button" data-pay ${busy ? 'disabled' : ''}>${text}</button>`;
+  const msg = {
+    held: ['Opening secure payment…', button('Opening payment…', true)],
+    opening: ['Opening secure payment…', button('Opening payment…', true)],
+    open: ['Finish the payment in the Razorpay window.', button('Payment window open…', true)],
+    verifying: ['Confirming your payment…', button('Confirming…', true)],
+    dismissed: ['Payment not completed. Your seat is still held — pay to confirm it.', button(`Pay ${priceText()} to confirm`)],
+    failed: [info.message || 'The payment didn’t go through. Try again, or pick another method.', button(`Try again · ${priceText()}`)],
+    blocked: ['The payment window couldn’t load. Turn off any ad-blocker for this site and try again.', button(`Pay ${priceText()} to confirm`)],
+    error: [info.message || 'We couldn’t start the payment. Please try again.', button(`Pay ${priceText()} to confirm`)],
+    pending: [info.message || 'We couldn’t confirm the payment yet. If money was deducted, it’s recorded automatically within 10 minutes — keep your booking ID.', button('Check again')],
+    paid: [`Paid ${priceText()} · ${info.paymentId ? `Payment ID ${esc(info.paymentId)}` : 'confirmed'}`, ''],
+    offline: ['Online payment opens in a few days. Your seat is held — we’ll email you the payment link.', ''],
+  }[state];
+  if (payState) payState.textContent = msg[0];
+  if (row) row.innerHTML = msg[1];
+  if (confirmState && paid) confirmState.textContent = 'We’ll email the date and venue before recording night.';
+}
+
+async function startPayment(card, bookingId) {
+  const done = $('.booked', card);
+  if (!safeUrl(booking.endpoint)) { seatState(card, 'offline'); return; }
+  done.onclick = (e) => { if (e.target.closest('[data-pay]')) startPayment(card, bookingId); };
+  seatState(card, 'opening');
+  let order;
+  try {
+    const [Razorpay, created] = await Promise.all([loadCheckout().catch(() => null), sendToSheet({ booking_id: bookingId }, 'create-order')]);
+    if (created.paid) { seatState(card, 'paid'); forgetSeat(); return; }
+    if (!created.ok) throw new Error(created.error || 'Could not start the payment.');
+    if (!Razorpay) { seatState(card, 'blocked'); return; }
+    order = created;
+    const rzp = new Razorpay({
+      key: order.key_id,
+      amount: order.amount,
+      currency: order.currency,
+      order_id: order.order_id,
+      name: 'The Founder Mafia',
+      description: `Live recording seat · ${bookingId}`,
+      image: new URL('img/tfm-logo.png', location.href).href,
+      prefill: order.prefill,
+      notes: { booking_id: bookingId },
+      theme: { color: '#93032e' },
+      retry: { enabled: true },
+      modal: { confirm_close: true, ondismiss: () => { if (done.dataset.state === 'open') seatState(card, 'dismissed'); } },
+      handler: async (resp) => {
+        seatState(card, 'verifying');
+        try {
+          const v = await sendToSheet({ booking_id: bookingId, ...resp }, 'verify-payment');
+          if (v.ok) { seatState(card, 'paid', { paymentId: v.payment_id }); forgetSeat(); }
+          else seatState(card, 'pending', { message: v.error ? `${v.error} If money was deducted, it’s recorded automatically within 10 minutes.` : undefined });
+        } catch { seatState(card, 'pending'); }
+      },
+    });
+    rzp.on('payment.failed', (resp) => {
+      const why = resp?.error?.description;
+      seatState(card, 'failed', { message: why ? `Payment failed: ${why}` : undefined });
+    });
+    seatState(card, 'open');
+    rzp.open();
+  } catch (err) {
+    console.warn('[tfm] payment', err);
+    seatState(card, 'error', { message: /^(This|Booking|Could|Payment)/.test(err.message || '') ? err.message : undefined });
+  }
+}
+
+function forgetSeat() { try { localStorage.removeItem('tfm-seat'); } catch {} }
+
+// Came back later with a held, unpaid seat? Offer to finish paying for it.
+function resumeSeat() {
+  const card = $('#bookingCard');
+  if (!card || !safeUrl(booking.endpoint)) return;
+  let seat = null;
+  try { seat = JSON.parse(localStorage.getItem('tfm-seat') || 'null'); } catch {}
+  if (!seat?.id) return;
+  const done = $('.booked', card);
+  $$('[data-out="name"]', done).forEach((el) => { el.textContent = seat.name || ''; });
+  $$('[data-out="id"]', done).forEach((el) => { el.textContent = seat.id; });
+  $('#bookForm').hidden = true;
+  done.hidden = false;
+  done.classList.add('is-in');
+  done.onclick = (e) => { if (e.target.closest('[data-pay]')) startPayment(card, seat.id); };
+  seatState(card, 'dismissed');
+  const another = document.createElement('button');
+  another.type = 'button'; another.className = 'linkish'; another.textContent = 'Book a different seat';
+  another.onclick = () => { forgetSeat(); done.hidden = true; $('#bookForm').hidden = false; $$('.book-steps li', card).forEach((li, i) => { li.className = i === 0 ? 'is-now' : ''; }); };
+  done.append(another);
 }
 
 /* ── Cinema: full-bleed scenes that open like a shutter as you scroll through them ── */
@@ -777,7 +896,7 @@ function transitions() {
 loader();
 for (const [name, fn] of [
   ['chrome', chrome], ['spaces', mountSpaces], ['objects', mountObjects], ['home', mountHome],
-  ['enter', mountEnter], ['team', mountTeam], ['community', mountCommunity], ['forms', mountForms], ['cinema', mountCinema],
+  ['enter', mountEnter], ['team', mountTeam], ['community', mountCommunity], ['forms', mountForms], ['resume-seat', resumeSeat], ['cinema', mountCinema],
   ['chapters', mountChapters], ['anchors', anchors], ['transitions', transitions], ['reveals', reveals],
 ]) {
   try { fn(); } catch (err) { console.error(`[tfm] ${name} failed`, err); }

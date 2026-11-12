@@ -1407,3 +1407,18 @@ html:not(.has-cinema) .viewfinder { opacity: 1; }
 .book-steps li.is-done { background: rgba(147, 3, 46, 0.1); color: var(--bur); box-shadow: inset 0 0 0 1.5px rgba(147, 3, 46, 0.35); }
 .book-steps li.is-done::before { content: '✓ '; }
 @media (min-width: 821px) and (min-height: 600px) { main > section.page-hero { padding-bottom: 92px; } }
+
+/* payment states */
+.booked-steps li.is-done::before { content: '✓'; background: var(--bur); color: var(--sand); }
+.booked-steps li.is-now::before { box-shadow: 0 0 0 4px rgba(147, 3, 46, 0.15); }
+.booked[data-state="paid"]::after { content: 'Confirmed'; }
+.booked[data-state="failed"] #payState, .booked[data-state="error"] #payState, .booked[data-state="blocked"] #payState { color: #b00030; font-weight: 600; }
+.booked[data-state="paid"] #payState { color: #1d6b3a; font-weight: 600; }
+.pay-btn { min-height: 54px; padding-inline: 30px; background: var(--bur) !important; color: var(--sand) !important; box-shadow: 0 14px 30px -12px rgba(147, 3, 46, 0.8); }
+.pay-btn.is-busy { opacity: 0.85; cursor: progress; }
+.pay-btn.is-busy::before, .pitch button.is-busy::before {
+  content: ''; width: 14px; height: 14px; margin-right: 10px; border-radius: 50%;
+  border: 2px solid currentColor; border-right-color: transparent; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.linkish { justify-self: start; margin-top: 4px; padding: 0; border: 0; background: none; color: var(--wine); font: 600 0.88rem var(--body); text-decoration: underline; cursor: pointer; }
