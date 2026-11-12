@@ -44,7 +44,7 @@ export const applicationsOpen = true;
 export const season = {
   name: 'Season 01',
   steps: [
-    { when: 'To be announced', what: 'Guest pitches open' },
+    { when: 'To be announced', what: 'Seat bookings open' },
     { when: 'To be announced', what: 'Shortlist announced' },
     { when: 'To be announced', what: 'Pre-calls with every shortlisted founder' },
     { when: 'To be announced', what: 'Recording week at the table' },
@@ -84,13 +84,13 @@ export const meetups = [
 
 // Enter the Mafia page.
 export const faqs = [
-  { q: 'Who can pitch themselves as a guest?', a: 'Founders building in India at any stage, from pre-product to exit. What matters is a real story and lessons another founder can use.' },
-  { q: 'Do I need a big brand or funding to be on the show?', a: 'No. Some of the most useful episodes come from bootstrapped founders and companies that did not work out.' },
-  { q: 'Is the conversation scripted?', a: 'No. We do a short pre-call to find the moments worth an hour, but no questions are shared in advance.' },
-  { q: 'Can I take something off the record after recording?', a: 'Yes. Nothing is off the record unless you say so, and you can say so after the recording too.' },
-  { q: 'How long until I hear back?', a: 'We read every pitch. If we want to hear more, we reply with times for a pre-call.' },
-  { q: 'Is there a fee to join the Mafia?', a: 'Yes. Joining the Mafia carries a participation fee, paid securely through Razorpay right after you send your pitch.' },
-];
+  { q: 'Who can book a seat?', a: 'Young founders, students and builders who want to hear how companies really get built. One seat is for one person.' },
+  { q: 'What do I get for ₹200?', a: 'A seat in the room at a live recording: you hear the host and the guest talk it through, and you can ask your own question at the end.' },
+  { q: 'When do I get the date and venue?', a: 'Every confirmed seat gets the date and venue by email before the recording.' },
+  { q: 'How do I pay?', a: 'Book your seat with your details first. Then pay ₹200 securely through Razorpay to confirm it.' },
+  { q: 'Can I bring a friend?', a: 'Yes — ask them to book their own seat, so their name is on the list too.' },
+  { q: 'Is the recording on the record?', a: 'Yes. What is said in the room may go out in the episode, so come ready to listen and ask.' },
+]
 
 // Shown in the footer as "Last update".
 export const lastUpdate = '5 Nov 2026';

@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261112c';
-import * as S from './stickers.js?v=20261112c';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261112d';
+import * as S from './stickers.js?v=20261112d';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -345,6 +345,8 @@ function mountTeam() {
 /* ── Enter the Mafia ──────────────────────────────────── */
 
 function mountEnter() {
+  const faq = $('#faq');
+  if (faq) faq.innerHTML = faqs.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
   const form = $('#pitchForm');
   if (!form) return;
   const status = $('#formStatus');
@@ -394,8 +396,7 @@ function mountEnter() {
     fee.innerHTML = `<b>Note:</b> joining the Mafia carries ${amt ? `a fee of <b>${esc(amt)}</b>` : 'a one-time participation fee'}. When you send your pitch you'll go to Razorpay to pay securely.`;
   }
 
-  const faq = $('#faq');
-  if (faq) faq.innerHTML = faqs.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
+
 }
 
 /* ── Community ────────────────────────────────────────── */
