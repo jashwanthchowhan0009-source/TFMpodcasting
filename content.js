@@ -30,7 +30,7 @@ export const company = 'A&V Venture House Pvt. Ltd.';
 // Payments run through Razorpay Checkout via that same backend. The Razorpay keys live ONLY in the
 // Apps Script's Script Properties — never put RAZORPAY_KEY_SECRET in this file (it is public on GitHub).
 export const booking = {
-  endpoint: '',            // e.g. 'https://script.google.com/macros/s/AKfy…/exec'
+  endpoint: 'https://script.google.com/macros/s/AKfycbygL9iljUvXrUfY-F9o8Pf0MDRqX66mnPdTqQgSqCdcSrW7AZUYcLc_uE56tBk_RbpaAw/exec',            // e.g. 'https://script.google.com/macros/s/AKfy…/exec'
   price: 199,              // ₹ per seat
   event: 'Live recording — Season 01',
   date: 'To be announced',
