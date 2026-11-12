@@ -446,7 +446,7 @@ html.lenis, html.lenis body { height: auto; }
 
 /* three tracks: playing cards */
 .tracks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2.4vw, 32px); }
-.track { display: grid; grid-template-columns: 116px 1fr; gap: 18px; align-items: start; }
+.track { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: start; }
 .track svg { display: block; width: 100%; height: auto; filter: drop-shadow(4px 14px 12px rgba(40, 0, 10, 0.45)); transform: rotate(var(--r, -4deg)); transition: transform 0.3s cubic-bezier(.2, .8, .2, 1.3); }
 .track:nth-child(2) svg { --r: 3deg; }
 .track:hover svg { transform: rotate(0) translateY(-6px); }
@@ -602,6 +602,7 @@ html.lenis, html.lenis body { height: auto; }
 .footer-pills .grow { flex: 1 1 auto; justify-content: flex-start; }
 .the-end { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 24px; margin-top: 28px; }
 .the-end b { font: 900 clamp(2.2rem, 8vw, 7rem) var(--display); line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; }
+.copyright { margin-top: 18px; font-size: 0.9rem; color: rgba(245, 235, 208, 0.72); }
 .the-end span { font: 700 0.66rem var(--display); letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.75; }
 
 /* ════════════════════════════════════════════════════════
@@ -680,7 +681,7 @@ html.lenis, html.lenis body { height: auto; }
 .ring-shadow { position: absolute; left: 50%; top: 66%; width: min(1100px, 120vw); height: 200px; margin-left: min(-550px, -60vw); border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.5), transparent); transform: rotateX(80deg); }
 
 /* coin: the seal, with real thickness */
-.coin { position: relative; width: clamp(220px, 30vw, 380px); aspect-ratio: 1; transform-style: preserve-3d; transform: rotateX(calc(14deg + var(--my) * -12deg)) rotateY(calc(var(--p) * 900deg + var(--mx) * 30deg)); }
+.coin { position: relative; width: clamp(220px, 30vw, 380px); aspect-ratio: 1; transform-style: preserve-3d; transform: rotateX(calc(6deg + var(--my) * -8deg)) rotateY(calc(var(--coin, 0deg) + var(--mx) * 14deg)); }
 .coin > * { position: absolute; inset: 0; border-radius: 50%; }
 .coin .face { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 .coin .face svg { display: block; width: 100%; height: 100%; }
@@ -710,6 +711,43 @@ html.lenis, html.lenis body { height: auto; }
 .cube .f4 { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
 .cube .f5 { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
 .cube .f6 { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+
+
+/* TV: the intro video plays on the screen */
+.trailer .tv { position: relative; }
+.tv-video {
+  position: absolute; left: 11.9%; top: 34.1%; width: 61.4%; height: 49.4%;
+  object-fit: cover; border-radius: 9% / 13%; background: #262626;
+  pointer-events: none;
+}
+.tv.has-video .tv-screen { animation: none; }
+
+/* money cards for the three tracks */
+.track svg { filter: drop-shadow(4px 14px 12px rgba(8, 0, 2, 0.5)); }
+
+/* coin: brass edge */
+.coin .edge { background: #7a5a1e; }
+.coin .edge:nth-child(odd) { background: #9c7a30; }
+.coin { width: clamp(200px, min(32vw, 46vh), 360px); }
+.coin .face, .coin .edge { border-radius: 50%; overflow: hidden; }
+
+/* ring back: suits only */
+.ring-card .back span { letter-spacing: 0.08em; }
+
+/* About: team */
+.team { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.member { border-radius: var(--radius-card); background: var(--glass); padding: 16px 16px 22px; display: grid; gap: 6px; align-content: start; }
+.member-photo { aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; background: var(--bur); display: grid; place-items: center; margin-bottom: 10px; }
+.member-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.member-photo span { font: 800 clamp(2rem, 4vw, 3.4rem) var(--display); color: var(--sand); }
+.member h3 { font: 800 1.05rem var(--display); text-transform: uppercase; letter-spacing: -0.01em; }
+.member-role { font: 700 0.62rem var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: #e0335f; }
+.member-bio { font-size: 0.95rem; color: rgba(245, 235, 208, 0.85); }
+@media (max-width: 1100px) { .team { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Enter: fee note */
+.fee-note { padding: 12px 14px; border-radius: 10px; background: rgba(147, 3, 46, 0.08); border-left: 3px solid var(--bur); color: var(--night); font-size: 0.95rem; }
+.fee-note b { color: var(--bur); }
 
 /* ── Smaller screens ─────────────────────────────────── */
 
@@ -763,8 +801,9 @@ html.lenis, html.lenis body { height: auto; }
   .keywords li { min-height: 110px; padding: 14px; }
   .channels { grid-template-columns: 1fr; }
   .steps, .credits { grid-template-columns: 1fr; }
+  .team { grid-template-columns: 1fr 1fr; }
   .pitch { grid-template-columns: 1fr; }
-  .track { grid-template-columns: 90px 1fr; }
+  .track { grid-template-columns: 110px 1fr; }
   .spacebar .pill { padding: 0 18px; font-size: 0.6rem; }
   .info-sheet div { grid-template-columns: 1fr; gap: 4px; }
   .join .obj-seal { top: -2%; left: -2%; }

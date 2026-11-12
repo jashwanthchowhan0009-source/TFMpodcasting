@@ -1,6 +1,6 @@
 # The Founder Mafia — website
 
-Static site for **The Founder Mafia** podcast, hosted by Aarav Phanindra. No build step.
+Static site for **The Founder Mafia** podcast, hosted by Phanindra Aarav. No build step.
 
 The look is "the office": one dark wine desk with paper grain, smoked-glass pills, and paper objects
 (notebook, wax seal, cigar, playing cards, matchbook, polaroids) pinned on top — several of them draggable.
@@ -14,15 +14,23 @@ Palette: Burgundy `#93032E` · Wine Red `#7F011F` · Night `#151515` · Light Sa
 
 | Page | File |
 |---|---|
-| Home | `index.html` — hero collage, what this is, tunnel, road to Season 02, who you sit with, card ring, trailer, five pillars, three tracks, episode index, glimpse inside, coin, join |
-| About Us | `about.html` — info sheet, profile, host, cube, how a sit-down works, house rules, credits |
+| Home | `index.html` — hero collage, what this is, tunnel, road to Season 01, who you sit with, card ring, trailer, five pillars, three tracks, episode index, glimpse inside, coin, join |
+| About Us | `about.html` — info sheet, profile, host, cube, how a sit-down works, house rules, team |
 | Enter the Mafia | `enter.html` — guest dossier form, what we look for, tunnel, FAQs |
 | Community | `community.html` — membership card, channels, meetups, family code, card ring |
 
 ## Edit content
 
-Everything you'll normally change lives in **`content.js`**: links (socials, trailer, pitch email),
-whether pitches are open, the Season 02 timeline, the people at the table, tracks, episodes, meetups, FAQs
+Everything you'll normally change lives in **`content.js`**. Put photos and videos in `media/` and point to them from there:
+
+- `table[0].photo` — host portrait for "Who you sit with matters" (e.g. `media/host.jpg`)
+- `links.trailerVideo` — intro video that loops inside the TV (e.g. `media/intro.mp4`)
+- `team` — About Us team cards (name, role, bio, optional photo)
+- `payment.razorpayLink` / `payment.amount` — where "Send pitch & pay" goes, and the fee shown in the note
+- `links.startupitch` — Community "Join" button
+
+Also in `content.js`: links (socials, trailer, pitch email),
+whether pitches are open, the Season 01 timeline, the people at the table, tracks, episodes, meetups, FAQs
 and the "last update" date. Placeholders read "To be announced".
 
 ## Files

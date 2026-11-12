@@ -76,17 +76,18 @@ export function note(title, lines) {
   </svg>`;
 }
 
-/** A playing card. */
+/** A playing card. Rank and label are optional; without them the card shows suits only. */
 export function card(rank, suit, label, { red = true } = {}) {
   const ink = red ? C.bur : C.night;
+  const corner = (rank ? `<text x="24" y="50" ${D} font-size="26" fill="${ink}">${rank}</text>` : '') +
+    `<text x="24" y="${rank ? 78 : 52}" font-size="26" fill="${ink}">${suit}</text>`;
   return `<svg viewBox="0 0 180 252" aria-hidden="true">
     <rect x="2" y="2" width="176" height="248" rx="14" fill="${C.sand}" stroke="${C.night}" stroke-opacity=".2" stroke-width="2"/>
     <rect x="14" y="14" width="152" height="224" rx="8" fill="none" stroke="${ink}" stroke-opacity=".35"/>
-    <text x="24" y="50" ${D} font-size="26" fill="${ink}">${rank}</text>
-    <text x="24" y="78" font-size="26" fill="${ink}">${suit}</text>
-    <g transform="rotate(180 90 126)"><text x="24" y="50" ${D} font-size="26" fill="${ink}">${rank}</text><text x="24" y="78" font-size="26" fill="${ink}">${suit}</text></g>
-    <text x="90" y="146" text-anchor="middle" font-size="84" fill="${ink}">${suit}</text>
-    <text x="90" y="194" text-anchor="middle" ${M} font-size="12" letter-spacing="2" fill="${C.night}">${label}</text>
+    ${corner}
+    <g transform="rotate(180 90 126)">${corner}</g>
+    <text x="90" y="${label ? 146 : 158}" text-anchor="middle" font-size="${label ? 84 : 100}" fill="${ink}">${suit}</text>
+    ${label ? `<text x="90" y="194" text-anchor="middle" ${M} font-size="12" letter-spacing="2" fill="${C.night}">${label}</text>` : ''}
   </svg>`;
 }
 
@@ -171,42 +172,86 @@ export function rose() {
   </svg>`;
 }
 
-/** Polaroid with a small scene inside. */
+/** Polaroid with a small scene inside (each scene is drawn in a 200 × 170 box). */
+const person = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})" fill="${C.night}">
+  <circle cx="0" cy="-30" r="9"/><ellipse cx="0" cy="-37" rx="14" ry="3"/><path d="M-8 -37q0-10 8-11q8 1 8 11z"/>
+  <path d="M-17 4q1-22 17-24q16 2 17 24z"/></g>`;
+const chair = (x, y, fill, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})">
+  <rect x="-12" y="-34" width="24" height="30" rx="5" fill="${fill}"/><rect x="-14" y="-6" width="28" height="7" rx="2" fill="${fill}"/></g>`;
 const SCENES = {
-  table: `<rect width="200" height="170" fill="${C.night}"/><path d="M80 0h40l60 170H20z" fill="${C.sand}" opacity=".16"/>
-    <ellipse cx="100" cy="132" rx="84" ry="18" fill="${C.wine}"/><rect x="96" y="132" width="8" height="38" fill="${C.wine}"/>
-    <rect x="50" y="94" width="10" height="34" fill="${C.sand}" opacity=".85"/><rect x="140" y="94" width="10" height="34" fill="${C.sand}" opacity=".85"/>
-    <rect x="44" y="84" width="22" height="16" rx="8" fill="${C.sand}"/><rect x="134" y="84" width="22" height="16" rx="8" fill="${C.sand}"/>
-    <path d="M90 0v14M84 14h12l6 10H78z" fill="${C.sand}" stroke="${C.sand}"/>`,
-  lamp: `<rect width="200" height="170" fill="${C.wine}"/><path d="M100 0v40" stroke="${C.night}" stroke-width="3"/>
-    <path d="M70 40h60l20 34H50z" fill="${C.night}"/><ellipse cx="100" cy="74" rx="50" ry="7" fill="${C.sand}"/>
-    <path d="M52 76h96l40 94H12z" fill="${C.sand}" opacity=".25"/>`,
+  door: `<rect width="200" height="170" fill="${C.night}"/>
+    <rect x="40" y="18" width="120" height="20" fill="${C.bur}"/><text x="100" y="32" text-anchor="middle" ${D} font-size="9" fill="${C.sand}">THE FOUNDER MAFIA</text>
+    <rect x="54" y="44" width="92" height="126" fill="#2a2a2a"/>
+    <rect x="100" y="48" width="42" height="122" fill="${C.sand}"/>
+    <path d="M100 48h42v122h-42z" fill="url(#pl-glow)"/>
+    <path d="M58 48h42v122h-42z" fill="${C.wine}"/><rect x="64" y="56" width="30" height="44" fill="none" stroke="#5c0117" stroke-width="2"/><rect x="64" y="108" width="30" height="52" fill="none" stroke="#5c0117" stroke-width="2"/>
+    <circle cx="94" cy="112" r="2.6" fill="${C.sand}"/>
+    <path d="M142 48l30 -8v138l-30 -8z" fill="${C.wine}"/><path d="M146 58l20 -5v40l-20 4z M146 106l20 -3v52l-20 -4z" fill="none" stroke="#5c0117" stroke-width="2"/>
+    <rect x="50" y="42" width="100" height="128" fill="none" stroke="${C.bur}" stroke-width="5"/>`,
+  mics: `<rect width="200" height="170" fill="${C.wine}"/>
+    <rect y="128" width="200" height="42" fill="#3a0010"/><path d="M0 128h200" stroke="${C.sand}" stroke-opacity=".2"/>
+    <g fill="none" stroke="${C.night}" stroke-width="4" stroke-linecap="round">
+      <path d="M8 0v30l34 34l20 -8"/><path d="M192 0v30l-34 34l-20 -8"/>
+    </g>
+    <g transform="translate(70 70) rotate(-62)">
+      <rect x="-13" y="-34" width="26" height="62" rx="13" fill="${C.night}"/>
+      <rect x="-15" y="-36" width="30" height="34" rx="15" fill="#2e2e2e"/>
+      <g stroke="#444" stroke-width="1.6">${[-30, -24, -18, -12, -6].map((y) => `<path d="M-13 ${y}h26"/>`).join('')}</g>
+      <rect x="-14" y="2" width="28" height="4" fill="${C.bur}"/>
+      <ellipse cx="0" cy="8" rx="20" ry="7" fill="none" stroke="${C.sand}" stroke-opacity=".6" stroke-width="2"/>
+    </g>
+    <g transform="translate(130 70) rotate(62)">
+      <rect x="-13" y="-34" width="26" height="62" rx="13" fill="${C.night}"/>
+      <rect x="-15" y="-36" width="30" height="34" rx="15" fill="#2e2e2e"/>
+      <g stroke="#444" stroke-width="1.6">${[-30, -24, -18, -12, -6].map((y) => `<path d="M-13 ${y}h26"/>`).join('')}</g>
+      <rect x="-14" y="2" width="28" height="4" fill="${C.bur}"/>
+      <ellipse cx="0" cy="8" rx="20" ry="7" fill="none" stroke="${C.sand}" stroke-opacity=".6" stroke-width="2"/>
+    </g>
+    <rect x="86" y="112" width="28" height="18" rx="3" fill="${C.night}"/><circle cx="94" cy="121" r="3" fill="#ff4d5e"/><rect x="100" y="118" width="10" height="6" fill="#444"/>
+    <path d="M0 150q50 -8 100 0q50 8 100 0" stroke="${C.night}" stroke-width="3" fill="none"/>`,
+  table: `<rect width="200" height="170" fill="${C.night}"/>
+    <path d="M100 0v18M90 18h20l8 12h-36z" fill="${C.bur}" stroke="${C.bur}"/>
+    <path d="M86 30h28l26 108h-80z" fill="${C.sand}" opacity=".22"/>
+    ${chair(40, 108, '#3a0010', 0.85)}${chair(72, 102, '#3a0010', 0.8)}${chair(128, 102, '#3a0010', 0.8)}${chair(160, 108, '#3a0010', 0.85)}
+    ${person(40, 104, 0.85)}${person(72, 98, 0.8)}${person(128, 98, 0.8)}${person(160, 104, 0.85)}
+    ${chair(100, 100, C.bur, 0.85)}
+    <ellipse cx="100" cy="128" rx="88" ry="16" fill="${C.wine}"/>
+    <ellipse cx="100" cy="124" rx="88" ry="14" fill="#a80a3a"/>
+    <ellipse cx="100" cy="124" rx="34" ry="7" fill="${C.sand}" opacity=".35"/>
+    <rect x="96" y="138" width="8" height="32" fill="${C.wine}"/>`,
+  funds: `<rect width="200" height="170" fill="${C.night}"/>
+    <path d="M100 0v14M88 14h24l10 14h-44z" fill="${C.bur}" stroke="${C.bur}"/>
+    <path d="M78 28h44l50 80h-144z" fill="${C.sand}" opacity=".16"/>
+    <path d="M0 100h200v70h-200z" fill="${C.wine}"/><path d="M0 100h200" stroke="${C.sand}" stroke-opacity=".25"/>
+    ${[[38, 118], [72, 108], [112, 112], [146, 120]].map(([x, y], i) => `
+      <g transform="translate(${x} ${y})">
+        ${[0, 1, 2, 3].map((k) => `<rect x="-20" y="${-k * 5}" width="40" height="18" rx="1.5" fill="${k % 2 ? C.deep : C.sand}" stroke="${C.night}" stroke-opacity=".35"/>`).join('')}
+        <rect x="-5" y="-17" width="10" height="20" fill="${C.bur}"/>
+        <text x="0" y="-2" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="9" fill="${C.night}">${i % 2 ? '₹' : '$'}</text>
+      </g>`).join('')}
+    ${[[60, 150], [84, 156], [128, 150], [170, 152], [24, 152]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="9" ry="4" fill="${C.brass}"/><ellipse cx="${x}" cy="${y - 2}" rx="9" ry="4" fill="#e8c873"/>`).join('')}`,
   cards: `<rect width="200" height="170" fill="${C.bur}"/>
     <g transform="rotate(-14 100 100)"><rect x="58" y="44" width="54" height="78" rx="6" fill="${C.sand}"/><text x="85" y="94" text-anchor="middle" font-size="34" fill="${C.night}">♠</text></g>
-    <g transform="rotate(8 100 100)"><rect x="88" y="40" width="54" height="78" rx="6" fill="${C.sand}"/><text x="115" y="90" text-anchor="middle" font-size="34" fill="${C.bur}">♥</text></g>
-    <circle cx="44" cy="140" r="14" fill="${C.night}"/><circle cx="44" cy="140" r="9" fill="none" stroke="${C.sand}" stroke-dasharray="3 3"/>
-    <circle cx="160" cy="146" r="14" fill="${C.night}"/><circle cx="160" cy="146" r="9" fill="none" stroke="${C.sand}" stroke-dasharray="3 3"/>`,
-  door: `<rect width="200" height="170" fill="${C.night}"/><path d="M60 170V60a40 40 0 0 1 80 0v110z" fill="${C.sand}"/>
-    <path d="M60 170V60a40 40 0 0 1 80 0v110z" fill="none" stroke="${C.bur}" stroke-width="6"/>
-    <circle cx="100" cy="120" r="9" fill="${C.night}"/><path d="M84 170q16-40 32 0z" fill="${C.night}"/>
-    <rect x="40" y="20" width="120" height="22" fill="${C.bur}"/><text x="100" y="37" text-anchor="middle" ${D} font-size="10" letter-spacing="1" fill="${C.sand}">THE FOUNDER MAFIA</text>`,
+    <g transform="rotate(8 100 100)"><rect x="88" y="40" width="54" height="78" rx="6" fill="${C.sand}"/><text x="115" y="90" text-anchor="middle" font-size="34" fill="${C.bur}">♥</text></g>`,
 };
 export function polaroid(scene, caption) {
   return `<svg viewBox="0 0 230 270" aria-hidden="true">
     <rect width="230" height="270" rx="3" fill="#fbf6ea"/>
-    <svg x="15" y="15" width="200" height="170" viewBox="0 0 200 170">${SCENES[scene]}</svg>
+    <svg x="15" y="15" width="200" height="170" viewBox="0 0 200 170"><defs><linearGradient id="pl-glow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3d0"/><stop offset="1" stop-color="#e8b070"/></linearGradient></defs>${SCENES[scene]}</svg>
     <text x="115" y="230" text-anchor="middle" font-family="'Open Sans',sans-serif" font-style="italic" font-size="19" fill="${C.night}">${caption}</text>
   </svg>`;
 }
 
-/** Mugshot-style placard for the "who you sit with" lineup. */
-export function lineup(name, role, n) {
+/** Mugshot-style placard for the "who you sit with" lineup. Pass `photo` to show a real portrait. */
+export function lineup(name, role, n, photo = '') {
   const heights = Array.from({ length: 7 }, (_, i) => `<path d="M0 ${40 + i * 40}h${i % 2 ? 24 : 40}" stroke="${C.sand}" stroke-opacity=".5" stroke-width="2"/><text x="46" y="${45 + i * 40}" ${M} font-size="11" fill="${C.sand}" fill-opacity=".55">${7 - i}'</text>`).join('');
   const filled = !!name;
-  return `<svg viewBox="0 0 300 360" role="img" aria-label="${filled ? name : 'Reserved seat'}, ${role}">
-    <rect width="300" height="360" fill="${C.night}"/>
-    <g>${heights}</g>
-    <g transform="translate(150 0)" fill="${filled ? C.bur : '#2a2a2a'}">
+  const id = `lu${n}`;
+  const figure = photo
+    ? `<defs><clipPath id="${id}"><rect width="300" height="262"/></clipPath></defs>
+       <image href="${photo}" x="0" y="0" width="300" height="262" preserveAspectRatio="xMidYMin slice" clip-path="url(#${id})"/>
+       <rect width="300" height="262" fill="${C.night}" opacity=".08"/>`
+    : `<g transform="translate(150 0)" fill="${filled ? C.bur : '#2a2a2a'}">
       <ellipse cx="0" cy="134" rx="34" ry="40"/>
       <path d="M-82 360c4-96 40-124 82-128c42 4 78 32 82 128z"/>
       <rect x="-14" y="166" width="28" height="30"/>
@@ -214,10 +259,15 @@ export function lineup(name, role, n) {
       <path d="M-38 104q-4-48 16-58q12-6 22 4q10-10 22-4q20 10 16 58q-38-8-76 0z" fill="${C.night}"/>
       <path d="M-38 92q38-8 76 0l1 12q-38-8-78 0z" fill="${C.bur}"/>
     </g>
-    ${filled ? '' : `<text x="150" y="150" text-anchor="middle" ${D} font-size="44" fill="${C.sand}" fill-opacity=".85">?</text>`}
+    ${filled ? '' : `<text x="150" y="150" text-anchor="middle" ${D} font-size="44" fill="${C.sand}" fill-opacity=".85">?</text>`}`;
+  return `<svg viewBox="0 0 300 360" role="img" aria-label="${filled ? name : 'Reserved seat'}, ${role}">
+    <rect width="300" height="360" fill="${C.night}"/>
+    ${photo ? '' : `<g>${heights}</g>`}
+    ${figure}
+    ${photo ? `<g opacity=".7">${heights}</g>` : ''}
     <rect x="40" y="262" width="220" height="74" fill="${C.sand}"/>
     <text x="150" y="292" text-anchor="middle" ${D} font-size="17" fill="${C.night}">${(name || 'Seat reserved').toUpperCase()}</text>
-    <text x="150" y="318" text-anchor="middle" ${M} font-size="12" letter-spacing="2" fill="${C.bur}">${role.toUpperCase()} · TFM-${String(n).padStart(3, '0')}</text>
+    <text x="150" y="318" text-anchor="middle" ${M} font-size="12" letter-spacing="2" fill="${C.bur}">${role.toUpperCase()}</text>
   </svg>`;
 }
 
@@ -268,5 +318,62 @@ export function oval(big, top, bottom, { fill = C.night, ink = C.sand } = {}) {
     <text ${M} font-size="13" letter-spacing="2.5" fill="${ink}" text-anchor="middle"><textPath href="#ov-top" startOffset="50%">${top}</textPath></text>
     <text x="210" y="148" text-anchor="middle" ${D} font-size="50" fill="${ink}">${big}</text>
     <text ${M} font-size="13" letter-spacing="2.5" fill="${ink}" text-anchor="middle"><textPath href="#ov-bot" startOffset="50%">${bottom}</textPath></text>
+  </svg>`;
+}
+
+/** A dollar note, tilted. */
+export function dollar() {
+  return `<svg viewBox="0 0 220 220" role="img" aria-label="Dollar">
+    <g transform="rotate(-14 110 110)">
+      <rect x="10" y="62" width="200" height="96" rx="6" fill="${C.deep}" stroke="${C.night}" stroke-width="2"/>
+      <rect x="20" y="72" width="180" height="76" rx="3" fill="none" stroke="${C.night}" stroke-opacity=".5" stroke-dasharray="2 3"/>
+      <ellipse cx="110" cy="110" rx="34" ry="30" fill="${C.sand}" stroke="${C.night}" stroke-width="2"/>
+      <text x="110" y="126" text-anchor="middle" ${D} font-size="44" fill="${C.night}">$</text>
+      <text x="36" y="94" text-anchor="middle" ${D} font-size="18" fill="${C.bur}">$</text>
+      <text x="184" y="142" text-anchor="middle" ${D} font-size="18" fill="${C.bur}">$</text>
+      <text x="160" y="94" text-anchor="middle" ${M} font-size="9" letter-spacing="1.5" fill="${C.night}">USD</text>
+      <path d="M30 136h40M30 142h28" stroke="${C.night}" stroke-opacity=".45" stroke-width="2"/>
+    </g>
+  </svg>`;
+}
+
+/** A one-rupee coin. */
+export function rupee() {
+  const reeds = Array.from({ length: 60 }, (_, i) => `<rect x="-1" y="-86" width="2" height="7" transform="rotate(${i * 6})"/>`).join('');
+  return `<svg viewBox="0 0 220 220" role="img" aria-label="One rupee coin">
+    <defs><radialGradient id="rp-g" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#f6e2a6"/><stop offset=".55" stop-color="#d4b05c"/><stop offset="1" stop-color="#9c7a30"/></radialGradient></defs>
+    <circle cx="110" cy="114" r="88" fill="#6e5420"/>
+    <circle cx="110" cy="110" r="88" fill="url(#rp-g)"/>
+    <g transform="translate(110 110)" fill="#9c7a30">${reeds}</g>
+    <circle cx="110" cy="110" r="70" fill="none" stroke="#8a6a26" stroke-width="2"/>
+    <text x="110" y="128" text-anchor="middle" ${D} font-size="64" fill="${C.night}">₹1</text>
+    <text x="110" y="160" text-anchor="middle" ${M} font-size="11" letter-spacing="3" fill="#5a4416">INDIA</text>
+    <path d="M60 70q30 -30 70 -26" stroke="#fff6d8" stroke-opacity=".6" stroke-width="5" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+
+/** The dollar and the rupee together. */
+export function collab() {
+  return `<svg viewBox="0 0 220 220" role="img" aria-label="Dollar and rupee together">
+    <g transform="translate(-26 -24) scale(.86)">${dollar().replace(/<\/?svg[^>]*>/g, '')}</g>
+    <g transform="translate(78 70) scale(.62)">${rupee().replace(/<\/?svg[^>]*>/g, '').replace(/rp-g/g, 'rp-g2')}</g>
+  </svg>`;
+}
+
+/** One face of the On-the-record coin: a round brass coin with reeded rim. */
+export function coinFace(top, centre, { id = 'cf' } = {}) {
+  const reeds = Array.from({ length: 90 }, (_, i) => `<rect x="-1" y="-108" width="2" height="9" transform="rotate(${i * 4})"/>`).join('');
+  return `<svg viewBox="0 0 220 220" aria-hidden="true">
+    <defs>
+      <radialGradient id="${id}-g" cx="36%" cy="30%" r="80%"><stop offset="0" stop-color="#f7e6b0"/><stop offset=".5" stop-color="#d1aa55"/><stop offset="1" stop-color="#8f6c27"/></radialGradient>
+      <path id="${id}-c" d="M38 110a72 72 0 1 1 144 0a72 72 0 1 1 -144 0" fill="none"/>
+    </defs>
+    <circle cx="110" cy="110" r="110" fill="url(#${id}-g)"/>
+    <g transform="translate(110 110)" fill="#8f6c27">${reeds}</g>
+    <circle cx="110" cy="110" r="94" fill="none" stroke="#7a5a1e" stroke-width="3"/>
+    <circle cx="110" cy="110" r="56" fill="none" stroke="#7a5a1e" stroke-width="2" stroke-dasharray="1 5"/>
+    <text font-family="Poppins,sans-serif" font-weight="700" font-size="14" letter-spacing="3.4" fill="${C.night}"><textPath href="#${id}-c">${top} · ${top} ·</textPath></text>
+    <text x="110" y="${/^[A-Z]/.test(centre) ? 124 : 128}" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="${centre.length > 3 ? 34 : 42}" fill="${C.bur}">${centre}</text>
+    <path d="M44 76q26 -38 74 -40" stroke="#fff8e0" stroke-opacity=".55" stroke-width="7" fill="none" stroke-linecap="round"/>
   </svg>`;
 }

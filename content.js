@@ -9,31 +9,43 @@ export const links = {
   instagram: '',    // e.g. 'https://instagram.com/thefoundermafia'
   linkedin: '',     // e.g. 'https://linkedin.com/company/thefoundermafia'
   whatsapp: '',     // community invite link
-  trailer: '',      // YouTube link to the show trailer
+  trailer: '',      // YouTube link to the show trailer (opens when the TV is clicked)
+  trailerVideo: '', // intro video that loops inside the TV, e.g. 'media/intro.mp4' (MP4, muted, no audio needed)
+  startupitch: 'https://startupitch.in', // Community page "Join" button
   contactEmail: '', // shown on the site for guest pitches, e.g. 'hello@yourdomain.in'
 };
+
+// Enter the Mafia: the pitch form sends people here to pay after they fill it in.
+export const payment = {
+  razorpayLink: '', // your Razorpay payment page / payment link, e.g. 'https://rzp.io/l/thefoundermafia'
+  amount: '',       // shown in the note above the button, e.g. '₹4,999'. Leave empty to show "a one-time fee".
+};
+
+// Footer line on every page.
+export const company = 'AV Venture House Pvt. Ltd.';
 
 // Is the guest pitch form open? Set to false to show "Applications closed".
 export const applicationsOpen = true;
 
-// "The road to Season 02" timeline on the home page.
+// "The road to Season 01" timeline on the home page.
 export const season = {
-  name: 'Season 02',
+  name: 'Season 01',
   steps: [
     { when: 'To be announced', what: 'Guest pitches open' },
     { when: 'To be announced', what: 'Shortlist announced' },
     { when: 'To be announced', what: 'Pre-calls with every shortlisted founder' },
     { when: 'To be announced', what: 'Recording week at the table' },
-    { when: 'To be announced', what: 'Season 02 premieres' },
+    { when: 'To be announced', what: 'Season 01 premieres' },
   ],
 };
 
 // "Who you sit with matters". The first entry is the host.
-// Add mentors or recurring guests as more entries; empty names show as a reserved seat.
+// `photo` is a path to a portrait, e.g. 'media/host.jpg' (a tall photo, roughly 3:4, works best).
+// Empty names show as a reserved seat.
 export const table = [
-  { name: 'Aarav Phanindra', role: 'Host', note: 'Runs the table and asks the questions founders usually only hear off-mic.' },
-  { name: '', role: 'Mentor seat', note: 'An operator who has built and scaled a company in India.' },
-  { name: '', role: 'Investor seat', note: 'Someone who has written the cheques our guests talk about.' },
+  { name: 'Phanindra Aarav', role: 'Host', photo: '', note: 'Runs the table and asks the questions founders usually only hear off-mic.' },
+  { name: '', role: 'Founder & CEO', photo: '', note: 'A founder and CEO who has built and scaled a company in India.' },
+  { name: '', role: 'Investor seat', photo: '', note: 'Someone who has written the cheques our guests talk about.' },
 ];
 
 // Episode tracks. Each episode below names one of these keys.
@@ -64,8 +76,17 @@ export const faqs = [
   { q: 'Is the conversation scripted?', a: 'No. We do a short pre-call to find the moments worth an hour, but no questions are shared in advance.' },
   { q: 'Can I take something off the record after recording?', a: 'Yes. Nothing is off the record unless you say so, and you can say so after the recording too.' },
   { q: 'How long until I hear back?', a: 'We read every pitch. If we want to hear more, we reply with times for a pre-call.' },
-  { q: 'Does it cost anything to be a guest?', a: 'No. There is no fee to appear on The Founder Mafia.' },
+  { q: 'Is there a fee to join the Mafia?', a: 'Yes. Joining the Mafia carries a participation fee, paid securely through Razorpay right after you send your pitch.' },
 ];
 
 // Shown in the footer as "Last update".
 export const lastUpdate = '5 Nov 2026';
+
+// About Us page: the team. Add one entry per person.
+// `photo` is optional, e.g. 'media/team-ravi.jpg'. Without one, the card shows their initials.
+export const team = [
+  { name: 'Phanindra Aarav', role: 'Host & Founder', bio: 'Runs the table and every conversation on it.', photo: '' },
+  { name: 'To be announced', role: 'Research & scripts', bio: '', photo: '' },
+  { name: 'To be announced', role: 'Production', bio: '', photo: '' },
+  { name: 'To be announced', role: 'Community', bio: '', photo: '' },
+];
