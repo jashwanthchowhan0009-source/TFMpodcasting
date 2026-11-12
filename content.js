@@ -22,7 +22,7 @@ export const payment = {
 };
 
 // Footer line on every page.
-export const company = 'AV Venture House Pvt. Ltd.';
+export const company = 'A&V Venture House Pvt. Ltd.';
 
 // Book a seat: young founders sit in the audience at a live recording.
 // Every booking (and every guest pitch) is saved to the Google Sheet "The Founder Mafia — Bookings & Pitches".
