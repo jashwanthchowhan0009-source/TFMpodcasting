@@ -75,9 +75,12 @@ function saveForm(data) {
       Math.random().toString(36).slice(2, 6).toUpperCase();
 
     if (type === 'booking' || type === 'join') {
-      const name = clean(data.name, 80), email = clean(data.email, 120), mobile = clean(data.mobile, 20);
+      // Check the number as typed (+91 88970 04533 is fine), then store digits only.
+      const rawMobile = String(data.mobile == null ? '' : data.mobile).trim();
+      const mobile = rawMobile.replace(/\D/g, '').replace(/^91(\d{10})$/, '$1').replace(/^0(\d{10})$/, '$1');
+      const name = clean(data.name, 80), email = clean(data.email, 120);
       const age = parseInt(data.age, 10);
-      if (!name || !/^\S+@\S+\.\S+$/.test(email) || !/^[0-9+\-\s]{8,16}$/.test(mobile) || !(age >= 13 && age <= 100)) {
+      if (!name || !/^\S+@\S+\.\S+$/.test(email) || !/^[0-9+\-\s()]{8,20}$/.test(rawMobile) || mobile.length < 8 || mobile.length > 15 || !(age >= 13 && age <= 100)) {
         return { ok: false, error: 'Please fill in your name, a valid age, email and mobile number.' };
       }
       if (type === 'join') sheet.appendRow([now, id, name, age, email, mobile, clean(data.startup, 120), 'New']);

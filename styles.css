@@ -1422,3 +1422,39 @@ html:not(.has-cinema) .viewfinder { opacity: 1; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .linkish { justify-self: start; margin-top: 4px; padding: 0; border: 0; background: none; color: var(--wine); font: 600 0.88rem var(--body); text-decoration: underline; cursor: pointer; }
+
+/* ── E-ticket ── */
+.e-ticket-wrap { display: grid; gap: 16px; opacity: 0; translate: 0 16px; transition: opacity 0.6s, translate 0.8s var(--ease-film); }
+.e-ticket-wrap.is-in { opacity: 1; translate: 0 0; }
+.ticket-note { font-size: 1rem; color: var(--night); }
+.ticket-note b { color: var(--bur); }
+.e-ticket {
+  position: relative; display: grid; grid-template-columns: 1fr auto; border-radius: 20px; overflow: hidden;
+  background: linear-gradient(135deg, #a1043a, #7f011f 55%, #5c0117); color: var(--sand);
+  box-shadow: 0 24px 50px -24px rgba(92, 1, 23, 0.9), inset 0 0 0 1px rgba(245, 235, 208, 0.18);
+}
+.e-ticket::before, .e-ticket::after { content: ''; position: absolute; right: 74px; width: 26px; height: 26px; border-radius: 50%; background: var(--sand); translate: 50% 0; }
+.e-ticket::before { top: -13px; } .e-ticket::after { bottom: -13px; }
+.e-ticket-main { position: relative; padding: 22px 24px 24px; display: grid; gap: 10px; border-right: 2px dashed rgba(245, 235, 208, 0.35); }
+.e-ticket-main header { display: flex; align-items: center; gap: 12px; }
+.e-ticket-main header img { width: 44px; height: auto; border-radius: 8px; }
+.e-ticket-main header b { display: block; font: 800 0.95rem var(--display); text-transform: uppercase; letter-spacing: 0.02em; }
+.e-ticket-main header span { font: 700 0.58rem var(--display); letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245, 235, 208, 0.7); }
+.e-ticket-event { margin-top: 6px; font: 700 0.66rem var(--display); letter-spacing: 0.12em; text-transform: uppercase; color: #ffb3c4; }
+.e-ticket-name { font: 900 clamp(1.5rem, 3.4vw, 2.3rem) var(--display); line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; overflow-wrap: anywhere; }
+.e-ticket dl { margin: 6px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+.e-ticket dl .wide { grid-column: 1 / -1; }
+.e-ticket dt { font: 700 0.56rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: rgba(245, 235, 208, 0.62); }
+.e-ticket dd { margin: 2px 0 0; font: 700 0.95rem var(--display); overflow-wrap: anywhere; }
+.e-ticket-stamp {
+  justify-self: end; margin-top: 6px; padding: 5px 12px; border: 2.5px solid #ffd2dc; border-radius: 8px;
+  font: 900 0.72rem var(--display); letter-spacing: 0.12em; text-transform: uppercase; color: #ffd2dc; rotate: -10deg;
+  animation: stamp-in 0.6s cubic-bezier(.3, 1.6, .5, 1) 0.4s both;
+}
+@keyframes stamp-in { from { opacity: 0; scale: 2.2; } to { opacity: 0.95; scale: 1; } }
+.e-ticket-stub { width: 74px; display: grid; place-items: center; gap: 10px; padding: 16px 0; background: rgba(0, 0, 0, 0.18); }
+.e-ticket-stub span { writing-mode: vertical-rl; rotate: 180deg; font: 700 0.72rem var(--display); letter-spacing: 0.14em; }
+.e-ticket-stub b { font: 900 0.62rem var(--display); letter-spacing: 0.16em; text-transform: uppercase; writing-mode: vertical-rl; rotate: 180deg; color: #ffb3c4; }
+.ticket-actions { align-items: center; gap: 14px; }
+.ticket-fine { font-size: 0.86rem; color: rgba(21, 21, 21, 0.62); }
+@media (max-width: 600px) { .e-ticket-stub { width: 58px; } .e-ticket::before, .e-ticket::after { right: 58px; } .e-ticket dl { grid-template-columns: 1fr; } }

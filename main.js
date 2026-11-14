@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261113b';
-import * as S from './stickers.js?v=20261113b';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114a';
+import * as S from './stickers.js?v=20261114a';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -525,6 +525,14 @@ function mountSpaces() {
 
 /* ── Forms: seat bookings, community joins and guest pitches all land in the Google Sheet ── */
 
+// "+91 88970 04533" → "8897004533". Indian numbers become 10 digits; others keep their digits.
+function normalizeMobile(v) {
+  let digits = String(v || '').replace(/\D/g, '');
+  if (digits.length === 12 && digits.startsWith('91')) digits = digits.slice(2);
+  else if (digits.length === 11 && digits.startsWith('0')) digits = digits.slice(1);
+  return digits.length >= 8 && digits.length <= 15 ? digits : '';
+}
+
 const priceText = () => `₹${Number(booking.price || 0).toLocaleString('en-IN')}`;
 
 async function sendToSheet(payload, route = '') {
@@ -578,6 +586,8 @@ function mountForms() {
       const bad = validate(form);
       if (bad) { status.textContent = 'Fill in your name, age, email and a valid mobile number.'; bad.focus(); return; }
       const d = Object.fromEntries(new FormData(form));
+      d.mobile = normalizeMobile(d.mobile);
+      if (!d.mobile) { status.textContent = 'Enter a valid mobile number.'; form.elements.mobile?.focus(); return; }
       try { const { website, ...keep } = d; localStorage.setItem(key, JSON.stringify(keep)); } catch {}
       button.disabled = true;
       button.classList.add('is-busy');
@@ -676,7 +686,7 @@ async function startPayment(card, bookingId) {
   let order;
   try {
     const [Razorpay, created] = await Promise.all([loadCheckout().catch(() => null), sendToSheet({ booking_id: bookingId }, 'create-order')]);
-    if (created.paid) { seatState(card, 'paid'); forgetSeat(); return; }
+    if (created.paid) { seatState(card, 'paid'); showTicket(card, { id: bookingId, name: $('[data-out="name"]', done)?.textContent }); forgetSeat(); return; }
     if (!created.ok) throw new Error(created.error || 'Could not start the payment.');
     if (!Razorpay) { seatState(card, 'blocked'); return; }
     order = created;
@@ -692,12 +702,25 @@ async function startPayment(card, bookingId) {
       notes: { booking_id: bookingId },
       theme: { color: '#93032e' },
       retry: { enabled: true },
+      hidden: { contact: true, email: true },
+      readonly: { contact: true, email: true },
+      config: {
+        display: {
+          blocks: { qr: { name: 'Scan & pay with any UPI app', instruments: [{ method: 'upi', flows: ['qr'] }] } },
+          sequence: ['block.qr'],
+          preferences: { show_default_blocks: false },
+        },
+      },
       modal: { confirm_close: true, ondismiss: () => { if (done.dataset.state === 'open') seatState(card, 'dismissed'); } },
       handler: async (resp) => {
         seatState(card, 'verifying');
         try {
           const v = await sendToSheet({ booking_id: bookingId, ...resp }, 'verify-payment');
-          if (v.ok) { seatState(card, 'paid', { paymentId: v.payment_id }); forgetSeat(); }
+          if (v.ok) {
+            seatState(card, 'paid', { paymentId: v.payment_id });
+            showTicket(card, { id: bookingId, name: order.prefill?.name || $('[data-out="name"]', done)?.textContent, paymentId: v.payment_id, paidAt: new Date().toISOString() });
+            forgetSeat();
+          }
           else seatState(card, 'pending', { message: v.error ? `${v.error} If money was deducted, it’s recorded automatically within 10 minutes.` : undefined });
         } catch { seatState(card, 'pending'); }
       },
@@ -714,12 +737,132 @@ async function startPayment(card, bookingId) {
   }
 }
 
+/* ── The ticket: issued on payment, made to be screenshotted (and saved as an image) ── */
+
+function ticketData(t) {
+  const when = t.paidAt ? new Date(t.paidAt) : new Date();
+  return {
+    name: (t.name || '').trim() || 'Founder',
+    id: t.id,
+    paymentId: t.paymentId || '',
+    issued: when.toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }),
+    event: booking.event || 'Live recording',
+    date: booking.date || 'To be announced',
+    venue: booking.venue || 'To be announced',
+    price: priceText(),
+  };
+}
+
+function showTicket(card, t) {
+  const d = ticketData(t);
+  try { localStorage.setItem('tfm-ticket', JSON.stringify(t)); } catch {}
+  $$('.book-steps li', card).forEach((li) => { li.className = 'is-done'; });
+  const done = $('.booked', card);
+  if (done) done.hidden = true;
+  $('#bookForm', card).hidden = true;
+  $('.e-ticket-wrap', card)?.remove();
+  const wrap = document.createElement('div');
+  wrap.className = 'e-ticket-wrap';
+  wrap.innerHTML = `
+    <p class="ticket-note"><b>Your seat is confirmed.</b> Take a screenshot of this ticket — show it at the door.</p>
+    <article class="e-ticket" aria-label="Your ticket">
+      <div class="e-ticket-main">
+        <header><img src="img/tfm-logo.png" alt="" width="44" height="43"><div><b>The Founder Mafia</b><span>Admit one founder</span></div></header>
+        <p class="e-ticket-event">${esc(d.event)}</p>
+        <p class="e-ticket-name">${esc(d.name)}</p>
+        <dl>
+          <div><dt>Booking ID</dt><dd>${esc(d.id)}</dd></div>
+          <div><dt>Paid</dt><dd>${esc(d.price)}</dd></div>
+          <div><dt>Date</dt><dd>${esc(d.date)}</dd></div>
+          <div><dt>Venue</dt><dd>${esc(d.venue)}</dd></div>
+          ${d.paymentId ? `<div class="wide"><dt>Payment ID</dt><dd>${esc(d.paymentId)}</dd></div>` : ''}
+          <div class="wide"><dt>Issued</dt><dd>${esc(d.issued)}</dd></div>
+        </dl>
+        <span class="e-ticket-stamp">Confirmed</span>
+      </div>
+      <div class="e-ticket-stub" aria-hidden="true"><span>${esc(d.id)}</span><b>Seat</b></div>
+    </article>
+    <div class="pill-row ticket-actions">
+      <button class="pill is-solid btn pay-btn" type="button" data-save-ticket>Save ticket as image</button>
+      <button class="linkish" type="button" data-new-seat>Book another seat</button>
+    </div>
+    <p class="ticket-fine">We’ll email the date and venue before recording night. Keep your booking ID.</p>`;
+  card.append(wrap);
+  $('[data-save-ticket]', wrap).onclick = () => saveTicket(d);
+  $('[data-new-seat]', wrap).onclick = () => {
+    try { localStorage.removeItem('tfm-ticket'); } catch {}
+    wrap.remove();
+    const form = $('#bookForm', card);
+    form.hidden = false; form.reset();
+    $$('button[type="submit"]', form).forEach((b) => { b.disabled = false; b.classList.remove('is-busy'); });
+    $('.form-status', form).textContent = '';
+    $$('.book-steps li', card).forEach((li, i) => { li.className = i === 0 ? 'is-now' : ''; });
+  };
+  requestAnimationFrame(() => wrap.classList.add('is-in'));
+  wrap.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+}
+
+// Draws the ticket on a canvas (1080 × 1500) so it saves to the phone's gallery.
+async function saveTicket(d) {
+  try { await document.fonts.ready; } catch {}
+  const W = 1080, H = 1600, c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  const bg = g.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#7f011f'); bg.addColorStop(1, '#3d0010');
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  // paper ticket
+  const x = 70, y = 110, w = W - 140, h = H - 220, r = 36;
+  g.fillStyle = '#f5ebd0';
+  g.beginPath(); g.roundRect(x, y, w, h, r); g.fill();
+  const rows = [['BOOKING ID', d.id], ['PAID', d.price], ['DATE', d.date], ['VENUE', d.venue]];
+  if (d.paymentId) rows.push(['PAYMENT ID', d.paymentId]);
+  rows.push(['ISSUED', d.issued]);
+  // perforation notches, below the last row
+  g.fillStyle = '#5c0117';
+  const py = y + 500 + rows.length * 98 + 20;
+  [[x, py], [x + w, py]].forEach(([cx, cy]) => { g.beginPath(); g.arc(cx, cy, 34, 0, Math.PI * 2); g.fill(); });
+  g.strokeStyle = 'rgba(21,21,21,.35)'; g.setLineDash([16, 14]); g.lineWidth = 4;
+  g.beginPath(); g.moveTo(x + 50, py); g.lineTo(x + w - 50, py); g.stroke(); g.setLineDash([]);
+  const logo = await new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = 'img/tfm-logo.png'; });
+  if (logo) g.drawImage(logo, x + 60, y + 60, 120, 117);
+  const T = (text, tx, ty, font, color, align = 'left', spacing = 0) => { g.font = font; g.fillStyle = color; g.textAlign = align; if ('letterSpacing' in g) g.letterSpacing = `${spacing}px`; g.fillText(text, tx, ty); };
+  T('THE FOUNDER MAFIA', x + 210, y + 118, '800 44px Poppins, sans-serif', '#151515', 'left', 1);
+  T('ADMIT ONE FOUNDER', x + 210, y + 162, '700 26px Poppins, sans-serif', '#93032e', 'left', 4);
+  T(d.event.toUpperCase(), x + 60, y + 290, '700 30px Poppins, sans-serif', '#7f011f', 'left', 2);
+  let size = 92; g.font = `900 ${size}px Poppins, sans-serif`;
+  while (g.measureText(d.name.toUpperCase()).width > w - 120 && size > 48) { size -= 4; g.font = `900 ${size}px Poppins, sans-serif`; }
+  T(d.name.toUpperCase(), x + 60, y + 400, `900 ${size}px Poppins, sans-serif`, '#93032e');
+  rows.forEach(([k, v], i) => {
+    const ry = y + 500 + i * 98;
+    T(k, x + 60, ry, '700 24px Poppins, sans-serif', 'rgba(21,21,21,.55)', 'left', 3);
+    T(v, x + 60, ry + 44, '700 36px Poppins, sans-serif', '#151515');
+  });
+  // stamp
+  g.save(); g.translate(x + w - 220, y + 560); g.rotate(-0.2);
+  g.strokeStyle = '#93032e'; g.lineWidth = 7; g.beginPath(); g.roundRect(-170, -56, 340, 112, 16); g.stroke();
+  T('CONFIRMED', 0, 18, '900 54px Poppins, sans-serif', '#93032e', 'center', 4); g.restore();
+  T('Show this ticket at the door.', W / 2, py + 100, '600 36px "Open Sans", sans-serif', '#151515', 'center');
+  T('thefoundermafia.com', W / 2, py + 160, '700 28px Poppins, sans-serif', '#93032e', 'center', 2);
+  c.toBlob((blob) => {
+    if (!blob) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = `TFM-ticket-${d.id}.png`;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }, 'image/png');
+}
+
 function forgetSeat() { try { localStorage.removeItem('tfm-seat'); } catch {} }
 
 // Came back later with a held, unpaid seat? Offer to finish paying for it.
 function resumeSeat() {
   const card = $('#bookingCard');
-  if (!card || !safeUrl(booking.endpoint)) return;
+  if (!card) return;
+  let ticket = null;
+  try { ticket = JSON.parse(localStorage.getItem('tfm-ticket') || 'null'); } catch {}
+  if (ticket?.id) { showTicket(card, ticket); return; }
+  if (!safeUrl(booking.endpoint)) return;
   let seat = null;
   try { seat = JSON.parse(localStorage.getItem('tfm-seat') || 'null'); } catch {}
   if (!seat?.id) return;
