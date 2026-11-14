@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114a';
-import * as S from './stickers.js?v=20261114a';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114b';
+import * as S from './stickers.js?v=20261114b';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -704,12 +704,22 @@ async function startPayment(card, bookingId) {
       retry: { enabled: true },
       hidden: { contact: true, email: true },
       readonly: { contact: true, email: true },
+      // Phones open the buyer's UPI app (GPay, PhonePe, Paytm…) with the QR as a fallback; computers show the QR only.
       config: {
-        display: {
-          blocks: { qr: { name: 'Scan & pay with any UPI app', instruments: [{ method: 'upi', flows: ['qr'] }] } },
-          sequence: ['block.qr'],
-          preferences: { show_default_blocks: false },
-        },
+        display: isPhone()
+          ? {
+            blocks: {
+              apps: { name: 'Pay with your UPI app', instruments: [{ method: 'upi', flows: ['intent'] }] },
+              qr: { name: 'Or scan the UPI QR', instruments: [{ method: 'upi', flows: ['qr'] }] },
+            },
+            sequence: ['block.apps', 'block.qr'],
+            preferences: { show_default_blocks: false },
+          }
+          : {
+            blocks: { qr: { name: 'Scan & pay with any UPI app', instruments: [{ method: 'upi', flows: ['qr'] }] } },
+            sequence: ['block.qr'],
+            preferences: { show_default_blocks: false },
+          },
       },
       modal: { confirm_close: true, ondismiss: () => { if (done.dataset.state === 'open') seatState(card, 'dismissed'); } },
       handler: async (resp) => {
@@ -851,6 +861,10 @@ async function saveTicket(d) {
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }, 'image/png');
+}
+
+function isPhone() {
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (matchMedia('(pointer: coarse)').matches && innerWidth < 900);
 }
 
 function forgetSeat() { try { localStorage.removeItem('tfm-seat'); } catch {} }
