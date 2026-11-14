@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114b';
-import * as S from './stickers.js?v=20261114b';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114c';
+import * as S from './stickers.js?v=20261114c';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -743,7 +743,12 @@ async function startPayment(card, bookingId) {
     rzp.open();
   } catch (err) {
     console.warn('[tfm] payment', err);
-    seatState(card, 'error', { message: /^(This|Booking|Could|Payment)/.test(err.message || '') ? err.message : undefined });
+    const m = String(err?.message || '');
+    // An old deployment of the backend answers /create-order like a form save ("Please fill in…")
+    const message = /^Please fill in/.test(m) ? 'Online payment is being switched on. Your seat is held — please try again in a little while.'
+      : err instanceof TypeError ? 'Couldn’t reach the payment desk. Check your connection and try again.'
+      : /^(This|Booking|Could|Payment)/.test(m) ? m : undefined;
+    seatState(card, 'error', { message });
   }
 }
 
