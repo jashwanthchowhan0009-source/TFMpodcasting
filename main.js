@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114d';
-import * as S from './stickers.js?v=20261114d';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114e';
+import * as S from './stickers.js?v=20261114e';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -538,7 +538,9 @@ const priceText = () => `₹${Number(booking.price || 0).toLocaleString('en-IN')
 async function sendToSheet(payload, route = '') {
   const base = safeUrl(booking.endpoint);
   if (!base) return { ok: false, offline: true };
-  const endpoint = route ? `${base.replace(/\/+$/, '')}/${route}` : base;
+  // Always the /exec URL itself: the step rides in the body, since /exec/<path> URLs fail cross-origin.
+  const endpoint = base;
+  if (route) payload = { ...payload, action: route };
   // text/plain keeps this a "simple" request: no CORS preflight, which Apps Script can't answer
   let res;
   try {

@@ -4,11 +4,12 @@
  * Saves seat bookings, community joins and guest pitches to the Google Sheet
  * "The Founder Mafia — Bookings & Pitches", and runs the Razorpay payment flow for ₹199 seats.
  *
- * Endpoints (all under the Web app URL that ends in /exec):
- *   POST /exec                  save a booking / join / pitch          body: { type, name, age, email, mobile, startup }
- *   POST /exec/create-order     create a Razorpay order for a booking  body: { booking_id }
- *   POST /exec/verify-payment   verify Checkout's signature, mark paid body: { booking_id, razorpay_order_id, razorpay_payment_id, razorpay_signature }
- *   GET  /exec                  { booked } count for a "seats left" counter
+ * Endpoints — every request goes to the Web app URL (ending in /exec); the body's "action" picks the step:
+ *   POST { type, name, age, email, mobile, startup }                       save a booking / join / pitch
+ *   POST { action: 'create-order', booking_id }                            create a Razorpay order for a booking
+ *   POST { action: 'verify-payment', booking_id, razorpay_order_id,
+ *          razorpay_payment_id, razorpay_signature }                       verify Checkout's signature, mark paid
+ *   GET                                                                    { booked } count for a "seats left" counter
  *
  * Secrets — never in content.js, never on GitHub. Apps Script → Project Settings (gear icon) → Script Properties:
  *   RAZORPAY_KEY_ID       rzp_test_…  (rzp_live_… when you go live)
@@ -37,9 +38,11 @@ const PAY_HEADERS = ['Razorpay order ID', 'Razorpay payment ID', 'Paid at'];
 /* ───────────────────────── routing ───────────────────────── */
 
 function doPost(e) {
-  const route = String((e && e.pathInfo) || '').replace(/^\/+|\/+$/g, '');
   let data;
   try { data = JSON.parse((e && e.postData && e.postData.contents) || '{}'); } catch (err) { return json({ ok: false, error: 'Bad request.' }); }
+  // The step comes in the body ({ action: 'create-order' }) — browsers can't reach /exec/<path> URLs
+  // cross-origin — with ?action= and /exec/<path> still accepted.
+  const route = String(data.action || (e && e.parameter && e.parameter.action) || (e && e.pathInfo) || '').replace(/^\/+|\/+$/g, '');
   try {
     if (route === 'create-order') return json(createOrder(data));
     if (route === 'verify-payment') return json(verifyPayment(data));
