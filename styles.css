@@ -1458,3 +1458,4 @@ html:not(.has-cinema) .viewfinder { opacity: 1; }
 .ticket-actions { align-items: center; gap: 14px; }
 .ticket-fine { font-size: 0.86rem; color: rgba(21, 21, 21, 0.62); }
 @media (max-width: 600px) { .e-ticket-stub { width: 58px; } .e-ticket::before, .e-ticket::after { right: 58px; } .e-ticket dl { grid-template-columns: 1fr; } }
+.err-detail { display: block; margin-top: 6px; font: 400 0.72rem/1.4 ui-monospace, Menlo, monospace; color: rgba(21, 21, 21, 0.6); overflow-wrap: anywhere; }

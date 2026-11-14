@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114c';
-import * as S from './stickers.js?v=20261114c';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261114d';
+import * as S from './stickers.js?v=20261114d';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -540,8 +540,19 @@ async function sendToSheet(payload, route = '') {
   if (!base) return { ok: false, offline: true };
   const endpoint = route ? `${base.replace(/\/+$/, '')}/${route}` : base;
   // text/plain keeps this a "simple" request: no CORS preflight, which Apps Script can't answer
-  const res = await fetch(endpoint, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
-  return res.json();
+  let res;
+  try {
+    res = await fetch(endpoint, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+  } catch (err) {
+    const e = new TypeError('Couldn’t reach the booking desk.'); e.detail = `network: ${err.message}`; throw e;
+  }
+  const text = await res.text();
+  try { return JSON.parse(text); } catch {
+    const e = new Error('Unexpected answer from the booking desk.');
+    const body = text.replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    e.detail = `HTTP ${res.status} ${body.slice(0, 160)}`;
+    throw e;
+  }
 }
 
 function validate(form) {
@@ -673,7 +684,10 @@ function seatState(card, state, info = {}) {
     paid: [`Paid ${priceText()} · ${info.paymentId ? `Payment ID ${esc(info.paymentId)}` : 'confirmed'}`, ''],
     offline: ['Online payment opens in a few days. Your seat is held — we’ll email you the payment link.', ''],
   }[state];
-  if (payState) payState.textContent = msg[0];
+  if (payState) {
+    payState.textContent = msg[0];
+    if (info.detail) { const small = document.createElement('small'); small.className = 'err-detail'; small.textContent = `Details: ${info.detail}`; payState.append(small); }
+  }
   if (row) row.innerHTML = msg[1];
   if (confirmState && paid) confirmState.textContent = 'We’ll email the date and venue before recording night.';
 }
@@ -687,7 +701,7 @@ async function startPayment(card, bookingId) {
   try {
     const [Razorpay, created] = await Promise.all([loadCheckout().catch(() => null), sendToSheet({ booking_id: bookingId }, 'create-order')]);
     if (created.paid) { seatState(card, 'paid'); showTicket(card, { id: bookingId, name: $('[data-out="name"]', done)?.textContent }); forgetSeat(); return; }
-    if (!created.ok) throw new Error(created.error || 'Could not start the payment.');
+    if (!created.ok) { const e = new Error(created.error || 'Could not start the payment.'); e.detail = `server: ${created.error || JSON.stringify(created).slice(0, 140)}`; throw e; }
     if (!Razorpay) { seatState(card, 'blocked'); return; }
     order = created;
     const rzp = new Razorpay({
@@ -748,7 +762,7 @@ async function startPayment(card, bookingId) {
     const message = /^Please fill in/.test(m) ? 'Online payment is being switched on. Your seat is held — please try again in a little while.'
       : err instanceof TypeError ? 'Couldn’t reach the payment desk. Check your connection and try again.'
       : /^(This|Booking|Could|Payment)/.test(m) ? m : undefined;
-    seatState(card, 'error', { message });
+    seatState(card, 'error', { message, detail: err?.detail || `${err?.name || 'Error'}: ${m}`.slice(0, 160) });
   }
 }
 
