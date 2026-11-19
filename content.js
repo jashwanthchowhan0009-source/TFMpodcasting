@@ -98,9 +98,14 @@ export const lastUpdate = '5 Nov 2026';
 
 // About Us page: the team. Add one entry per person.
 // `photo` is optional, e.g. 'media/team-ravi.jpg'. Without one, the card shows their initials.
+// `bio` shows on the card; optional `about` opens under it with "Read more".
 export const team = [
   { name: 'Phanindra Aarav', role: 'Founder & Host', bio: 'Runs the table and every conversation on it.', photo: 'media/phanindra-aarav.jpg' },
-  { name: 'Vamsi', role: 'Co-founder', bio: '', photo: 'media/vamsi.jpg' },
+  {
+    name: 'Vamshi Mallam', role: 'Co-founder', photo: 'media/vamshi-mallam.jpg',
+    bio: 'Understanding money was the beginning. Understanding business became the next chapter.',
+    about: 'With a background in wealth management, I now focus on entrepreneurship, business development, and creating value from opportunities.',
+  },
   { name: 'Jashwanth Chowhan', role: 'Creative Lead', bio: 'Shapes how the show looks, sounds and lands online.', photo: 'media/jashwanth-chowhan.jpg' },
   { name: 'Arjun Sabavath', role: 'Core team', bio: '', photo: 'media/arjun-sabavath.jpg' },
 ];

@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261119b';
-import * as S from './stickers.js?v=20261119b';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261119c';
+import * as S from './stickers.js?v=20261119c';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -338,6 +338,7 @@ function mountTeam() {
       <h3>${esc(p.name)}</h3>
       <p class="member-role">${esc(p.role)}</p>
       ${p.bio ? `<p class="member-bio">${esc(p.bio)}</p>` : ''}
+      ${p.about ? `<details class="member-more"><summary>Read more</summary><p>${esc(p.about)}</p></details>` : ''}
     </li>`;
   }).join('');
 }

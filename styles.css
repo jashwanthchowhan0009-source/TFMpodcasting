@@ -1459,3 +1459,12 @@ html:not(.has-cinema) .viewfinder { opacity: 1; }
 .ticket-fine { font-size: 0.86rem; color: rgba(21, 21, 21, 0.62); }
 @media (max-width: 600px) { .e-ticket-stub { width: 58px; } .e-ticket::before, .e-ticket::after { right: 58px; } .e-ticket dl { grid-template-columns: 1fr; } }
 .err-detail { display: block; margin-top: 6px; font: 400 0.72rem/1.4 ui-monospace, Menlo, monospace; color: rgba(21, 21, 21, 0.6); overflow-wrap: anywhere; }
+
+/* team: longer bio opens under the card */
+.member-more { padding-inline: 4px; }
+.member-more summary { display: inline-flex; align-items: center; gap: 6px; list-style: none; cursor: pointer; font: 700 0.62rem var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: #e0335f; }
+.member-more summary::-webkit-details-marker { display: none; }
+.member-more summary::after { content: '+'; font-size: 0.9rem; line-height: 1; transition: transform 0.3s; }
+.member-more[open] summary::after { transform: rotate(45deg); }
+.member-more[open] summary { margin-bottom: 6px; }
+.member-more p { font-size: 0.95rem; color: rgba(245, 235, 208, 0.85); }
