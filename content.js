@@ -102,7 +102,7 @@ export const lastUpdate = '5 Nov 2026';
 export const team = [
   { name: 'Phanindra Aarav', role: 'Founder & Host', bio: 'Runs the table and every conversation on it.', photo: 'media/phanindra-aarav.jpg' },
   {
-    name: 'Vamshi Mallam', role: 'Co-founder', photo: 'media/vamshi-mallam.jpg',
+    name: 'Vamshi Mallam', role: 'Co-founder', photo: 'media/vamshi-mallam-2.jpg',
     bio: 'From wealth management to building businesses.',
     about: 'Understanding money was the beginning. Understanding business became the next chapter. With a background in wealth management, I now focus on entrepreneurship, business development, and creating value from opportunities.',
   },
