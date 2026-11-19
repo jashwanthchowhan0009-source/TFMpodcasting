@@ -1,5 +1,5 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261119a';
-import * as S from './stickers.js?v=20261119a';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261119b';
+import * as S from './stickers.js?v=20261119b';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -36,7 +36,7 @@ const goTo = (y) => (lenis ? lenis.scrollTo(y, { duration: 1.2 }) : scrollTo({ t
 
 function reveals() {
   const groups = [
-    '.block-head', '.intro > *', '.road > li', '.lineup > figure', '.trailer > *', '.pillars > li', '.tracks > .track', '.n-head', '.n-steps > li', '.n-track', '.n-road > li', '.n-team > li', '.n-split > *', '.n-host > *',
+    '.block-head', '.intro > *', '.road > li', '.lineup > figure', '.trailer > *', '.pillars > li', '.tracks > .track',
     '.index', '.glimpse > figure', '.keywords > li', '.info-grid > *', '.steps > li', '.rules > li', '.team > li',
     '.channels > li', '.meetups > li', '.faq > details', '.look-for > li', '.split > *', '.join .wordmark-pill',
     '.foot-cta > *', '.foot-grid > *', '.foot-end', '.book-grid > *', '.av-card > *', '.av-points > li', '.ticket-card > div',
@@ -292,19 +292,6 @@ function mountHome() {
     const note = $('#tvNote');
     if (note) note.textContent = url ? 'Click the TV to watch the full trailer on YouTube.' : video ? '' : 'The trailer drops before the first episode.';
   }
-
-  // noir home: the reserved seats beside the host, and the three tracks
-  const seats = $('#seats');
-  if (seats) seats.innerHTML = table.slice(1).map((p) => `
-    <li><span class="seat-suit" aria-hidden="true"></span><div><h3>${esc(p.name || 'Reserved')}<small>${esc(p.role)}</small></h3><p>${esc(p.note)}</p></div></li>`).join('');
-  const nt = $('#nTracks');
-  if (nt) nt.innerHTML = Object.values(tracks).map((t) => `
-    <article class="n-track">
-      <span class="n-suit" aria-hidden="true">${esc(t.suit)}</span>
-      <h3>${esc(t.name)}</h3>
-      <p class="n-track-sub">${esc(t.sub)}</p>
-      <p>${esc(t.text)}</p>
-    </article>`).join('');
 
   const tr = $('#tracks');
   if (tr) tr.innerHTML = Object.values(tracks).map((t, i) => `
@@ -1023,7 +1010,7 @@ function frameStops() {
       if (kind === 'tunnel') {
         const n = (sec.dataset.words || '').split('|').length;
         ps = Array.from({ length: n }, (_, i) => Math.min(1, i / (n - 0.35)));
-      } else if (kind === 'coin') ps = document.body.classList.contains('noir') ? [0.06, 0.56] : [0.06, 0.56, 1];
+      } else if (kind === 'coin') ps = [0.06, 0.56, 1];
       else if (kind === 'ring') ps = [0.12, 0.6];
       else if (kind === 'cube') ps = [0.1, 0.5, 0.9];
       ps.forEach((p) => stops.push(t + p * run));

@@ -100,7 +100,7 @@ export const lastUpdate = '5 Nov 2026';
 // `photo` is optional, e.g. 'media/team-ravi.jpg'. Without one, the card shows their initials.
 export const team = [
   { name: 'Phanindra Aarav', role: 'Founder & Host', bio: 'Runs the table and every conversation on it.', photo: 'media/phanindra-aarav.jpg' },
-  { name: 'Co-founder', role: 'Founder', bio: 'Joining the table soon.', photo: '' }, // ← second founder: name, role, bio, photo
+  { name: 'Vamsi', role: 'Co-founder', bio: '', photo: 'media/vamsi.jpg' },
   { name: 'Jashwanth Chowhan', role: 'Creative Lead', bio: 'Shapes how the show looks, sounds and lands online.', photo: 'media/jashwanth-chowhan.jpg' },
   { name: 'Arjun Sabavath', role: 'Core team', bio: '', photo: 'media/arjun-sabavath.jpg' },
 ];
