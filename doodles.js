@@ -128,13 +128,19 @@ export function mountSky({ still = false } = {}) {
   sky.className = 'doodle-sky';
   sky.setAttribute('aria-hidden', 'true');
   let html = boilFilter(still);
+  // the rocket and the plane cross the whole page; everyone else gets a cell of an even grid
+  const roamers = cast.filter((n) => !['rocket', 'plane'].includes(n)).length;
+  const cols = phone ? 3 : 4, rows = Math.ceil(roamers / cols);
+  let cell = 0;
   const actors = cast.map((name, i) => {
+    const k = ['rocket', 'plane'].includes(name) ? 0 : cell++;
     const size = phone ? 30 + r() * 10 : 40 + r() * 18;
     const a = {
       name, size, mode: TRAVEL[name] || 'wander',
       // wander: a slow Lissajous loop across the whole page
-      cx: 0.1 + r() * 0.8, cy: (i + r()) / cast.length,
-      ax: 0.12 + r() * 0.22, ay: 0.08 + r() * 0.14,
+      // spread evenly: each doodle owns a cell of a grid over the page and roams around it
+      cx: ((k % cols) + 0.5) / cols + (r() - 0.5) * 0.06, cy: (Math.floor(k / cols) + 0.2 + r() * 0.6) / rows,
+      ax: (0.22 + r() * 0.12) / cols, ay: (0.3 + r() * 0.25) / rows,
       fx: (0.5 + r() * 0.7) / 60, fy: (0.4 + r() * 0.8) / 60, px: r() * 6.3, py: r() * 6.3,
       z: 0.15 + r() * 0.45, t0: r() * 60,
     };
@@ -159,8 +165,8 @@ export function mountSky({ still = false } = {}) {
       const A = actors[i];
       for (let j = i + 1; j < n; j++) {
         const B = actors[j];
-        const dx = (B.tx + B.ox + B.size / 2) - (A.tx + A.ox + A.size / 2);
-        const dy = (B.ty + B.oy + B.size / 2) - (A.ty + A.oy + A.size / 2);
+        const dx = (B.tx + B.size / 2) - (A.tx + A.size / 2);
+        const dy = (B.ty + B.size / 2) - (A.ty + A.size / 2);
         const d = Math.hypot(dx, dy) || 0.01, min = (A.size + B.size) / 2 + 46;
         if (d < min) {
           const push = (min - d) * 0.5, ux = dx / d, uy = dy / d;
@@ -171,8 +177,9 @@ export function mountSky({ still = false } = {}) {
     const boxes = clear.map((el) => el.getBoundingClientRect());
     for (let i = 0; i < n; i++) {
       const a = actors[i];
-      a.ox = Math.max(-260, Math.min(260, a.ox * 0.97 + fx[i] * 0.12));
-      a.oy = Math.max(-260, Math.min(260, a.oy * 0.97 + fy[i] * 0.12));
+      // ease toward this frame's push only — offsets fade as soon as they're clear of each other
+      a.ox += (Math.max(-120, Math.min(120, fx[i] * 1.6)) - a.ox) * 0.08;
+      a.oy += (Math.max(-120, Math.min(120, fy[i] * 1.6)) - a.oy) * 0.08;
       a.x = a.tx + a.ox; a.y = a.ty + a.oy;
       const cx = a.x + a.size / 2, cy = a.y + a.size / 2;
       const hidden = boxes.some((b) => cx > b.left - 30 && cx < b.right + 30 && cy > b.top - 30 && cy < b.bottom + 30);
@@ -191,7 +198,9 @@ export function mountSky({ still = false } = {}) {
         const T = 11, k = ((t + a.t0) % T) / T;
         const cyc = Math.floor((t + a.t0) / T);
         const rr = rng(cyc * 31 + 7);
-        const x0 = rr() * W * 0.45, x1 = W * 0.55 + rr() * W * 0.45;
+        // alternate: left-to-right one flight, right-to-left the next
+        let x0 = rr() * W * 0.45, x1 = W * 0.55 + rr() * W * 0.45;
+        if (cyc % 2) [x0, x1] = [W - x0, W - x1];
         const p0 = [x0, H + s], c = [x0 + (x1 - x0) * 0.12, H * (0.05 + rr() * 0.25)], p1 = [x1, -s * 1.5];
         const e = k, u = 1 - e;
         const x = u * u * p0[0] + 2 * u * e * c[0] + e * e * p1[0];

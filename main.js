@@ -1,6 +1,6 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261126j';
-import * as S from './stickers.js?v=20261126j';
-import { mountSky, doodle } from './doodles.js?v=20261126j';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261126n';
+import * as S from './stickers.js?v=20261126n';
+import { mountSky, doodle } from './doodles.js?v=20261126n';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
