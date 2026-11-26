@@ -1568,10 +1568,10 @@ body:not(.is-ready) .doodle > svg { scale: 0; opacity: 0; }
 .k-globe .spin { animation: globe-spin 3.2s linear infinite; }
 @keyframes globe-spin { to { transform: translateX(19px); } }
 /* the case opens, a page peeks out, it shuts again */
-.k-briefcase .lid { transform-origin: 87px 40px; animation: case-lid 3.6s ease-in-out infinite; }
+.k-briefcase .lid { transform-origin: 12px 52px; animation: case-lid 3.6s cubic-bezier(.5, 0, .3, 1.3) infinite; }
 .k-briefcase .paper { animation: case-paper 3.6s ease-in-out infinite; }
-@keyframes case-lid { 0%, 25%, 90%, 100% { transform: rotate(0); } 45%, 75% { transform: rotate(-38deg); } }
-@keyframes case-paper { 0%, 30%, 85%, 100% { transform: translateY(22px); } 50%, 72% { transform: translateY(0); } }
+@keyframes case-lid { 0%, 22%, 92%, 100% { transform: rotate(0); } 42%, 76% { transform: rotate(-58deg); } }
+@keyframes case-paper { 0%, 34%, 84%, 100% { transform: translateY(24px); } 52%, 72% { transform: translateY(0); } }
 /* the mic is live: red light blinking, sound coming in */
 .k-mic .rec { animation: rec-blink 1.2s steps(1) infinite; }
 .k-mic .waves path { animation: mic-wave 1.6s ease-out infinite; }
@@ -1638,7 +1638,7 @@ body:not(.is-ready) .doodle > svg { scale: 0; opacity: 0; }
 
 /* ── House rules: a 2D coin toss instead of the 3D coin ── */
 .rules2d-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 80px); align-items: center; }
-.rules2d-art { display: grid; place-items: center; padding-top: 150px; }
+.rules2d-art { display: grid; place-items: center; padding-top: 120px; }
 .rules-coin { width: clamp(180px, 22vw, 300px); aspect-ratio: 1; }
 .rules-coin svg { width: 100%; height: 100%; filter: url(#tfm-boil) drop-shadow(0 16px 14px rgba(30, 0, 8, 0.45)); }
 .rules2d .house-rules { margin-top: 22px; }
@@ -1668,3 +1668,73 @@ body:not(.is-ready) .doodle > svg { scale: 0; opacity: 0; }
 }
 .topbar .pill:not([aria-current="page"]):not(.is-solid):not(.nav-book):hover, .round:hover { background: #3a0010 !important; }
 .member, .about-grid > *, .faq details, .meetups li, .ticket-card { box-shadow: inset 0 0 0 2px rgba(245, 235, 208, 0.12), 7px 9px 0 rgba(21, 8, 12, 0.38) !important; }
+
+/* ── Doodles keep out of the landing banner and the film ── */
+.doodle.is-clear, .doodle.is-gone { opacity: 0 !important; }
+
+/* ── The intro film, now its own frame under the banner ── */
+.film-sec { display: grid; place-items: center; }
+.film-sec .hero-film { margin: 0 auto; }
+
+/* ── Gold TFM coin: heads ₹, tails ♠, a shine sweeping across ── */
+.k-coin .heads { animation: coin-heads 3s infinite; }
+.k-coin .tails { animation: coin-tails 3s infinite; }
+@keyframes coin-heads { 0%, 18.4% { opacity: 1; } 18.5%, 30.9% { opacity: 0; } 31%, 43% { opacity: 1; } 43.1%, 55.4% { opacity: 0; } 55.5%, 100% { opacity: 1; } }
+@keyframes coin-tails { 0%, 18.4% { opacity: 0; } 18.5%, 30.9% { opacity: 1; } 31%, 43% { opacity: 0; } 43.1%, 55.4% { opacity: 1; } 55.5%, 100% { opacity: 0; } }
+.k-coin .shine { animation: coin-shine 3s ease-in-out infinite; }
+@keyframes coin-shine { 0%, 66% { transform: rotate(25deg) translateX(0); } 90%, 100% { transform: rotate(25deg) translateX(150px); } }
+.k-coin .cshadow { transform-origin: 50px 106px; animation: coin-shadow 3s cubic-bezier(.45, 0, .55, 1) infinite; }
+@keyframes coin-shadow { 0%, 12% { transform: scale(1); opacity: 1; } 37% { transform: scale(0.5); opacity: 0.4; } 62%, 100% { transform: scale(1); opacity: 1; } 66% { transform: scale(1.12); } }
+.rules-coin svg { filter: drop-shadow(0 0 40px rgba(243, 194, 90, 0.28)); }
+.doodle .k-coin .cshadow { display: none; }
+
+/* ── Footer: a calm, professional close on every page ── */
+.site-footer.pro-foot {
+  display: grid; grid-template-rows: 1fr auto auto; min-height: 100svh; padding: clamp(90px, 12vh, 130px) 0 calc(24px + env(safe-area-inset-bottom));
+  background: #2a0009; box-shadow: inset 0 2px 0 rgba(245, 235, 208, 0.08);
+}
+.pro-foot .pf-cta { align-self: center; display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 28px 48px; padding-bottom: clamp(40px, 7vh, 80px); }
+.pf-kicker { font: 700 0.7rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: #e0335f; }
+.pf-line { margin-top: 12px; font: 900 clamp(2.4rem, 6.4vw, 6rem) var(--display); line-height: 0.92; letter-spacing: -0.035em; text-transform: uppercase; }
+.pf-sub { margin-top: 16px; max-width: 34rem; color: rgba(245, 235, 208, 0.78); font-size: 1.05rem; }
+.pf-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.pf-actions .pill:not(.is-solid) { background: transparent; box-shadow: inset 0 0 0 2px rgba(245, 235, 208, 0.3); }
+.pro-foot .pf-grid {
+  display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 32px clamp(24px, 4vw, 64px);
+  padding-block: clamp(36px, 6vh, 56px); border-top: 1px solid rgba(245, 235, 208, 0.14); border-bottom: 1px solid rgba(245, 235, 208, 0.14);
+}
+.pf-brand { display: grid; gap: 14px; align-content: start; }
+.pf-logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--sand); font: 800 1.05rem var(--display); text-transform: uppercase; letter-spacing: 0.01em; }
+.pf-logo img { width: 46px; height: auto; }
+.pf-brand p { max-width: 24rem; color: rgba(245, 235, 208, 0.72); font-size: 0.95rem; }
+.pf-social { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf-social:empty { display: none; }
+.pf-social .pill { min-height: 34px; padding: 0 14px; font-size: 0.62rem; background: transparent !important; box-shadow: inset 0 0 0 1px rgba(245, 235, 208, 0.3); }
+.pf-col { display: grid; gap: 4px; align-content: start; }
+.pf-col h3 { margin-bottom: 10px; font: 700 0.68rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: rgba(245, 235, 208, 0.5); }
+.pf-col a { justify-self: start; padding: 4px 0; color: rgba(245, 235, 208, 0.88); text-decoration: none; font-size: 0.98rem; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 0.35s, color 0.2s; }
+.pf-col a:hover { color: var(--sand); background-size: 100% 1px; }
+.pf-venture {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 16px; align-self: start;
+  padding: 18px 20px; border-radius: 20px; text-decoration: none; color: var(--sand);
+  background: #3a0010; box-shadow: inset 0 0 0 2px rgba(245, 235, 208, 0.1), 6px 8px 0 rgba(10, 0, 3, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.pf-venture img { width: auto; height: 62px; }
+.pf-venture span { display: grid; gap: 2px; }
+.pf-venture small { font: 700 0.6rem var(--display); letter-spacing: 0.12em; text-transform: uppercase; color: rgba(245, 235, 208, 0.55); }
+.pf-venture b { font: 800 0.95rem var(--display); text-transform: uppercase; }
+.pf-venture em { font: 700 0.62rem var(--display); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #f0a35a; }
+.pf-venture:hover { transform: translate(-2px, -3px); box-shadow: inset 0 0 0 2px rgba(240, 163, 90, 0.4), 9px 12px 0 rgba(10, 0, 3, 0.4); }
+.pro-foot .pf-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding-top: 20px; }
+.pf-bottom p { font-size: 0.85rem; color: rgba(245, 235, 208, 0.6); }
+.pf-top { border: 0; background: none; cursor: pointer; padding: 6px 0; font: 700 0.68rem var(--display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--sand); }
+.pf-top:hover { color: #e0335f; }
+.pf-top:focus-visible, .pf-col a:focus-visible, .pf-venture:focus-visible { outline: 2px solid var(--sand); outline-offset: 4px; }
+@media (max-width: 1024px) { .pro-foot .pf-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) {
+  .site-footer.pro-foot { min-height: 0; padding-top: 80px; }
+  .pro-foot .pf-grid { grid-template-columns: 1fr 1fr; }
+  .pf-brand, .pf-venture { grid-column: 1 / -1; }
+  .pro-foot .pf-bottom { flex-direction: column; align-items: flex-start; }
+}

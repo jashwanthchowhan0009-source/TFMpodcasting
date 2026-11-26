@@ -1,6 +1,6 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261126g';
-import * as S from './stickers.js?v=20261126g';
-import { mountSky, doodle } from './doodles.js?v=20261126g';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261126i';
+import * as S from './stickers.js?v=20261126i';
+import { mountSky, doodle } from './doodles.js?v=20261126i';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -40,7 +40,7 @@ function reveals() {
     '.block-head', '.intro > *', '.road > li', '.lineup > figure', '.trailer > *', '.pillars > li', '.tracks > .track',
     '.index', '.glimpse > figure', '.keywords > li', '.info-grid > *', '.steps > li', '.rules > li', '.team > li',
     '.channels > li', '.meetups > li', '.faq > details', '.look-for > li', '.split > *', '.join .wordmark-pill',
-    '.foot-cta > *', '.foot-grid > *', '.foot-end', '.book-grid > *', '.av-card > *', '.av-points > li', '.ticket-card > div',
+    '.foot-cta > *', '.foot-grid > *', '.pf-cta > *', '.pf-grid > *', '.foot-end', '.book-grid > *', '.av-card > *', '.av-points > li', '.ticket-card > div',
     '.about-grid > *', '.booth-copy > *', '.booth-form',
   ];
   const els = [];
@@ -111,9 +111,7 @@ function mountFilm() {
   const sound = $('.film-sound', wrap);
   v.muted = true; v.loop = true; // browsers only allow autoplay without sound
   const play = () => v.play()?.catch(() => {});
-  // the loader covers the first moments, so the loop starts from the top the instant the page is revealed
-  if (document.body.classList.contains('is-ready')) play();
-  else document.addEventListener('tfm:ready', () => { v.currentTime = 0; play(); }, { once: true });
+  // it plays whenever it is on screen (see the observer below)
   // if the browser still blocks autoplay (low-power mode), the first touch anywhere starts it
   const kick = () => { if (v.paused) play(); };
   addEventListener('pointerdown', kick, { once: true, passive: true });

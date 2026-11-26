@@ -40,10 +40,10 @@ const DRAW = {
       + lines('M15 37C38 44 62 44 85 37', 'M15 63C38 56 62 56 85 63', 'M12 50L88 50');
   },
 
-  briefcase: () => g('paper', shape('M24 44L24 22L72 22L72 44', '#f3e4c4'))
-    + shape('M13 40L87 40L87 84L13 84Z')
-    + lines('M13 58L87 58', 'M44 53L56 53L56 63L44 63Z')
-    + g('lid', shape('M13 40L13 31L87 31L87 40Z') + lines('M38 31L38 22L62 22L62 31')),
+  briefcase: () => g('paper', shape('M26 56L26 34L58 34L58 56Z', '#f3e4c4') + shape('M40 56L40 30L72 30L72 56Z', '#f3e4c4') + lines('M45 37L66 37', 'M45 43L62 43'))
+    + shape('M12 52L88 52L88 86L12 86Z')
+    + lines('M30 52L30 58', 'M70 52L70 58')
+    + g('lid', shape('M12 52L12 40C12 35 15 32 20 32L80 32C85 32 88 35 88 40L88 52Z') + lines('M38 32L38 23L62 23L62 32', 'M28 52L28 46L34 46L34 52', 'M66 52L66 46L72 46L72 52')),
 
   mic: () => g('waves', lines('M22 22C16 30 16 40 22 48', 'M14 16C5 28 5 42 14 54', 'M78 22C84 30 84 40 78 48', 'M86 16C95 28 95 42 86 54'))
     + shape('M37 21C37 9 63 9 63 21L63 49C63 61 37 61 37 49Z')
@@ -56,10 +56,24 @@ const DRAW = {
     + g('bar b3', shape('M62 84L62 38L73 38L73 84Z'))
     + g('trend', ink(w('M21 58L39 40L53 49L81 20'), ' pathLength="100"') + lines('M67 20L83 18L81 34')),
 
-  coin: () => g('toss', shape(CIRCLE(50, 50, 39)) + lines(CIRCLE(50, 50, 28), 'M39 36L62 36', 'M39 45L62 45', 'M41 36C58 36 58 54 41 54L58 69')),
+  coin: () => {
+    const id = ++uid;
+    const face = `M50 10C72 10 90 28 90 50C90 72 72 90 50 90C28 90 10 72 10 50C10 28 28 10 50 10Z`;
+    return `<defs><linearGradient id="cg${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1bf"/><stop offset=".45" stop-color="#f3c25a"/><stop offset="1" stop-color="#c8871c"/></linearGradient>
+      <clipPath id="cc${id}"><path d="${face}"/></clipPath></defs>`
+      + `<ellipse class="cshadow" cx="50" cy="106" rx="30" ry="5" fill="rgba(20,0,6,.38)"/>`
+      + g('toss',
+        `<path d="${face}" fill="#8f5a10" transform="translate(0 5)"/>`
+        + `<path d="${face}" fill="url(#cg${id})" stroke="#4d0a1c" stroke-width="4"/>`
+        + `<circle cx="50" cy="50" r="35" fill="none" stroke="#fff3cc" stroke-width="2.4" stroke-dasharray="1.5 4.2" opacity=".9"/>`
+        + `<circle cx="50" cy="50" r="30" fill="none" stroke="#b47617" stroke-width="2.5"/>`
+        + g('heads', `<g fill="none" stroke="#7f011f" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><path d="M39 33L61 33"/><path d="M39 42L61 42"/><path d="M41 33C57 33 57 51 41 51L57 66"/></g><text x="50" y="80" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="8" letter-spacing="1.5" fill="#7f011f">TFM</text>`)
+        + g('tails', `<g transform="matrix(1 0 0 -1 0 100)"><path d="M50 26C44 36 32 42 34 52C35 59 43 61 48 56C48 62 46 66 42 70L58 70C54 66 52 62 52 56C57 61 65 59 66 52C68 42 56 36 50 26Z" fill="#7f011f"/><text x="50" y="81" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="7" letter-spacing="1.2" fill="#7f011f">MAFIA</text></g>`)
+        + `<g clip-path="url(#cc${id})"><rect class="shine" x="-30" y="-20" width="16" height="140" fill="#fff" opacity=".55" transform="rotate(25 50 50)"/></g>`);
+  },
 
-  target: () => g('board', shape(CIRCLE(46, 54, 36)) + lines(CIRCLE(46, 54, 23), CIRCLE(46, 54, 10)))
-    + g('arrow', lines('M46 54L94 6', 'M84 4L96 4L96 16', 'M88 0L100 0L100 12')),
+  target: () => g('board', shape(CIRCLE(44, 56, 36)) + `<path d="${w(CIRCLE(44, 56, 23))}" fill="${PINK}" opacity="0.55"/>` + lines(CIRCLE(44, 56, 23), CIRCLE(44, 56, 10)))
+    + g('arrow', `<path d="M44 56L56.7 51.7L48.3 43.3Z" fill="${INK}"/>` + lines('M50 50L94 6', 'M80 20L88.5 20', 'M80 20L80 11.5', 'M86 14L94.5 14', 'M86 14L86 5.5', 'M92 8L100.5 8', 'M92 8L92 -0.5')),
 
   rocket: () => g('flame', shape('M38 63C30 67 25 74 21 81C29 78 36 74 41 66Z', RED))
     + shape('M73 15C58 18 42 34 36 52L48 64C66 58 82 42 85 27C86 19 80 14 73 15Z')
@@ -115,7 +129,7 @@ export function mountSky({ still = false } = {}) {
   sky.setAttribute('aria-hidden', 'true');
   let html = boilFilter(still);
   const actors = cast.map((name, i) => {
-    const size = phone ? 46 + r() * 16 : 62 + r() * 30;
+    const size = phone ? 30 + r() * 10 : 40 + r() * 18;
     const a = {
       name, size, mode: TRAVEL[name] || 'wander',
       // wander: a slow Lissajous loop across the whole page
@@ -133,7 +147,39 @@ export function mountSky({ still = false } = {}) {
   const els = [...sky.querySelectorAll('.doodle')];
   els.forEach((el, i) => { actors[i].el = el; });
 
-  const place = (a, x, y, rot = 0) => { a.x = x; a.y = y; a.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${rot.toFixed(1)}deg)`; };
+  const place = (a, x, y, rot = 0) => { a.tx = x; a.ty = y; a.rot = rot; };
+  actors.forEach((a) => { a.ox = 0; a.oy = 0; a.x = 0; a.y = 0; });
+  // the landing banner and the intro film stay clear of doodles
+  const clear = [...document.querySelectorAll('.hero, .film-sec .hero-film')];
+  const settle = () => {
+    // keep doodles from touching: neighbours push each other apart, softly
+    const n = actors.length;
+    const fx = new Float32Array(n), fy = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const A = actors[i];
+      for (let j = i + 1; j < n; j++) {
+        const B = actors[j];
+        const dx = (B.tx + B.ox + B.size / 2) - (A.tx + A.ox + A.size / 2);
+        const dy = (B.ty + B.oy + B.size / 2) - (A.ty + A.oy + A.size / 2);
+        const d = Math.hypot(dx, dy) || 0.01, min = (A.size + B.size) / 2 + 46;
+        if (d < min) {
+          const push = (min - d) * 0.5, ux = dx / d, uy = dy / d;
+          fx[i] -= ux * push; fy[i] -= uy * push; fx[j] += ux * push; fy[j] += uy * push;
+        }
+      }
+    }
+    const boxes = clear.map((el) => el.getBoundingClientRect());
+    for (let i = 0; i < n; i++) {
+      const a = actors[i];
+      a.ox = Math.max(-260, Math.min(260, a.ox * 0.97 + fx[i] * 0.12));
+      a.oy = Math.max(-260, Math.min(260, a.oy * 0.97 + fy[i] * 0.12));
+      a.x = a.tx + a.ox; a.y = a.ty + a.oy;
+      const cx = a.x + a.size / 2, cy = a.y + a.size / 2;
+      const hidden = boxes.some((b) => cx > b.left - 30 && cx < b.right + 30 && cy > b.top - 30 && cy < b.bottom + 30);
+      a.el.style.transform = `translate3d(${a.x.toFixed(1)}px, ${a.y.toFixed(1)}px, 0) rotate(${a.rot.toFixed(1)}deg)`;
+      if (a.hidden !== hidden) { a.hidden = hidden; a.el.classList.toggle('is-clear', hidden); }
+    }
+  };
   const wrapY = (y, vh) => { const span = vh + 240; let v = (y + 120) % span; if (v < 0) v += span; return v - 120; };
 
   const frame = (now) => {
@@ -153,7 +199,7 @@ export function mountSky({ still = false } = {}) {
         const dx = 2 * u * (c[0] - p0[0]) + 2 * e * (p1[0] - c[0]);
         const dy = 2 * u * (c[1] - p0[1]) + 2 * e * (p1[1] - c[1]);
         place(a, x - s / 2, y - s / 2, (Math.atan2(dy, dx) * 180) / Math.PI + 45);
-        a.el.style.opacity = k > 0.97 ? 0 : 1;
+        a.el.classList.toggle('is-gone', k > 0.97);
       } else if (a.mode === 'glide') {
         const T = 26, k = ((t + a.t0) % T) / T;
         const x = -s + (W + 2 * s) * k;
@@ -173,6 +219,7 @@ export function mountSky({ still = false } = {}) {
         place(a, Math.min(Math.max(x, -s * 0.3), W - s * 0.7), y);
       }
     }
+    settle();
     if (!still) requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
