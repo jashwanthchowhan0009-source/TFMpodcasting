@@ -1,6 +1,6 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261126d';
-import * as S from './stickers.js?v=20261126d';
-import { mountSky, doodle } from './doodles.js?v=20261126d';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261126g';
+import * as S from './stickers.js?v=20261126g';
+import { mountSky, doodle } from './doodles.js?v=20261126g';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -79,7 +79,7 @@ function mount2D() {
     ['K', '♥', 'SPEED', tracks.speed?.text],
     ['Q', '♦', 'SPINE', tracks.spine?.text],
     ['J', '♣', 'FAMILY', 'Members, guests and the host — one table, one family.'],
-    ['?', '♥', 'YOUR SEAT', 'Book a seat for ₹199 and the next card is yours.'],
+    ['?', '♥', 'YOUR SEAT', 'Join the community for ₹999 and the next card is yours.'],
   ];
   for (const fan of $$('[data-fan]')) {
     const n = deck.length;
@@ -663,13 +663,13 @@ function mountForms() {
       try { const { website, ...keep } = d; localStorage.setItem(key, JSON.stringify(keep)); } catch {}
       button.disabled = true;
       button.classList.add('is-busy');
-      status.textContent = type === 'join' ? 'Opening the door…' : 'Holding your seat…';
+      status.textContent = type === 'join' ? 'Opening the door…' : 'Holding your place…';
       try {
         const r = await sendToSheet({ type, ...d, page: location.pathname });
         if (r.offline) {
           status.textContent = type === 'join'
             ? 'Joining opens in a few days. Your details are kept on this device, so it’s one tap when we go live.'
-            : 'Seat booking opens in a few days. Your details are kept on this device, so it’s one tap when we go live.';
+            : 'Registration opens in a few days. Your details are kept on this device, so it’s one tap when we go live.';
           button.disabled = false;
           button.classList.remove('is-busy');
           return;
@@ -697,7 +697,7 @@ function mountForms() {
   }
 }
 
-/* ── Razorpay Checkout: hold the seat → pay ₹199 → verified on the server → confirmed ── */
+/* ── Razorpay Checkout: hold the place → pay ₹999 → verified on the server → confirmed ── */
 
 let checkoutLoading = null;
 function loadCheckout() {
@@ -729,21 +729,21 @@ function seatState(card, state, info = {}) {
   done.dataset.state = state;
   steps.forEach((li, i) => { li.classList.toggle('is-done', i === 0 || paid); li.classList.toggle('is-now', (i === 1 && !paid) || (i === 2 && paid)); });
   pills.forEach((li, i) => { li.classList.toggle('is-done', i === 0 || (paid && i === 1)); li.classList.toggle('is-now', paid ? i === 2 : i === 1); });
-  if (label) label.textContent = paid ? 'Seat confirmed' : 'Seat held';
-  if (head) head.innerHTML = paid ? `Your seat is confirmed, <span data-out="name">${esc(name)}</span>.` : `You’re on the list, <span data-out="name">${esc(name)}</span>.`;
+  if (label) label.textContent = paid ? 'Membership confirmed' : 'Place held';
+  if (head) head.innerHTML = paid ? `Your membership is confirmed, <span data-out="name">${esc(name)}</span>.` : `You’re on the list, <span data-out="name">${esc(name)}</span>.`;
   const button = (text, busy = false) => `<button class="pill is-solid btn pay-btn${busy ? ' is-busy' : ''}" type="button" data-pay ${busy ? 'disabled' : ''}>${text}</button>`;
   const msg = {
     held: ['Opening secure payment…', button('Opening payment…', true)],
     opening: ['Opening secure payment…', button('Opening payment…', true)],
     open: ['Finish the payment in the Razorpay window.', button('Payment window open…', true)],
     verifying: ['Confirming your payment…', button('Confirming…', true)],
-    dismissed: ['Payment not completed. Your seat is still held — pay to confirm it.', button(`Pay ${priceText()} to confirm`)],
+    dismissed: ['Payment not completed. Your place is still held — pay to confirm your membership.', button(`Pay ${priceText()} to confirm`)],
     failed: [info.message || 'The payment didn’t go through. Try again, or pick another method.', button(`Try again · ${priceText()}`)],
     blocked: ['The payment window couldn’t load. Turn off any ad-blocker for this site and try again.', button(`Pay ${priceText()} to confirm`)],
     error: [info.message || 'We couldn’t start the payment. Please try again.', button(`Pay ${priceText()} to confirm`)],
     pending: [info.message || 'We couldn’t confirm the payment yet. If money was deducted, it’s recorded automatically within 10 minutes — keep your booking ID.', button('Check again')],
     paid: [`Paid ${priceText()} · ${info.paymentId ? `Payment ID ${esc(info.paymentId)}` : 'confirmed'}`, ''],
-    offline: ['Online payment opens in a few days. Your seat is held — we’ll email you the payment link.', ''],
+    offline: ['Online payment opens in a few days. Your place is held — we’ll email you the payment link.', ''],
   }[state];
   if (payState) {
     payState.textContent = msg[0];
@@ -771,7 +771,7 @@ async function startPayment(card, bookingId) {
       currency: order.currency,
       order_id: order.order_id,
       name: 'The Founder Mafia',
-      description: `Live recording seat · ${bookingId}`,
+      description: `TFM Community membership · ${bookingId}`,
       image: new URL('img/tfm-logo.png', location.href).href,
       prefill: order.prefill,
       notes: { booking_id: bookingId },
@@ -820,7 +820,7 @@ async function startPayment(card, bookingId) {
     console.warn('[tfm] payment', err);
     const m = String(err?.message || '');
     // An old deployment of the backend answers /create-order like a form save ("Please fill in…")
-    const message = /^Please fill in/.test(m) ? 'Online payment is being switched on. Your seat is held — please try again in a little while.'
+    const message = /^Please fill in/.test(m) ? 'Online payment is being switched on. Your place is held — please try again in a little while.'
       : err instanceof TypeError ? 'Couldn’t reach the payment desk. Check your connection and try again.'
       : /^(This|Booking|Could|Payment)/.test(m) ? m : undefined;
     seatState(card, 'error', { message, detail: err?.detail || `${err?.name || 'Error'}: ${m}`.slice(0, 160) });
@@ -854,14 +854,14 @@ function showTicket(card, t) {
   const wrap = document.createElement('div');
   wrap.className = 'e-ticket-wrap';
   wrap.innerHTML = `
-    <p class="ticket-note"><b>Your seat is confirmed.</b> Take a screenshot of this ticket — show it at the door.</p>
-    <article class="e-ticket" aria-label="Your ticket">
+    <p class="ticket-note"><b>Your membership is confirmed.</b> Take a screenshot of this pass — show it at the door.</p>
+    <article class="e-ticket" aria-label="Your membership pass">
       <div class="e-ticket-main">
         <header><img src="img/tfm-logo.png" alt="" width="44" height="43"><div><b>The Founder Mafia</b><span>Admit one founder</span></div></header>
         <p class="e-ticket-event">${esc(d.event)}</p>
         <p class="e-ticket-name">${esc(d.name)}</p>
         <dl>
-          <div><dt>Booking ID</dt><dd>${esc(d.id)}</dd></div>
+          <div><dt>Membership ID</dt><dd>${esc(d.id)}</dd></div>
           <div><dt>Paid</dt><dd>${esc(d.price)}</dd></div>
           <div><dt>Date</dt><dd>${esc(d.date)}</dd></div>
           <div><dt>Venue</dt><dd>${esc(d.venue)}</dd></div>
@@ -870,11 +870,11 @@ function showTicket(card, t) {
         </dl>
         <span class="e-ticket-stamp">Confirmed</span>
       </div>
-      <div class="e-ticket-stub" aria-hidden="true"><span>${esc(d.id)}</span><b>Seat</b></div>
+      <div class="e-ticket-stub" aria-hidden="true"><span>${esc(d.id)}</span><b>Member</b></div>
     </article>
     <div class="pill-row ticket-actions">
       <button class="pill is-solid btn pay-btn" type="button" data-save-ticket>Save ticket as image</button>
-      <button class="linkish" type="button" data-new-seat>Book another seat</button>
+      <button class="linkish" type="button" data-new-seat>Register another member</button>
     </div>
     <p class="ticket-fine">We’ll email the date and venue before recording night. Keep your booking ID.</p>`;
   card.append(wrap);
@@ -905,7 +905,7 @@ async function saveTicket(d) {
   const x = 70, y = 110, w = W - 140, h = H - 220, r = 36;
   g.fillStyle = '#f5ebd0';
   g.beginPath(); g.roundRect(x, y, w, h, r); g.fill();
-  const rows = [['BOOKING ID', d.id], ['PAID', d.price], ['DATE', d.date], ['VENUE', d.venue]];
+  const rows = [['MEMBERSHIP ID', d.id], ['PAID', d.price], ['DATE', d.date], ['VENUE', d.venue]];
   if (d.paymentId) rows.push(['PAYMENT ID', d.paymentId]);
   rows.push(['ISSUED', d.issued]);
   // perforation notches, below the last row
@@ -932,7 +932,7 @@ async function saveTicket(d) {
   g.save(); g.translate(x + w - 220, y + 560); g.rotate(-0.2);
   g.strokeStyle = '#93032e'; g.lineWidth = 7; g.beginPath(); g.roundRect(-170, -56, 340, 112, 16); g.stroke();
   T('CONFIRMED', 0, 18, '900 54px Poppins, sans-serif', '#93032e', 'center', 4); g.restore();
-  T('Show this ticket at the door.', W / 2, py + 100, '600 36px "Open Sans", sans-serif', '#151515', 'center');
+  T('Show this pass at the door.', W / 2, py + 100, '600 36px "Open Sans", sans-serif', '#151515', 'center');
   T('thefoundermafia.com', W / 2, py + 160, '700 28px Poppins, sans-serif', '#93032e', 'center', 2);
   c.toBlob((blob) => {
     if (!blob) return;
@@ -969,7 +969,7 @@ function resumeSeat() {
   done.onclick = (e) => { if (e.target.closest('[data-pay]')) startPayment(card, seat.id); };
   seatState(card, 'dismissed');
   const another = document.createElement('button');
-  another.type = 'button'; another.className = 'linkish'; another.textContent = 'Book a different seat';
+  another.type = 'button'; another.className = 'linkish'; another.textContent = 'Register someone else';
   another.onclick = () => { forgetSeat(); done.hidden = true; $('#bookForm').hidden = false; $$('.book-steps li', card).forEach((li, i) => { li.className = i === 0 ? 'is-now' : ''; }); };
   done.append(another);
 }

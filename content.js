@@ -31,8 +31,8 @@ export const company = 'A&V Venture House Pvt. Ltd.';
 // Apps Script's Script Properties — never put RAZORPAY_KEY_SECRET in this file (it is public on GitHub).
 export const booking = {
   endpoint: 'https://script.google.com/macros/s/AKfycbygL9iljUvXrUfY-F9o8Pf0MDRqX66mnPdTqQgSqCdcSrW7AZUYcLc_uE56tBk_RbpaAw/exec',            // e.g. 'https://script.google.com/macros/s/AKfy…/exec'
-  price: 199,              // ₹ per seat
-  event: 'Live recording — Season 01',
+  price: 999,              // ₹ one-time TFM Community membership
+  event: 'TFM Community membership — Season 01',
   date: 'To be announced',
   venue: 'To be announced',
   capacity: 0,             // total seats; 0 hides the "seats left" counter
@@ -86,9 +86,9 @@ export const meetups = [
 // Enter the Mafia page.
 export const faqs = [
   { q: 'Who can book a seat?', a: 'Young founders, students and builders who want to hear how companies really get built. One seat is for one person.' },
-  { q: 'What do I get for ₹199?', a: 'A seat in the room at a live recording: you hear the host and the guest talk it through, and you can ask your own question at the end.' },
+  { q: 'What does the ₹999 membership include?', a: 'Membership of The Founder Mafia community. It is a one-time fee that gives you a seat at our live recordings — where you hear the host and the guest talk it through and ask your own question — and a place among the founders, guests and members around the table.' },
   { q: 'When do I get the date and venue?', a: 'Every confirmed seat gets the date and venue by email before the recording.' },
-  { q: 'How do I pay?', a: 'Book your seat with your details first. Then pay ₹199 securely through Razorpay to confirm it.' },
+  { q: 'How do I pay?', a: 'Register with your details first. Then pay the one-time ₹999 membership fee securely through Razorpay to confirm it.' },
   { q: 'Can I bring a friend?', a: 'Yes — ask them to book their own seat, so their name is on the list too.' },
   { q: 'Is the recording on the record?', a: 'Yes. What is said in the room may go out in the episode, so come ready to listen and ask.' },
 ]

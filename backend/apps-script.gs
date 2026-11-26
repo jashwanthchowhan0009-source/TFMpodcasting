@@ -2,7 +2,7 @@
  * The Founder Mafia — backend (Google Apps Script)
  *
  * Saves seat bookings, community joins and guest pitches to the Google Sheet
- * "The Founder Mafia — Bookings & Pitches", and runs the Razorpay payment flow for ₹199 seats.
+ * "The Founder Mafia — Bookings & Pitches", and runs the Razorpay payment flow for ₹999 TFM Community memberships.
  *
  * Endpoints — every request goes to the Web app URL (ending in /exec); the body's "action" picks the step:
  *   POST { type, name, age, email, mobile, startup }                       save a booking / join / pitch
@@ -27,7 +27,7 @@
  */
 
 const SHEETS = { booking: 'Seat bookings', pitch: 'Guest pitches', join: 'Community members' };
-const SEAT_PRICE = 199;          // ₹ per seat — keep in sync with content.js
+const SEAT_PRICE = 999;          // ₹ one-time TFM Community membership — keep in sync with content.js
 const CURRENCY = 'INR';
 const RZP = 'https://api.razorpay.com/v1';
 
@@ -108,7 +108,7 @@ function clean(v, max) {
 
 /**
  * POST /create-order  { booking_id }
- * The amount is never taken from the browser: it is worked out here from the booking (seats × ₹199),
+ * The amount is never taken from the browser: it is worked out here from the booking (members × ₹999),
  * converted to paise (× 100), so nobody can pay ₹1 for a seat by editing the request.
  */
 function createOrder(data) {
