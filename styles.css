@@ -1468,3 +1468,121 @@ html:not(.has-cinema) .viewfinder { opacity: 1; }
 .member-more[open] summary::after { transform: rotate(45deg); }
 .member-more[open] summary { margin-bottom: 6px; }
 .member-more p { font-size: 0.95rem; color: rgba(245, 235, 208, 0.85); }
+
+/* ── The intro film in the hero ── */
+.hero-film {
+  position: relative; width: min(100%, calc((100svh - 250px) * 16 / 9)); min-width: min(100%, 560px);
+  margin-inline: auto; aspect-ratio: 16 / 9; border-radius: clamp(18px, 2.4vw, 34px); overflow: hidden;
+  background: var(--bur) url('media/intro-poster.jpg') center / cover no-repeat;
+  box-shadow: var(--shadow), 0 0 0 1px rgba(245, 235, 208, 0.1);
+}
+.hero-video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.film-controls {
+  position: absolute; right: clamp(10px, 1.4vw, 20px); bottom: clamp(10px, 1.4vw, 20px);
+  display: flex; gap: 8px; opacity: 0.88; transition: opacity 0.3s;
+}
+.hero-film:hover .film-controls, .film-controls:focus-within, .hero-film.is-ended .film-controls { opacity: 1; }
+.film-btn {
+  min-height: 36px; padding: 0 16px; border: 0; border-radius: 999px; cursor: pointer;
+  font: 700 0.68rem var(--display); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--sand); background: rgba(21, 21, 21, 0.55); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(245, 235, 208, 0.25); transition: background-color 0.25s;
+}
+.film-btn:hover { background: var(--bur); }
+.film-btn[aria-pressed="true"] { background: var(--sand); color: var(--night); }
+.hero-film.needs-tap { cursor: pointer; }
+.hero-film.needs-tap::after {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%;
+  background: rgba(21, 21, 21, 0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='%23f5ebd0'/%3E%3C/svg%3E") center / 40% no-repeat;
+  box-shadow: inset 0 0 0 1px rgba(245, 235, 208, 0.3);
+}
+@media (max-width: 820px) {
+  .hero-film { width: 100%; min-width: 0; border-radius: 18px; }
+  .film-btn { min-height: 32px; padding: 0 12px; font-size: 0.6rem; }
+}
+
+/* ── Doodles: hand-drawn, drifting at the page edges ── */
+.doodle-sky { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.doodle-defs { position: absolute; width: 0; height: 0; }
+.doodle { position: absolute; left: var(--x); top: 0; width: var(--s); height: var(--s); will-change: transform; }
+.doodle svg {
+  display: block; width: 100%; height: 100%; overflow: visible;
+  filter: url(#tfm-boil) drop-shadow(0 8px 10px rgba(30, 0, 8, 0.35));
+  transform: rotate(var(--t));
+  animation: doodle-bob var(--dur) ease-in-out var(--delay) infinite alternate;
+}
+body:not(.is-ready) .doodle svg { scale: 0; opacity: 0; }
+body.is-ready .doodle svg { transition: scale 0.8s cubic-bezier(.34, 1.56, .64, 1), opacity 0.5s; transition-delay: calc(var(--z) * 0.6s); }
+@keyframes doodle-bob {
+  from { transform: rotate(var(--t)) translateY(-7px); }
+  to { transform: rotate(calc(var(--t) * -0.5)) translateY(9px) scale(1.05); }
+}
+@media (max-width: 820px) { .doodle { opacity: 0.7; } }
+@media (prefers-reduced-motion: reduce) {
+  .doodle svg { animation: none; }
+  body:not(.is-ready) .doodle svg { scale: 1; opacity: 1; }
+}
+
+/* ── Cleaner chrome: no scene rail, no percentage, a quiet spacebar key ── */
+.scene-rail, .progress-pill .pct { display: none !important; }
+@media (pointer: fine) {
+  .spacebar { left: auto; right: max(var(--gutter), env(safe-area-inset-right, 0px)); transform: none; }
+  .spacebar.is-hidden { transform: translateY(20px); }
+  .spacebar .pill { min-height: 40px; padding: 0 16px; font-size: 0.6rem; opacity: 0.75; }
+  .spacebar .round { width: 40px; height: 40px; }
+}
+
+/* pinned scenes run shorter, so the page never feels stuck */
+.space { height: 200vh; }
+.cinema { height: 170vh; }
+@media (max-width: 820px) { .space { height: 170vh; } .cinema { height: 150vh; } }
+
+/* ── 2D steps: four cards, each with its doodle ── */
+.steps2d { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 22px); counter-reset: none; }
+.steps2d li {
+  position: relative; display: grid; align-content: start; gap: 8px;
+  padding: clamp(22px, 2.4vw, 34px); border-radius: 28px; outline: none;
+  background: var(--glass); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  box-shadow: inset 0 0 0 1px rgba(245, 235, 208, 0.1);
+  transition: transform 0.5s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.3s, background-color 0.3s;
+}
+.steps2d li:nth-child(even) { --tilt: 1.2deg; }
+.steps2d li:nth-child(odd) { --tilt: -1.2deg; }
+.steps2d li:hover, .steps2d li:focus-visible { transform: translateY(-8px) rotate(var(--tilt)); box-shadow: inset 0 0 0 1px rgba(245, 235, 208, 0.24), 0 24px 40px -24px rgba(20, 0, 6, 0.7); }
+.steps2d li:focus-visible { box-shadow: 0 0 0 3px var(--sand); }
+.step-doodle { display: block; width: clamp(64px, 6vw, 92px); aspect-ratio: 1; margin: -6px 0 14px -6px; transform-origin: 50% 80%; }
+.step-doodle svg { width: 100%; height: 100%; overflow: visible; filter: url(#tfm-boil); }
+.steps2d li:hover .step-doodle, .steps2d li:focus-visible .step-doodle { animation: doodle-wiggle 0.7s ease-in-out; }
+@keyframes doodle-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-10deg) scale(1.08); } 55% { transform: rotate(8deg) scale(1.08); } 80% { transform: rotate(-3deg); } }
+.steps2d small { font: 700 0.68rem var(--display); letter-spacing: 0.12em; color: #e0335f; }
+.steps2d h3 { font: 800 clamp(1.25rem, 1.7vw, 1.6rem) var(--display); text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.05; }
+.steps2d p { font-size: 0.98rem; color: rgba(245, 235, 208, 0.84); }
+/* a hand-drawn dashed thread runs behind the four cards */
+.steps2d::before { content: ''; grid-area: 1 / 1 / 2 / -1; align-self: start; margin-top: clamp(60px, 5.5vw, 84px); height: 0; border-top: 2px dashed rgba(245, 235, 208, 0.22); z-index: -1; }
+@media (max-width: 1024px) { .steps2d { grid-template-columns: repeat(2, minmax(0, 1fr)); } .steps2d::before { display: none; } }
+@media (max-width: 560px) { .steps2d { grid-template-columns: 1fr; } .step-doodle { width: 64px; } }
+
+/* ── 2D card fan ── */
+.fan { display: grid; justify-items: center; gap: clamp(18px, 3vh, 30px); padding-top: clamp(10px, 3vh, 30px); }
+.fan-hand { position: relative; width: min(100%, 760px); height: clamp(280px, 40vh, 380px); }
+.fan-card {
+  --w: clamp(130px, 15vw, 190px);
+  position: absolute; left: 50%; bottom: 0; width: var(--w); aspect-ratio: 180 / 252; margin-left: calc(var(--w) / -2);
+  padding: 0; border: 0; background: none; cursor: pointer; border-radius: 12px;
+  transform-origin: 50% 120%;
+  transform: translateX(calc(var(--i) * var(--w) * 0.42)) rotate(calc(var(--i) * 9deg));
+  transition: transform 0.6s cubic-bezier(.34, 1.4, .64, 1), filter 0.3s;
+  filter: drop-shadow(0 18px 18px rgba(30, 0, 8, 0.45));
+}
+.fan-card svg { display: block; width: 100%; height: 100%; }
+.fan.has-pick .fan-card { transform: translateX(calc(var(--i) * var(--w) * 0.5 + clamp(-1, var(--d), 1) * var(--w) * 0.16)) rotate(calc(var(--i) * 10deg)); filter: drop-shadow(0 12px 12px rgba(30, 0, 8, 0.4)) brightness(0.86); }
+.fan.has-pick .fan-card.is-up { z-index: 5; transform: translateX(calc(var(--i) * var(--w) * 0.5)) translateY(-16%) rotate(calc(var(--i) * 3deg)) scale(1.08); filter: drop-shadow(0 28px 26px rgba(30, 0, 8, 0.55)); }
+.fan-card:focus-visible { outline: 3px solid var(--sand); outline-offset: 4px; }
+.fan-note { min-height: 3em; max-width: 34rem; text-align: center; font-size: clamp(1rem, 1.3vw, 1.15rem); color: rgba(245, 235, 208, 0.88); }
+body.is-ready .fan-card { animation: fan-deal 0.9s cubic-bezier(.34, 1.3, .64, 1) backwards; animation-delay: calc((var(--i) + 2) * 80ms + 0.3s); }
+@keyframes fan-deal { from { transform: translateY(40%) rotate(0deg); opacity: 0; } }
+@media (max-width: 600px) { .fan-card { --w: 100px; } .fan-hand { height: 220px; } }
+
+/* doodles answer the cursor: they lean away as it passes */
+.doodle > svg { translate: var(--px, 0px) var(--py, 0px); transition: translate 0.6s cubic-bezier(.34, 1.56, .64, 1), scale 0.8s cubic-bezier(.34, 1.56, .64, 1), opacity 0.5s; }
+@media (prefers-reduced-motion: reduce) { .fan-card { transition: none; animation: none !important; } .steps2d li { transition: none; } }

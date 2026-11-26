@@ -16,15 +16,15 @@
   <link rel="canonical" href="https://thefoundermafia.com/">
   <meta property="og:url" content="https://thefoundermafia.com/">
   <meta property="og:site_name" content="The Founder Mafia">
-  <meta property="og:image" content="https://thefoundermafia.com/img/og.png">
+  <meta property="og:image" content="https://thefoundermafia.com/img/og.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://thefoundermafia.com/img/og.png">
+  <meta name="twitter:image" content="https://thefoundermafia.com/img/og.jpg">
   <link rel="preload" href="fonts/poppins-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/open-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="img/tfm-wordmark.png" as="image">
-  <link rel="stylesheet" href="styles.css?v=20261119e">
+  <link rel="preload" href="media/intro-poster.jpg" as="image">
+  <link rel="stylesheet" href="styles.css?v=20261126c">
   <script>
     /* Loader failsafe. Runs before anything else and does not depend on main.js:
        if the page has not revealed itself after 3 s, or a script/stylesheet fails to load,
@@ -59,7 +59,7 @@
     "name": "The Founder Mafia",
     "url": "https://thefoundermafia.com/",
     "description": "A long-form podcast and a family of founders building in India.",
-    "image": "https://thefoundermafia.com/img/og.png",
+    "image": "https://thefoundermafia.com/img/og.jpg",
     "author": { "@type": "Person", "name": "Phanindra Aarav" },
     "publisher": { "@type": "Organization", "name": "A&V Venture House Pvt. Ltd." }
   }
@@ -94,8 +94,15 @@
 
   <main id="main">
     <section class="hero desk" aria-label="The Founder Mafia" data-scene="The street">
-      <div class="hero-pill hero-banner drop" style="--d:0">
-        <img class="hero-art" src="img/tfm-wordmark.png" width="1863" height="495" alt="Phanindra Aarav presents The Founder Mafia — TFM Podcasting">
+      <div class="hero-film drop" style="--d:0">
+        <video class="hero-video" autoplay muted playsinline preload="auto" poster="media/intro-poster.jpg" width="1920" height="1080" aria-label="Intro: Idea, Launch, Capital — Phanindra Aarav presents The Founder Mafia, TFM Podcasting">
+          <source src="media/intro-720.mp4" type="video/mp4" media="(max-width: 820px)">
+          <source src="media/intro-1080.mp4" type="video/mp4">
+        </video>
+        <div class="film-controls">
+          <button class="film-btn" type="button" data-film="sound" aria-pressed="false">Sound on</button>
+          <button class="film-btn" type="button" data-film="replay" hidden>Replay</button>
+        </div>
       </div>
       <div class="scallop" aria-hidden="true"><div class="marquee"><ul><li>Podcast</li><li>Founder family</li><li>Not a course</li><li>Not an accelerator</li><li>Live sit-downs</li><li>On the record</li><li>Numbers, not adjectives</li><li>No slides</li></ul><ul><li>Podcast</li><li>Founder family</li><li>Not a course</li><li>Not an accelerator</li><li>Live sit-downs</li><li>On the record</li><li>Numbers, not adjectives</li><li>No slides</li></ul></div></div>
       <p class="visually-hidden">Podcast and founder family. Not a course, not an accelerator: live sit-downs, on the record.</p>
@@ -160,12 +167,14 @@
       <ul class="team" id="team"></ul>
     </section>
 
-    <section class="space" data-space="tunnel" data-words="The pitch::A founder pitches their story, or we invite them after following their work.|The pre-call::Twenty minutes to find the moments worth an hour. No script is shared.|The recording::One take, two microphones. The guest can pull anything off the record afterwards.|The episode::Out on YouTube and Spotify, with one lesson for the next founder." aria-label="How a sit-down works" data-scene="How it works">
-      <div class="space-sticky">
-        <div class="space-stage" aria-hidden="true"></div>
-        <div class="space-caption"><span class="label">About us · How it works</span><b>How a sit-down works</b></div>
-        <span class="pill space-count" aria-hidden="true">1 / 4</span>
-      </div>
+    <section class="block desk" aria-labelledby="howTitle" data-scene="How it works">
+      <div class="block-head"><h2 class="title-pill" id="howTitle">How a sit-down works</h2><p>Four steps from a founder’s first message to the episode going out.</p></div>
+      <ol class="steps2d">
+        <li tabindex="0"><span class="step-doodle" data-doodle="bulb"></span><small>01</small><h3>The pitch</h3><p>A founder pitches their story, or we invite them after following their work.</p></li>
+        <li tabindex="0"><span class="step-doodle" data-doodle="cup"></span><small>02</small><h3>The pre-call</h3><p>Twenty minutes to find the moments worth an hour. No script is shared.</p></li>
+        <li tabindex="0"><span class="step-doodle" data-doodle="mic"></span><small>03</small><h3>The recording</h3><p>One take, two microphones. The guest can pull anything off the record afterwards.</p></li>
+        <li tabindex="0"><span class="step-doodle" data-doodle="rocket"></span><small>04</small><h3>The episode</h3><p>Out on YouTube and Spotify, with one lesson for the next founder.</p></li>
+      </ol>
     </section>
 
     <section class="block desk" aria-labelledby="roadTitle" data-scene="The road">
@@ -184,11 +193,9 @@
       <div class="lineup" id="lineup"></div>
     </section>
 
-    <section class="space" data-space="ring" aria-label="The family deck" data-scene="The deck">
-      <div class="space-sticky">
-        <div class="space-stage" aria-hidden="true"></div>
-        <div class="space-caption"><span class="label">The family deck</span><b>Every guest gets a card</b><p>Scroll to shuffle. Move your cursor to tilt the table.</p></div>
-      </div>
+    <section class="block desk" aria-labelledby="deckTitle" data-scene="The deck">
+      <div class="block-head"><h2 class="title-pill" id="deckTitle">Every guest gets a card</h2><p>Hover or tap a card to pull it from the deck.</p></div>
+      <div class="fan" data-fan></div>
     </section>
 
     <section class="block desk" aria-labelledby="trailerTitle" data-scene="Why the table">
@@ -358,6 +365,6 @@
     <button class="round" type="button" aria-label="Scroll down"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 
-  <script type="module" src="main.js?v=20261119e"></script>
+  <script type="module" src="main.js?v=20261126c"></script>
 </body>
 </html>

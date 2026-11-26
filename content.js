@@ -10,7 +10,7 @@ export const links = {
   linkedin: '',     // e.g. 'https://linkedin.com/company/thefoundermafia'
   whatsapp: '',     // community invite link
   trailer: '',      // YouTube link to the show trailer (opens when the TV is clicked)
-  trailerVideo: '', // intro video that loops inside the TV, e.g. 'media/intro.mp4' (MP4, muted, no audio needed)
+  trailerVideo: 'media/intro-720.mp4', // intro video that loops inside the TV, e.g. 'media/intro.mp4' (MP4, muted, no audio needed)
   startupitch: 'https://startupitch.in', // Community page "Join" button
   contactEmail: '', // shown on the site for guest pitches, e.g. 'hello@yourdomain.in'
 };
