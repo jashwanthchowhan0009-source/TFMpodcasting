@@ -1,6 +1,6 @@
-import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261126c';
-import * as S from './stickers.js?v=20261126c';
-import { mountSky, doodle } from './doodles.js?v=20261126c';
+import { links, applicationsOpen, season, table, tracks, episodes, meetups, faqs, lastUpdate, payment, company, team, booking } from './content.js?v=20261126d';
+import * as S from './stickers.js?v=20261126d';
+import { mountSky, doodle } from './doodles.js?v=20261126d';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -108,30 +108,23 @@ function mountFilm() {
   const wrap = $('.hero-film');
   const v = $('.hero-video', wrap || document);
   if (!wrap || !v) return;
-  const sound = $('[data-film="sound"]', wrap);
-  const replay = $('[data-film="replay"]', wrap);
-  v.muted = true; // browsers only allow autoplay without sound
-  const start = () => { v.currentTime = 0; v.play()?.catch(() => wrap.classList.add('needs-tap')); };
-  // the loader covers the first moments, so the film restarts the instant the page is revealed
-  if (!reduceMotion) {
-    if (document.body.classList.contains('is-ready')) v.play()?.catch(() => wrap.classList.add('needs-tap'));
-    else document.addEventListener('tfm:ready', start, { once: true });
-  } else { v.removeAttribute('autoplay'); v.pause(); replay.hidden = false; replay.textContent = 'Play intro'; }
-  v.addEventListener('playing', () => { wrap.classList.remove('needs-tap', 'is-ended'); replay.hidden = true; });
-  v.addEventListener('ended', () => { wrap.classList.add('is-ended'); replay.hidden = false; replay.textContent = 'Replay'; });
-  replay.addEventListener('click', start);
-  wrap.addEventListener('click', (e) => { if (wrap.classList.contains('needs-tap') && !e.target.closest('button')) start(); });
+  const sound = $('.film-sound', wrap);
+  v.muted = true; v.loop = true; // browsers only allow autoplay without sound
+  const play = () => v.play()?.catch(() => {});
+  // the loader covers the first moments, so the loop starts from the top the instant the page is revealed
+  if (document.body.classList.contains('is-ready')) play();
+  else document.addEventListener('tfm:ready', () => { v.currentTime = 0; play(); }, { once: true });
+  // if the browser still blocks autoplay (low-power mode), the first touch anywhere starts it
+  const kick = () => { if (v.paused) play(); };
+  addEventListener('pointerdown', kick, { once: true, passive: true });
   sound.addEventListener('click', () => {
     v.muted = !v.muted;
     sound.setAttribute('aria-pressed', String(!v.muted));
-    sound.textContent = v.muted ? 'Sound on' : 'Sound off';
-    if (!v.muted) start(); // turning sound on plays it from the top, with sound
+    sound.setAttribute('aria-label', v.muted ? 'Turn sound on' : 'Turn sound off');
+    if (v.paused) play();
   });
   // pause while scrolled away, carry on when back
-  new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) { if (!v.paused) { v.pause(); v.dataset.resume = '1'; } }
-    else if (v.dataset.resume) { delete v.dataset.resume; v.play()?.catch(() => {}); }
-  }, { threshold: 0.25 }).observe(v);
+  new IntersectionObserver(([e]) => { if (!e.isIntersecting) v.pause(); else play(); }, { threshold: 0.2 }).observe(v);
 }
 
 /* ── Loader: "Opening the office" ─────────────────────── */
